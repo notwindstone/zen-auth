@@ -19,6 +19,9 @@ export function Form({ type }: { type: "sign-in" | "sign-up" }) {
                 <p className="text-lg">
                     Logged in user: <strong>{session.username}</strong>
                 </p>
+                <p>
+                    Email: <strong>{session.email}</strong>
+                </p>
                 <LogoutButton />
             </>
         );

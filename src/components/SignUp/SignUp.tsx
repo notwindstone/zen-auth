@@ -32,9 +32,9 @@ export default function SignUp() {
         const email = formData.get("email") as string;
         const password = formData.get("password") as string;
 
-        const userExists = await checkUser(email);
+        const { exists } = await checkUser(email);
 
-        if (userExists) {
+        if (exists) {
             setUserExists(true);
             setIsLoading(false)
             setTimeout(() => {
