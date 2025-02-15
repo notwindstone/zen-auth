@@ -33,24 +33,36 @@ function LoginForm() {
                 event.preventDefault();
                 const formData = new FormData(event.currentTarget);
                 const username = formData.get("username") as string;
+                const password = formData.get("password") as string;
                 login(username, {
                     optimisticData: {
                         isLoggedIn: true,
                         username,
+                        password,
                     },
                 });
             }}
             method="POST"
         >
             <label className="block text-lg">
-                <span>Username</span>
+                <p>Username</p>
                 <input
+                    className="border-pink-200 border-2 px-2 py-1 focus:outline-none focus:border-pink-500"
                     type="text"
                     name="username"
                     placeholder=""
-                    defaultValue="Alison"
+                    defaultValue="notwindstone"
                     required
-                    autoComplete="off"
+                />
+            </label>
+            <label className="block text-lg">
+                <p>Password</p>
+                <input
+                    className="border-pink-200 border-2 px-2 py-1 focus:outline-none focus:border-pink-500"
+                    type="password"
+                    name="password"
+                    placeholder=""
+                    required
                 />
             </label>
             <div>
