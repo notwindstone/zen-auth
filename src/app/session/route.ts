@@ -31,11 +31,11 @@ export async function POST(request: NextRequest) {
     if (isSignIn) {
         const foundSessionId = (await getSessionId(sessionId))?.[0]?.sessionId;
 
-        if (!foundSessionId) {
-            return Response.json(defaultSession);
+        if (foundSessionId) {
+            return Response.json(session);
         }
 
-        return Response.json(session);
+
     }
 
     const userUUID = generateUUID();

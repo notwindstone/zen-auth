@@ -1,3 +1,5 @@
+"use client";
+
 import useSession from "@/hooks/use-session";
 import Image from "next/image";
 import nextJsLogo from "../../../public/nextjs-icon.svg";

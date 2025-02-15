@@ -1,3 +1,5 @@
+"use client";
+
 import useSession from "@/hooks/use-session";
 import Image from "next/image";
 import nextJsLogo from "../../../public/nextjs-icon.svg";
@@ -6,7 +8,7 @@ import Link from "next/link";
 import checkUser from "@/lib/checkUser";
 import {FormEvent, useState} from "react";
 
-export default function SignUp() {
+export default function SignIn() {
     const { login } = useSession();
     const [isLoading, setIsLoading] = useState(false);
     const [isDelayed, setDelayed] = useState(false);
@@ -87,11 +89,11 @@ export default function SignUp() {
                     }
                     {
                         <button
-                            className={`${isLoading ? "hover:bg-zinc-300 bg-zinc-300 cursor-default" : "hover:bg-zinc-700 bg-zinc-800"} transition mt-2 rounded-md p-2 text-white h-[40px]`}
+                            className={`${isLoading || isDelayed ? "hover:bg-zinc-300 bg-zinc-300 cursor-default" : "hover:bg-zinc-700 bg-zinc-800"} transition mt-2 rounded-md p-2 text-white h-[40px]`}
                             type="submit"
                         >
                             {
-                                !isLoading && "Продолжить"
+                                (!isLoading && !isDelayed) && "Продолжить"
                             }
                         </button>
                     }
