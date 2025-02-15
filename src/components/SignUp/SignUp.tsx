@@ -100,7 +100,7 @@ export default function SignUp() {
                     }
                     {
                         <button
-                            className={`${isLoading ? "hover:bg-zinc-300 bg-zinc-300 cursor-default" : "hover:bg-zinc-700 bg-zinc-800"} transition mt-2 rounded-md p-2 text-white h-[40px]`}
+                            className={`${isLoading ? "hover:bg-zinc-300 bg-zinc-300 cursor-default" : "hover:bg-zinc-700 bg-zinc-800"} ${userExists && "cursor-default hover:bg-zinc-800"} transition mt-2 rounded-md p-2 text-white h-[40px]`}
                             type="submit"
                         >
                             {
