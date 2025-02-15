@@ -16,10 +16,6 @@ export const sessionOptions: SessionOptions = {
     password: "complex_password_at_least_32_characters_long",
     cookieName: "authless-next-cookies-key-name",
     cookieOptions: {
-        secure: true,
+        secure: false,
     },
 };
-
-export function sleep(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-}

@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import { getIronSession } from "iron-session";
 import { defaultSession, sessionOptions } from "@/lib/sessions";
-import { sleep, SessionData } from "@/lib/sessions";
+import { SessionData } from "@/lib/sessions";
 import { v4 as generateUUID } from 'uuid';
 import {createUser} from "@/queries/insert";
 import bcrypt from 'bcrypt';
@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
     const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
-console.log(session.isLoggedIn)
+
     if (!session.isLoggedIn) {
         return Response.json(defaultSession);
     }

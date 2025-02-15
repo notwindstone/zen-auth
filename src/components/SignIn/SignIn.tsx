@@ -5,7 +5,6 @@ import Image from "next/image";
 import nextJsLogo from "../../../public/nextjs-icon.svg";
 import {LOGIN_INPUTS} from "@/app/configs/constants";
 import Link from "next/link";
-import checkUser from "@/lib/checkUser";
 import {FormEvent, useEffect, useState} from "react";
 import {useRouter} from "nextjs-toploader/app";
 
@@ -31,8 +30,6 @@ export default function SignIn() {
         const formData = new FormData(event.currentTarget);
         const email = formData.get("email") as string;
         const password = formData.get("password") as string;
-
-        const userExists = await checkUser(email);
 
         login({
             email,
