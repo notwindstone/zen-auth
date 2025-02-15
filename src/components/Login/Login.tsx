@@ -32,7 +32,11 @@ export default function Login() {
                         const username = formData.get("username") as string;
                         const email = formData.get("email") as string;
                         const password = formData.get("password") as string;
-                        login(username, {
+                        login({
+                            username,
+                            email,
+                            password,
+                        }, {
                             optimisticData: {
                                 isLoggedIn: true,
                                 username,

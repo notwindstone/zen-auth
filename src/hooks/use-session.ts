@@ -18,7 +18,8 @@ async function fetchJson<JSON = unknown>(
     }).then((res) => res.json());
 }
 
-function doLogin(url: string, { arg }: { arg: string }) {
+function doLogin(url: string, { arg }: { arg: {} }) {
+    console.log(url, arg)
     return fetchJson<SessionData>(url, {
         method: "POST",
         body: JSON.stringify({ username: arg }),
