@@ -34,6 +34,10 @@ export async function POST(request: NextRequest) {
 
             await session.save();
 
+            const newSessionId = (await cookies()).get("authless-next-cookies-key-name")?.value ?? "";
+
+            await updateSessionId(email, { sessionId: newSessionId });
+
             return Response.json(session);
         }
 
@@ -117,7 +121,6 @@ export async function GET() {
 
 export async function DELETE() {
     const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
-    const sessionId = (await cookies()).get("authless-next-cookies-key-name")?.value ?? "";
 
     await updateSessionId(session.email, { sessionId: "" });
     session.destroy();
