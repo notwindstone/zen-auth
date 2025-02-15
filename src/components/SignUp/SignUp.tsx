@@ -4,21 +4,32 @@ import nextJsLogo from "../../../public/nextjs-icon.svg";
 import {REGISTRATION_INPUTS} from "@/app/configs/constants";
 import Link from "next/link";
 import checkUser from "@/lib/checkUser";
-import {FormEvent} from "react";
+import {FormEvent, useState} from "react";
 
 export default function SignUp() {
     const { login } = useSession();
+    const [isDelayed, setDelayed] = useState(false);
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
+
+        if (isDelayed) {
+            return;
+        }
+
+        setDelayed(true);
+        setTimeout(() => {
+            setDelayed(false);
+        }, 3000);
+
         const formData = new FormData(event.currentTarget);
         const username = formData.get("username") as string;
         const email = formData.get("email") as string;
         const password = formData.get("password") as string;
 
-        const currentUser = await checkUser(email);
+        const userExists = await checkUser(email);
 
-        if (currentUser) {
+        if (userExists) {
             return;
         }
 
