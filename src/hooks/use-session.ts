@@ -3,7 +3,7 @@ import { SessionData, defaultSession } from "@/lib/sessions";
 import useSWRMutation from "swr/mutation";
 
 const sessionApiRoute =
-    "/app-router-client-component-route-handler-swr/session";
+    "/session";
 
 async function fetchJson<JSON = unknown>(
     input: RequestInfo,

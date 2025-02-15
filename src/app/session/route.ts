@@ -14,7 +14,6 @@ export async function POST(request: NextRequest) {
 
     session.isLoggedIn = true;
     session.username = username;
-    session.counter = 0;
     await session.save();
 
     // simulate looking up the user in db

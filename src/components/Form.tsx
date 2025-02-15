@@ -37,7 +37,6 @@ function LoginForm() {
                     optimisticData: {
                         isLoggedIn: true,
                         username,
-                        counter: 0,
                     },
                 });
             }}
