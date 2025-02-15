@@ -48,6 +48,7 @@ function LoginForm() {
                 </p>
                 <div className="h-[1px] w-full bg-gray-200" />
                 <form
+                    className="w-full"
                     onSubmit={function (event) {
                         event.preventDefault();
                         const formData = new FormData(event.currentTarget);
@@ -64,15 +65,19 @@ function LoginForm() {
                     }}
                     method="POST"
                 >
-                    <p className="font-semibold">Имя пользователя</p>
-                    <input
-                        className="focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md px-2 py-1 transition-all"
-                        type="text"
-                        name="username"
-                        placeholder=""
-                        defaultValue="notwindstone"
-                        required
-                    />
+                    <div className="flex flex-col gap-2">
+                        <p className="font-semibold text-gray-800">
+                            Имя пользователя
+                        </p>
+                        <input
+                            className="focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md px-2 py-1 transition-all"
+                            type="text"
+                            name="username"
+                            placeholder=""
+                            defaultValue="notwindstone"
+                            required
+                        />
+                    </div>
                     <label className="block text-lg">
                         <p>Email</p>
                         <input
@@ -84,7 +89,7 @@ function LoginForm() {
                         />
                     </label>
                     <label className="block text-lg">
-                        <p>Password</p>
+                    <p>Password</p>
                         <input
                             className="border-pink-200 border-2 px-2 py-1 focus:outline-none focus:border-pink-500"
                             type="password"
