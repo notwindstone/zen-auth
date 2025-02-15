@@ -8,6 +8,7 @@ import Link from "next/link";
 import {FormEvent, useEffect, useState} from "react";
 import {useRouter} from "nextjs-toploader/app";
 import checkUser from "@/lib/checkUser";
+import sendEmail from "@/lib/sendEmail";
 
 export default function SignIn() {
     const { login, session } = useSession();

@@ -8,6 +8,7 @@ import Link from "next/link";
 import checkUser from "@/lib/checkUser";
 import {FormEvent, useState} from "react";
 import {useRouter} from "nextjs-toploader/app";
+import sendEmail from "@/lib/sendEmail";
 
 export default function SignUp() {
     const { login } = useSession();
@@ -45,6 +46,8 @@ export default function SignUp() {
 
             return;
         }
+
+
 
         login({
             username,

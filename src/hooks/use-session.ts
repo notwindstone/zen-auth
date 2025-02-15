@@ -3,8 +3,7 @@ import { SessionData, defaultSession } from "@/lib/sessions";
 import useSWRMutation from "swr/mutation";
 import {UserData} from "@/types/UserData.type";
 
-const sessionApiRoute =
-    "/session";
+const sessionApiRoute = "/session";
 
 async function fetchJson<JSON = unknown>(
     input: RequestInfo,
