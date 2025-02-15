@@ -7,7 +7,7 @@ import {LOGIN_INPUTS} from "@/app/configs/constants";
 import Link from "next/link";
 import checkUser from "@/lib/checkUser";
 import {FormEvent, useEffect, useState} from "react";
-import {useRouter} from "next/navigation";
+import {useRouter} from "nextjs-toploader/app";
 
 export default function SignIn() {
     const { login, session } = useSession();

@@ -1,7 +1,13 @@
 import SignIn from "@/components/SignIn/SignIn";
+import Link from "next/link";
 
 export default function Page() {
     return (
-        <SignIn />
+        <div>
+            <SignIn />
+            <Link href={"/"}>
+                Домой
+            </Link>
+        </div>
     );
 }
