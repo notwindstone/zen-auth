@@ -13,14 +13,14 @@ export async function getUserEmail(email: SelectUser['email']): Promise<
     }).from(usersTable).where(eq(usersTable.email, email));
 }
 
-export async function getSessionId(sessionId: SelectUser['sessionId']): Promise<
+export async function getSessionId(email: SelectUser['email']): Promise<
     Array<{
         sessionId: string;
     }>
 > {
     return db.select({
         sessionId: usersTable.sessionId,
-    }).from(usersTable).where(eq(usersTable.sessionId, sessionId));
+    }).from(usersTable).where(eq(usersTable.email, email));
 }
 
 export async function getHashedPassword(email: SelectUser['email']): Promise<

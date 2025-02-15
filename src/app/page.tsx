@@ -11,7 +11,7 @@ export default function Home() {
             </p>
 
             <div className="grid grid-cols-1 gap-4 p-10 border border-slate-500 rounded-md max-w-xl">
-                <Form />
+                <Form type="sign-up" />
                 <div className="space-y-2">
                     <hr/>
                     <p>

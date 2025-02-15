@@ -1,17 +1,13 @@
 "use client";
 
-import nextJsLogo from '../../public/nextjs-icon.svg'
 import useSession from "@/hooks/use-session";
 import { defaultSession } from "@/lib/sessions";
-import Image from "next/image";
-import Link from "next/link";
-import {REGISTRATION_INPUTS} from "@/app/configs/constants";
 import SignUp from "@/components/SignUp/SignUp";
 import SignIn from "@/components/SignIn/SignIn";
 
 export function Form({ type }: { type: "sign-in" | "sign-up" }) {
     const { session, isLoading } = useSession();
-
+console.log(session)
     if (isLoading) {
         return <p className="text-lg">Loading...</p>;
     }

@@ -23,9 +23,9 @@ export async function POST(request: NextRequest) {
     const sessionId = (await cookies()).get("authless-next-cookies-key-name")?.value ?? "";
 
     if (isSignIn) {
-        const foundSessionId = (await getSessionId(sessionId))?.[0]?.sessionId;
+        const foundSessionId = (await getSessionId(email))?.[0]?.sessionId;
 
-        if (foundSessionId) {
+        if (foundSessionId === sessionId) {
             session.isLoggedIn = true;
             session.username = username;
             session.email = email;
@@ -45,6 +45,10 @@ export async function POST(request: NextRequest) {
             session.email = email;
 
             await session.save();
+
+            const newSessionId = (await cookies()).get("authless-next-cookies-key-name")?.value ?? "";
+console.log(`NEW---SESSION ${newSessionId}`);
+            await updateSessionId(email, { sessionId: newSessionId });
 
             return Response.json(session);
         }
@@ -66,7 +70,7 @@ export async function POST(request: NextRequest) {
 
             hashedPassword = hash;
             saltedPassword = salt;
-
+console.log("SIGN UP", sessionId)
             await createUser({
                 uuid: userUUID,
                 name: username,
@@ -95,9 +99,9 @@ export async function GET() {
     }
 
     const sessionId = (await cookies()).get("authless-next-cookies-key-name")?.value ?? "";
-    const foundSessionId = (await getSessionId(sessionId))?.[0]?.sessionId;
-
-    if (!foundSessionId) {
+    const foundSessionId = (await getSessionId(session.email))?.[0]?.sessionId;
+console.log(foundSessionId, sessionId, foundSessionId === sessionId)
+    if (foundSessionId !== sessionId) {
         return Response.json(defaultSession);
     }
 
@@ -108,7 +112,7 @@ export async function DELETE() {
     const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
     const sessionId = (await cookies()).get("authless-next-cookies-key-name")?.value ?? "";
 
-    await updateSessionId(sessionId);
+    await updateSessionId(session.email, { sessionId: "" });
     session.destroy();
 
     return Response.json(defaultSession);

@@ -7,6 +7,7 @@ import {LOGIN_INPUTS} from "@/app/configs/constants";
 import Link from "next/link";
 import {FormEvent, useEffect, useState} from "react";
 import {useRouter} from "nextjs-toploader/app";
+import checkUser from "@/lib/checkUser";
 
 export default function SignIn() {
     const { login, session } = useSession();
@@ -30,6 +31,12 @@ export default function SignIn() {
         const formData = new FormData(event.currentTarget);
         const email = formData.get("email") as string;
         const password = formData.get("password") as string;
+
+        const userExists = await checkUser(email);
+
+        if (!userExists) {
+            return;
+        }
 
         login({
             email,
