@@ -7,7 +7,7 @@ import { v4 as generateUUID } from 'uuid';
 import {createUser} from "@/queries/insert";
 import bcrypt from 'bcrypt';
 import {updateSessionId} from "@/queries/update";
-import {getSessionId} from "@/queries/select";
+import {getHashedPassword, getSessionId} from "@/queries/select";
 import {UserData} from "@/types/UserData.type";
 
 export async function POST(request: NextRequest) {
@@ -20,22 +20,36 @@ export async function POST(request: NextRequest) {
         isSignIn = false,
     } = (await request.json()) as UserData;
 
-    session.isLoggedIn = true;
-    session.username = username;
-    session.email = email;
-
-    await session.save();
-
     const sessionId = (await cookies()).get("authless-next-cookies-key-name")?.value ?? "";
 
     if (isSignIn) {
         const foundSessionId = (await getSessionId(sessionId))?.[0]?.sessionId;
 
         if (foundSessionId) {
+            session.isLoggedIn = true;
+            session.username = username;
+            session.email = email;
+
+            await session.save();
+
             return Response.json(session);
         }
 
+        const { hashedPassword } = (await getHashedPassword(email))?.[0];
 
+        const isPasswordEqual = await bcrypt.compare(password, hashedPassword);
+
+        if (isPasswordEqual) {
+            session.isLoggedIn = true;
+            session.username = username;
+            session.email = email;
+
+            await session.save();
+
+            return Response.json(session);
+        }
+
+        return Response.json(defaultSession);
     }
 
     const userUUID = generateUUID();
@@ -64,12 +78,18 @@ export async function POST(request: NextRequest) {
         });
     });
 
+    session.isLoggedIn = true;
+    session.username = username;
+    session.email = email;
+
+    await session.save();
+
     return Response.json(session);
 }
 
 export async function GET() {
     const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
-
+console.log(session.isLoggedIn)
     if (!session.isLoggedIn) {
         return Response.json(defaultSession);
     }

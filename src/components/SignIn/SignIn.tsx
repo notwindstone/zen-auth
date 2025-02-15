@@ -6,12 +6,14 @@ import nextJsLogo from "../../../public/nextjs-icon.svg";
 import {LOGIN_INPUTS} from "@/app/configs/constants";
 import Link from "next/link";
 import checkUser from "@/lib/checkUser";
-import {FormEvent, useState} from "react";
+import {FormEvent, useEffect, useState} from "react";
+import {useRouter} from "next/navigation";
 
 export default function SignIn() {
-    const { login } = useSession();
+    const { login, session } = useSession();
     const [isLoading, setIsLoading] = useState(false);
     const [isDelayed, setDelayed] = useState(false);
+    const router = useRouter();
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -46,6 +48,12 @@ export default function SignIn() {
 
         setIsLoading(false)
     }
+
+    useEffect(() => {
+        if (session.isLoggedIn) {
+            router.push("/");
+        }
+    }, [session]);
 
     return (
         <div className="bg-white drop-shadow-xl py-6 px-12 rounded-md">
