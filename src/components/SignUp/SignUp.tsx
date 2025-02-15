@@ -3,6 +3,8 @@ import Image from "next/image";
 import nextJsLogo from "../../../public/nextjs-icon.svg";
 import {REGISTRATION_INPUTS} from "@/app/configs/constants";
 import Link from "next/link";
+import {getUser} from "@/queries/select";
+import checkUser from "@/lib/checkUser";
 
 export default function SignUp() {
     const { login } = useSession();
@@ -26,12 +28,19 @@ export default function SignUp() {
                 <div className="h-[1px] w-full bg-gray-200" />
                 <form
                     className="w-full flex flex-col gap-4"
-                    onSubmit={function (event) {
+                    onSubmit={async function (event) {
                         event.preventDefault();
                         const formData = new FormData(event.currentTarget);
                         const username = formData.get("username") as string;
                         const email = formData.get("email") as string;
                         const password = formData.get("password") as string;
+
+                        const currentUser = await checkUser(email);
+
+                        if (currentUser) {
+                            return;
+                        }
+
                         login({
                             username,
                             email,

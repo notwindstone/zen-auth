@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm';
 import { db } from '@/db/db';
 import { SelectUser, usersTable } from '@/db/schema';
 
-export async function getUserById(uuid: SelectUser['uuid']): Promise<
+export async function getUser(email: SelectUser['email']): Promise<
     Array<{
         uuid: string;
         name: string;
@@ -10,5 +10,5 @@ export async function getUserById(uuid: SelectUser['uuid']): Promise<
         sessionId: string;
     }>
 > {
-    return db.select().from(usersTable).where(eq(usersTable.uuid, uuid));
+    return db.select().from(usersTable).where(eq(usersTable.email, email));
 }

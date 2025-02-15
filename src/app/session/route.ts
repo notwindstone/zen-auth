@@ -3,6 +3,9 @@ import { cookies } from "next/headers";
 import { getIronSession } from "iron-session";
 import { defaultSession, sessionOptions } from "@/lib/sessions";
 import { sleep, SessionData } from "@/lib/sessions";
+import { v4 as generateUUID } from 'uuid';
+import {createUser} from "@/queries/insert";
+import {getUser} from "@/queries/select";
 
 export async function POST(request: NextRequest) {
     const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
@@ -20,9 +23,18 @@ export async function POST(request: NextRequest) {
     session.isLoggedIn = true;
     session.username = username;
     session.email = email;
+
     await session.save();
 
-    await sleep(250);
+    const userUUID = generateUUID();
+
+    await createUser({
+        uuid: userUUID,
+        name: username,
+        email: email,
+        password: password,
+        sessionId: "",
+    });
 
     return Response.json(session);
 }
