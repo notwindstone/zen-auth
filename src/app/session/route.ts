@@ -4,7 +4,6 @@ import { getIronSession } from "iron-session";
 import { defaultSession, sessionOptions } from "@/lib/sessions";
 import { sleep, SessionData } from "@/lib/sessions";
 
-// login
 export async function POST(request: NextRequest) {
     const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
 
@@ -16,17 +15,14 @@ export async function POST(request: NextRequest) {
     session.username = username;
     await session.save();
 
-    // simulate looking up the user in db
     await sleep(250);
 
     return Response.json(session);
 }
 
-// read session
 export async function GET() {
     const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
 
-    // simulate looking up the user in db
     await sleep(250);
 
     if (!session.isLoggedIn) {
@@ -36,7 +32,6 @@ export async function GET() {
     return Response.json(session);
 }
 
-// logout
 export async function DELETE() {
     const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
 

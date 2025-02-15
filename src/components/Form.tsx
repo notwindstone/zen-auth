@@ -50,7 +50,6 @@ function LoginForm() {
                     placeholder=""
                     defaultValue="Alison"
                     required
-                    // for demo purposes, disabling autocomplete 1password here
                     autoComplete="off"
                 />
             </label>

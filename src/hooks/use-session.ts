@@ -41,7 +41,6 @@ export default function useSession() {
     );
 
     const { trigger: login } = useSWRMutation(sessionApiRoute, doLogin, {
-        // the login route already provides the updated information, no need to revalidate
         revalidate: false,
     });
     const { trigger: logout } = useSWRMutation(sessionApiRoute, doLogout);
