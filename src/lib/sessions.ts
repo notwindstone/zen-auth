@@ -4,6 +4,7 @@ export interface SessionData {
     username: string;
     isLoggedIn: boolean;
     email: string;
+    password?: string | null;
 }
 
 export const defaultSession: SessionData = {

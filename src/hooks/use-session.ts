@@ -46,5 +46,9 @@ export default function useSession() {
     });
     const { trigger: logout } = useSWRMutation(sessionApiRoute, doLogout);
 
+    if (session?.password) {
+        session.password = null;
+    }
+
     return { session, logout, login, isLoading };
 }

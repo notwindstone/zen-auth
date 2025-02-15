@@ -27,7 +27,10 @@ export async function POST(request: NextRequest) {
         const foundSessionId = fetchedData?.sessionId;
         const foundName = fetchedData?.name;
 
-        if (foundSessionId === sessionId) {
+        const { hashedPassword } = (await getHashedPassword(email))?.[0];
+        const isPasswordEqual = await bcrypt.compare(password, hashedPassword);
+
+        if (foundSessionId === sessionId || isPasswordEqual) {
             session.isLoggedIn = true;
             session.username = foundName;
             session.email = email;
@@ -38,25 +41,11 @@ export async function POST(request: NextRequest) {
 
             await updateSessionId(email, { sessionId: newSessionId });
 
-            return Response.json(session);
-        }
-
-        const { hashedPassword } = (await getHashedPassword(email))?.[0];
-
-        const isPasswordEqual = await bcrypt.compare(password, hashedPassword);
-
-        if (isPasswordEqual) {
-            session.isLoggedIn = true;
-            session.username = username;
-            session.email = email;
-
-            await session.save();
-
-            const newSessionId = (await cookies()).get("authless-next-cookies-key-name")?.value ?? "";
-
-            await updateSessionId(email, { sessionId: newSessionId });
-
-            return Response.json(session);
+            return Response.json({
+                ...session,
+                password: undefined,
+                username: foundName,
+            });
         }
 
         return Response.json(defaultSession);
@@ -68,7 +57,7 @@ export async function POST(request: NextRequest) {
     let hashedPassword: string;
     let saltedPassword: string;
 
-    bcrypt.genSalt(saltRounds, async (err, salt) => {
+    bcrypt.genSalt(saltRounds, async (_err, salt) => {
         bcrypt.hash(password, salt, async (err, hash) => {
             if (err) {
                 return Response.error();
@@ -96,7 +85,11 @@ export async function POST(request: NextRequest) {
 
     await session.save();
 
-    return Response.json(session);
+    return Response.json({
+        ...session,
+        password: undefined,
+        username: username,
+    });
 }
 
 export async function GET() {
@@ -117,6 +110,7 @@ export async function GET() {
 
     return Response.json({
         ...session,
+        password: undefined,
         username: foundName,
     });
 }

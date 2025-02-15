@@ -15,6 +15,13 @@ export default function SignIn() {
     const [isDelayed, setDelayed] = useState(false);
     const router = useRouter();
 
+    useEffect(() => {
+        if (session.isLoggedIn) {
+            router.push("/");
+        }
+    }, [session]);
+
+
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
@@ -32,13 +39,14 @@ export default function SignIn() {
         const email = formData.get("email") as string;
         const password = formData.get("password") as string;
 
-        const userExists = await checkUser(email);
+        const { username, exists } = await checkUser(email);
 
-        if (!userExists) {
+        if (!exists) {
             return;
         }
 
         login({
+            username,
             email,
             password,
             isSignIn: true,
@@ -47,17 +55,12 @@ export default function SignIn() {
                 isLoggedIn: true,
                 email,
                 password,
+                username,
             },
         });
 
         setIsLoading(false)
     }
-
-    useEffect(() => {
-        if (session.isLoggedIn) {
-            router.push("/");
-        }
-    }, [session]);
 
     return (
         <div className="bg-white drop-shadow-xl py-6 px-12 rounded-md">
