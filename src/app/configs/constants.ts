@@ -15,3 +15,15 @@ export const REGISTRATION_INPUTS = [
         name: "password",
     },
 ];
+export const LOGIN_INPUTS = [
+    {
+        label: "Почта",
+        type: "email",
+        name: "email",
+    },
+    {
+        label: "Пароль",
+        type: "password",
+        name: "password",
+    },
+];

@@ -1,5 +1,6 @@
 export type UserData = {
-    username: string;
+    username?: string;
+    isSignIn?: boolean;
     email: string;
     password: string;
 };

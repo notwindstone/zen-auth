@@ -8,6 +8,7 @@ import {createUser} from "@/queries/insert";
 import bcrypt from 'bcrypt';
 import {updateSessionId} from "@/queries/update";
 import {getSessionId} from "@/queries/select";
+import {UserData} from "@/types/UserData.type";
 
 export async function POST(request: NextRequest) {
     const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
@@ -16,17 +17,26 @@ export async function POST(request: NextRequest) {
         username = "No username",
         email = "No email",
         password = "No password",
-    } = (await request.json()) as {
-        username: string;
-        email: string;
-        password: string;
-    };
+        isSignIn = false,
+    } = (await request.json()) as UserData;
 
     session.isLoggedIn = true;
     session.username = username;
     session.email = email;
 
     await session.save();
+
+    const sessionId = (await cookies()).get("authless-next-cookies-key-name")?.value ?? "";
+
+    if (isSignIn) {
+        const foundSessionId = (await getSessionId(sessionId))?.[0]?.sessionId;
+
+        if (!foundSessionId) {
+            return Response.json(defaultSession);
+        }
+
+        return Response.json(session);
+    }
 
     const userUUID = generateUUID();
     const saltRounds = 10;
@@ -42,8 +52,6 @@ export async function POST(request: NextRequest) {
 
             hashedPassword = hash;
             saltedPassword = salt;
-
-            const sessionId = (await cookies()).get("authless-next-cookies-key-name")?.value ?? "";
 
             await createUser({
                 uuid: userUUID,

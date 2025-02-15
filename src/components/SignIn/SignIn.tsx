@@ -1,7 +1,7 @@
 import useSession from "@/hooks/use-session";
 import Image from "next/image";
 import nextJsLogo from "../../../public/nextjs-icon.svg";
-import {REGISTRATION_INPUTS} from "@/app/configs/constants";
+import {LOGIN_INPUTS} from "@/app/configs/constants";
 import Link from "next/link";
 import checkUser from "@/lib/checkUser";
 import {FormEvent, useState} from "react";
@@ -10,7 +10,6 @@ export default function SignUp() {
     const { login } = useSession();
     const [isLoading, setIsLoading] = useState(false);
     const [isDelayed, setDelayed] = useState(false);
-    const [userExists, setUserExists] = useState(false);
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -26,30 +25,18 @@ export default function SignUp() {
         }, 3000);
 
         const formData = new FormData(event.currentTarget);
-        const username = formData.get("username") as string;
         const email = formData.get("email") as string;
         const password = formData.get("password") as string;
 
         const userExists = await checkUser(email);
 
-        if (userExists) {
-            setUserExists(true);
-            setIsLoading(false)
-            setTimeout(() => {
-                setUserExists(false);
-            }, 3000);
-
-            return;
-        }
-
         login({
-            username,
             email,
             password,
+            isSignIn: true,
         }, {
             optimisticData: {
                 isLoggedIn: true,
-                username,
                 email,
                 password,
             },
@@ -69,10 +56,10 @@ export default function SignUp() {
                     alt={"Next.js logo"}
                 />
                 <p className="text-xl font-bold text-black">
-                    Регистрация аккаунта
+                    Авторизация
                 </p>
                 <p className="text-center text-gray-500 font-medium">
-                    Добро пожаловать! Зарегистрируйтесь, чтобы продолжить.
+                    Добро пожаловать! Войдите, чтобы продолжить.
                 </p>
                 <div className="h-[1px] w-full bg-gray-200" />
                 <form
@@ -81,7 +68,7 @@ export default function SignUp() {
                     method="POST"
                 >
                     {
-                        REGISTRATION_INPUTS.map((currentInput) => {
+                        LOGIN_INPUTS.map((currentInput) => {
                             return (
                                 <div className="flex flex-col gap-2" key={currentInput.name}>
                                     <p className="font-semibold text-gray-800">
@@ -100,23 +87,22 @@ export default function SignUp() {
                     }
                     {
                         <button
-                            className={`${isLoading ? "hover:bg-zinc-300 bg-zinc-300 cursor-default" : "hover:bg-zinc-700 bg-zinc-800"} ${userExists && "cursor-default hover:bg-zinc-800"} transition mt-2 rounded-md p-2 text-white h-[40px]`}
+                            className={`${isLoading ? "hover:bg-zinc-300 bg-zinc-300 cursor-default" : "hover:bg-zinc-700 bg-zinc-800"} transition mt-2 rounded-md p-2 text-white h-[40px]`}
                             type="submit"
                         >
                             {
-                                !isLoading
-                                    && (userExists ? "Пользователь с такой почтой уже существует" : "Продолжить")
+                                !isLoading && "Продолжить"
                             }
                         </button>
                     }
                 </form>
                 <p className="text-gray-500 font-medium">
-                    Уже есть аккаунт?{' '}
+                    Ещё нет аккаунта?{' '}
                     <Link
                         className="text-black font-medium"
-                        href={"/sign-in"}
+                        href={"/sign-up"}
                     >
-                        Войдите
+                        Зарегистрируйтесь
                     </Link>
                 </p>
             </div>
