@@ -3,7 +3,7 @@
 import useSession from "@/hooks/use-session";
 import Image from "next/image";
 import nextJsLogo from "../../../public/nextjs-icon.svg";
-import {REGISTRATION_INPUTS} from "@/app/configs/constants";
+import {REGISTRATION_INPUTS} from "@/configs/constants";
 import Link from "next/link";
 import checkUser from "@/lib/checkUser";
 import {FormEvent, useState} from "react";

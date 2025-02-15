@@ -3,7 +3,7 @@
 import useSession from "@/hooks/use-session";
 import Image from "next/image";
 import nextJsLogo from "../../../public/nextjs-icon.svg";
-import {LOGIN_INPUTS} from "@/app/configs/constants";
+import {LOGIN_INPUTS} from "@/configs/constants";
 import Link from "next/link";
 import {FormEvent, useEffect, useState} from "react";
 import {useRouter} from "nextjs-toploader/app";
@@ -13,7 +13,7 @@ export default function SignIn() {
     const { login, session } = useSession();
     const [isLoading, setIsLoading] = useState(false);
     const [isDelayed, setDelayed] = useState(false);
-    const [incorrectPassword, setIncorrectPassword] = useState(false);
+    const [incorrectData, setIncorrectData] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -44,6 +44,7 @@ export default function SignIn() {
 
         if (!exists) {
             setIsLoading(false)
+            setIncorrectData(true);
 
             return;
         }
@@ -68,7 +69,7 @@ export default function SignIn() {
                 return;
             }
 
-            setIncorrectPassword(true);
+            setIncorrectData(true);
 
             return;
         });
@@ -100,11 +101,15 @@ export default function SignIn() {
                         LOGIN_INPUTS.map((currentInput) => {
                             return (
                                 <div className="flex flex-col gap-2" key={currentInput.name}>
-                                    <p className={`font-semibold ${incorrectPassword ? "text-red-500" : "text-gray-800"}`}>
-                                        {currentInput.label}
+                                    <p className={`font-semibold ${incorrectData && !isLoading ? "text-red-500" : "text-gray-800"}`}>
+                                        {
+                                            (incorrectData && !isLoading)
+                                                ? currentInput.error
+                                                : currentInput.label
+                                        }
                                     </p>
                                     <input
-                                        className={`shadow-sm focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md px-2 py-1 transition-all ${incorrectPassword ? "text-red-500" : "text-black"}`}
+                                        className={`shadow-sm focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md px-2 py-1 transition-all ${incorrectData && !isLoading ? "text-red-500" : "text-black"}`}
                                         type={currentInput.type}
                                         name={currentInput.name}
                                         placeholder=""

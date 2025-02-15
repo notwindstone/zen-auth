@@ -9,7 +9,7 @@ import bcrypt from 'bcrypt';
 import {updateSessionId} from "@/queries/update";
 import {getHashedPassword, getSessionId} from "@/queries/select";
 import {UserData} from "@/types/UserData.type";
-import {LOGIN_ERRORS} from "@/app/configs/constants";
+import {LOGIN_ERRORS} from "@/configs/constants";
 
 export async function POST(request: NextRequest) {
     const session = await getIronSession<SessionData>(await cookies(), sessionOptions);

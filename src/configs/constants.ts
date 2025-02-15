@@ -20,11 +20,13 @@ export const LOGIN_INPUTS = [
         label: "Почта",
         type: "email",
         name: "email",
+        error: "Почта (неправильная почта или пароль)",
     },
     {
         label: "Пароль",
         type: "password",
         name: "password",
+        error: "Пароль (неправильная почта или пароль)",
     },
 ];
 export const LOGIN_ERRORS = {
