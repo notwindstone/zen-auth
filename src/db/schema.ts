@@ -5,6 +5,7 @@ export const usersTable = pgTable('users_table', {
     name: text('name').notNull(),
     email: text('email').notNull().unique(),
     password: text('password').notNull(),
+    sessionId: text('sessionId').notNull(),
 });
 
 export type InsertUser = typeof usersTable.$inferInsert;
