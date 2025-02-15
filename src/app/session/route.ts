@@ -77,13 +77,15 @@ export async function POST(request: NextRequest) {
             hashedPassword = hash;
             saltedPassword = salt;
 
+            const newSessionId = (await cookies()).get("authless-next-cookies-key-name")?.value ?? "";
+
             await createUser({
                 uuid: userUUID,
                 name: username,
                 email: email,
                 password: hashedPassword,
                 salt: saltedPassword,
-                sessionId: sessionId,
+                sessionId: newSessionId,
             });
         });
     });
