@@ -1,7 +1,7 @@
 "use server";
 
-import {getUser} from "@/queries/select";
+import {getUserEmail} from "@/queries/select";
 
 export default async function checkUser(email: string) {
-    return (await getUser(email))?.[0]?.email === email;
+    return (await getUserEmail(email))?.[0]?.email === email;
 }

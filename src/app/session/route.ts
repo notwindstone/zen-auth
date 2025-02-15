@@ -5,7 +5,7 @@ import { defaultSession, sessionOptions } from "@/lib/sessions";
 import { sleep, SessionData } from "@/lib/sessions";
 import { v4 as generateUUID } from 'uuid';
 import {createUser} from "@/queries/insert";
-import { bcrypt } from 'bcrypt';
+import bcrypt from 'bcrypt';
 
 export async function POST(request: NextRequest) {
     const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
@@ -27,13 +27,29 @@ export async function POST(request: NextRequest) {
     await session.save();
 
     const userUUID = generateUUID();
+    const saltRounds = 10;
 
-    await createUser({
-        uuid: userUUID,
-        name: username,
-        email: email,
-        password: password,
-        sessionId: "",
+    let hashedPassword: string;
+    let saltedPassword: string;
+
+    bcrypt.genSalt(saltRounds, async (err, salt) => {
+        bcrypt.hash(password, salt, async (err, hash) => {
+            if (err) {
+                return Response.error();
+            }
+
+            hashedPassword = hash;
+            saltedPassword = salt;
+
+            await createUser({
+                uuid: userUUID,
+                name: username,
+                email: email,
+                password: hashedPassword,
+                salt: saltedPassword,
+                sessionId: "",
+            });
+        });
     });
 
     return Response.json(session);
