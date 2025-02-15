@@ -9,6 +9,7 @@ import bcrypt from 'bcrypt';
 import {updateSessionId} from "@/queries/update";
 import {getHashedPassword, getSessionId} from "@/queries/select";
 import {UserData} from "@/types/UserData.type";
+import {LOGIN_ERRORS} from "@/app/configs/constants";
 
 export async function POST(request: NextRequest) {
     const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
@@ -20,17 +21,14 @@ export async function POST(request: NextRequest) {
         isSignIn = false,
     } = (await request.json()) as UserData;
 
-    const sessionId = (await cookies()).get("authless-next-cookies-key-name")?.value ?? "";
-
     if (isSignIn) {
         const fetchedData = (await getSessionId(email))?.[0];
-        const foundSessionId = fetchedData?.sessionId;
         const foundName = fetchedData?.name;
 
         const { hashedPassword } = (await getHashedPassword(email))?.[0];
         const isPasswordEqual = await bcrypt.compare(password, hashedPassword);
 
-        if (foundSessionId === sessionId || isPasswordEqual) {
+        if (isPasswordEqual) {
             session.isLoggedIn = true;
             session.username = foundName;
             session.email = email;
@@ -48,7 +46,10 @@ export async function POST(request: NextRequest) {
             });
         }
 
-        return Response.json(defaultSession);
+        return Response.json({
+            ...defaultSession,
+            error: LOGIN_ERRORS.INCORRECT_PASSWORD,
+        });
     }
 
     const userUUID = generateUUID();

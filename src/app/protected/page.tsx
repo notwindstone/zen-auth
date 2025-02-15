@@ -26,7 +26,7 @@ function Content() {
 
     useEffect(() => {
         if (!isLoading && !session.isLoggedIn) {
-            router.push("/auth");
+            router.push("/sign-in");
         }
     }, [isLoading, session.isLoggedIn, router]);
 

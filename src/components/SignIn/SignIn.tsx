@@ -13,6 +13,7 @@ export default function SignIn() {
     const { login, session } = useSession();
     const [isLoading, setIsLoading] = useState(false);
     const [isDelayed, setDelayed] = useState(false);
+    const [incorrectPassword, setIncorrectPassword] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -42,6 +43,8 @@ export default function SignIn() {
         const { username, exists } = await checkUser(email);
 
         if (!exists) {
+            setIsLoading(false)
+
             return;
         }
 
@@ -52,14 +55,23 @@ export default function SignIn() {
             isSignIn: true,
         }, {
             optimisticData: {
-                isLoggedIn: true,
                 email,
                 password,
                 username,
             },
-        });
+        }).then((updatedSession) => {
+            setIsLoading(false)
 
-        setIsLoading(false)
+            if (updatedSession.isLoggedIn) {
+                router.push('/');
+
+                return;
+            }
+
+            setIncorrectPassword(true);
+
+            return;
+        });
     }
 
     return (
@@ -88,11 +100,11 @@ export default function SignIn() {
                         LOGIN_INPUTS.map((currentInput) => {
                             return (
                                 <div className="flex flex-col gap-2" key={currentInput.name}>
-                                    <p className="font-semibold text-gray-800">
+                                    <p className={`font-semibold ${incorrectPassword ? "text-red-500" : "text-gray-800"}`}>
                                         {currentInput.label}
                                     </p>
                                     <input
-                                        className="shadow-sm focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md px-2 py-1 transition-all"
+                                        className={`shadow-sm focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md px-2 py-1 transition-all ${incorrectPassword ? "text-red-500" : "text-black"}`}
                                         type={currentInput.type}
                                         name={currentInput.name}
                                         placeholder=""

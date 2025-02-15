@@ -4,7 +4,6 @@ import useSession from "@/hooks/use-session";
 import { defaultSession } from "@/lib/sessions";
 import SignUp from "@/components/SignUp/SignUp";
 import SignIn from "@/components/SignIn/SignIn";
-import {useEffect} from "react";
 
 export function Form({ type }: { type: "sign-in" | "sign-up" }) {
     const { session, isLoading } = useSession();

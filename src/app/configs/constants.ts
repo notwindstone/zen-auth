@@ -27,3 +27,6 @@ export const LOGIN_INPUTS = [
         name: "password",
     },
 ];
+export const LOGIN_ERRORS = {
+    INCORRECT_PASSWORD: "Неверный пароль",
+};
