@@ -8,7 +8,9 @@ import {FormEvent, useState} from "react";
 
 export default function SignUp() {
     const { login } = useSession();
+    const [isLoading, setIsLoading] = useState(false);
     const [isDelayed, setDelayed] = useState(false);
+    const [userExists, setUserExists] = useState(false);
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -17,6 +19,7 @@ export default function SignUp() {
             return;
         }
 
+        setIsLoading(true);
         setDelayed(true);
         setTimeout(() => {
             setDelayed(false);
@@ -30,6 +33,12 @@ export default function SignUp() {
         const userExists = await checkUser(email);
 
         if (userExists) {
+            setUserExists(true);
+            setIsLoading(false)
+            setTimeout(() => {
+                setUserExists(false);
+            }, 3000);
+
             return;
         }
 
@@ -45,6 +54,8 @@ export default function SignUp() {
                 password,
             },
         });
+
+        setIsLoading(false)
     }
 
     return (
@@ -87,12 +98,17 @@ export default function SignUp() {
                             );
                         })
                     }
-                    <button
-                        className="hover:bg-zinc-700 transition mt-2 rounded-md bg-zinc-800 p-2 text-white"
-                        type="submit"
-                    >
-                        Продолжить
-                    </button>
+                    {
+                        <button
+                            className={`${isLoading ? "hover:bg-zinc-300 bg-zinc-300 cursor-default" : "hover:bg-zinc-700 bg-zinc-800"} transition mt-2 rounded-md p-2 text-white h-[40px]`}
+                            type="submit"
+                        >
+                            {
+                                !isLoading
+                                    && (userExists ? "Пользователь с такой почтой уже существует" : "Продолжить")
+                            }
+                        </button>
+                    }
                 </form>
                 <p className="text-gray-500 font-medium">
                     Уже есть аккаунт?{' '}
