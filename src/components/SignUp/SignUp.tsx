@@ -7,12 +7,14 @@ import {REGISTRATION_INPUTS} from "@/configs/constants";
 import Link from "next/link";
 import checkUser from "@/lib/checkUser";
 import {FormEvent, useState} from "react";
+import {useRouter} from "nextjs-toploader/app";
 
 export default function SignUp() {
     const { login } = useSession();
     const [isLoading, setIsLoading] = useState(false);
     const [isDelayed, setDelayed] = useState(false);
     const [userExists, setUserExists] = useState(false);
+    const router = useRouter();
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -50,14 +52,21 @@ export default function SignUp() {
             password,
         }, {
             optimisticData: {
-                isLoggedIn: true,
                 username,
                 email,
                 password,
             },
-        });
+        }).then((updatedSession) => {
+            setIsLoading(false)
 
-        setIsLoading(false)
+            if (updatedSession.isLoggedIn) {
+                router.push('/');
+
+                return;
+            }
+
+            return;
+        });
     }
 
     return (
