@@ -1,7 +1,6 @@
 import { eq } from 'drizzle-orm';
 import { db } from '@/db/db';
 import { SelectUser, usersTable } from '@/db/schema';
-import {use} from "react";
 
 export async function getUserEmail(email: SelectUser['email']): Promise<
     Array<{
@@ -15,10 +14,12 @@ export async function getUserEmail(email: SelectUser['email']): Promise<
 
 export async function getSessionId(email: SelectUser['email']): Promise<
     Array<{
+        name: string;
         sessionId: string;
     }>
 > {
     return db.select({
+        name: usersTable.name,
         sessionId: usersTable.sessionId,
     }).from(usersTable).where(eq(usersTable.email, email));
 }

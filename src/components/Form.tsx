@@ -7,7 +7,7 @@ import SignIn from "@/components/SignIn/SignIn";
 
 export function Form({ type }: { type: "sign-in" | "sign-up" }) {
     const { session, isLoading } = useSession();
-console.log(session)
+
     if (isLoading) {
         return <p className="text-lg">Loading...</p>;
     }

@@ -23,11 +23,13 @@ export async function POST(request: NextRequest) {
     const sessionId = (await cookies()).get("authless-next-cookies-key-name")?.value ?? "";
 
     if (isSignIn) {
-        const foundSessionId = (await getSessionId(email))?.[0]?.sessionId;
+        const fetchedData = (await getSessionId(email))?.[0];
+        const foundSessionId = fetchedData?.sessionId;
+        const foundName = fetchedData?.name;
 
         if (foundSessionId === sessionId) {
             session.isLoggedIn = true;
-            session.username = username;
+            session.username = foundName;
             session.email = email;
 
             await session.save();
@@ -47,7 +49,7 @@ export async function POST(request: NextRequest) {
             await session.save();
 
             const newSessionId = (await cookies()).get("authless-next-cookies-key-name")?.value ?? "";
-console.log(`NEW---SESSION ${newSessionId}`);
+
             await updateSessionId(email, { sessionId: newSessionId });
 
             return Response.json(session);
@@ -70,7 +72,7 @@ console.log(`NEW---SESSION ${newSessionId}`);
 
             hashedPassword = hash;
             saltedPassword = salt;
-console.log("SIGN UP", sessionId)
+
             await createUser({
                 uuid: userUUID,
                 name: username,
@@ -99,13 +101,18 @@ export async function GET() {
     }
 
     const sessionId = (await cookies()).get("authless-next-cookies-key-name")?.value ?? "";
-    const foundSessionId = (await getSessionId(session.email))?.[0]?.sessionId;
-console.log(foundSessionId, sessionId, foundSessionId === sessionId)
+    const fetchedData = (await getSessionId(session.email))?.[0];
+    const foundSessionId = fetchedData?.sessionId;
+    const foundName = fetchedData?.name;
+
     if (foundSessionId !== sessionId) {
         return Response.json(defaultSession);
     }
 
-    return Response.json(session);
+    return Response.json({
+        ...session,
+        username: foundName,
+    });
 }
 
 export async function DELETE() {
