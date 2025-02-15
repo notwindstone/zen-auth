@@ -1,6 +1,7 @@
 import useSWR from "swr";
 import { SessionData, defaultSession } from "@/lib/sessions";
 import useSWRMutation from "swr/mutation";
+import {UserData} from "@/types/UserData.type";
 
 const sessionApiRoute =
     "/session";
@@ -18,11 +19,10 @@ async function fetchJson<JSON = unknown>(
     }).then((res) => res.json());
 }
 
-function doLogin(url: string, { arg }: { arg: {} }) {
-    console.log(url, arg)
+function doLogin(url: string, { arg }: { arg: UserData }) {
     return fetchJson<SessionData>(url, {
         method: "POST",
-        body: JSON.stringify({ username: arg }),
+        body: JSON.stringify({ ...arg }),
     });
 }
 

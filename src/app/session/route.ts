@@ -7,12 +7,19 @@ import { sleep, SessionData } from "@/lib/sessions";
 export async function POST(request: NextRequest) {
     const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
 
-    const { username = "No username" } = (await request.json()) as {
+    const {
+        username = "No username",
+        email = "No email",
+        password = "No password",
+    } = (await request.json()) as {
         username: string;
+        email: string;
+        password: string;
     };
 
     session.isLoggedIn = true;
     session.username = username;
+    session.email = email;
     await session.save();
 
     await sleep(250);

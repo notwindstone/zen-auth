@@ -8,7 +8,7 @@ export default function Login() {
     const { login } = useSession();
 
     return (
-        <div className="bg-white drop-shadow-xl py-4 px-12 rounded-md">
+        <div className="bg-white drop-shadow-xl py-6 px-12 rounded-md">
             <div className="flex flex-col items-center gap-4">
                 <Image
                     className="mb-4"
@@ -65,7 +65,10 @@ export default function Login() {
                             );
                         })
                     }
-                    <button type="submit">
+                    <button
+                        className="hover:bg-zinc-700 transition mt-2 rounded-md bg-zinc-800 p-2 text-white"
+                        type="submit"
+                    >
                         Продолжить
                     </button>
                 </form>
