@@ -3,11 +3,38 @@ import Image from "next/image";
 import nextJsLogo from "../../../public/nextjs-icon.svg";
 import {REGISTRATION_INPUTS} from "@/app/configs/constants";
 import Link from "next/link";
-import {getUser} from "@/queries/select";
 import checkUser from "@/lib/checkUser";
+import {FormEvent} from "react";
 
 export default function SignUp() {
     const { login } = useSession();
+
+    async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        const username = formData.get("username") as string;
+        const email = formData.get("email") as string;
+        const password = formData.get("password") as string;
+
+        const currentUser = await checkUser(email);
+
+        if (currentUser) {
+            return;
+        }
+
+        login({
+            username,
+            email,
+            password,
+        }, {
+            optimisticData: {
+                isLoggedIn: true,
+                username,
+                email,
+                password,
+            },
+        });
+    }
 
     return (
         <div className="bg-white drop-shadow-xl py-6 px-12 rounded-md">
@@ -28,32 +55,7 @@ export default function SignUp() {
                 <div className="h-[1px] w-full bg-gray-200" />
                 <form
                     className="w-full flex flex-col gap-4"
-                    onSubmit={async function (event) {
-                        event.preventDefault();
-                        const formData = new FormData(event.currentTarget);
-                        const username = formData.get("username") as string;
-                        const email = formData.get("email") as string;
-                        const password = formData.get("password") as string;
-
-                        const currentUser = await checkUser(email);
-
-                        if (currentUser) {
-                            return;
-                        }
-
-                        login({
-                            username,
-                            email,
-                            password,
-                        }, {
-                            optimisticData: {
-                                isLoggedIn: true,
-                                username,
-                                email,
-                                password,
-                            },
-                        });
-                    }}
+                    onSubmit={(event) => handleSubmit(event)}
                     method="POST"
                 >
                     {
