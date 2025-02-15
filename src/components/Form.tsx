@@ -31,7 +31,7 @@ function LoginForm() {
     const { login } = useSession();
 
     return (
-        <div className="bg-white drop-shadow-xl py-4 px-6 rounded-md">
+        <div className="bg-white drop-shadow-xl py-4 px-12 rounded-md">
             <div className="flex flex-col items-center gap-4">
                 <Image
                     className="mb-4"
@@ -43,9 +43,60 @@ function LoginForm() {
                 <p className="text-xl font-bold text-black">
                     Регистрация аккаунта
                 </p>
-                <p className="text-balance text-center text-gray-500 font-medium">
-                    Добро пожаловать! Пожалуйста, зарегистрируйтесь, чтобы продолжить.
+                <p className="text-center text-gray-500 font-medium">
+                    Добро пожаловать! Зарегистрируйтесь, чтобы продолжить.
                 </p>
+                <div className="h-[1px] w-full bg-gray-200" />
+                <form
+                    onSubmit={function (event) {
+                        event.preventDefault();
+                        const formData = new FormData(event.currentTarget);
+                        const username = formData.get("username") as string;
+                        const email = formData.get("email") as string;
+                        const password = formData.get("password") as string;
+                        login(username, {
+                            optimisticData: {
+                                isLoggedIn: true,
+                                username,
+                                password,
+                            },
+                        });
+                    }}
+                    method="POST"
+                >
+                    <p className="font-semibold">Имя пользователя</p>
+                    <input
+                        className="focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md px-2 py-1 transition-all"
+                        type="text"
+                        name="username"
+                        placeholder=""
+                        defaultValue="notwindstone"
+                        required
+                    />
+                    <label className="block text-lg">
+                        <p>Email</p>
+                        <input
+                            className="border-pink-200 border-2 px-2 py-1 focus:outline-none focus:border-pink-500"
+                            type="email"
+                            name="email"
+                            placeholder=""
+                            required
+                        />
+                    </label>
+                    <label className="block text-lg">
+                        <p>Password</p>
+                        <input
+                            className="border-pink-200 border-2 px-2 py-1 focus:outline-none focus:border-pink-500"
+                            type="password"
+                            name="password"
+                            placeholder=""
+                            required
+                        />
+                    </label>
+                    <button type="submit">
+                        Продолжить
+                    </button>
+                </form>
                 <p className="text-gray-500 font-medium">
                     Уже есть аккаунт?{' '}
                     <Link
@@ -56,47 +107,6 @@ function LoginForm() {
                     </Link>
                 </p>
             </div>
-            <form
-                onSubmit={function (event) {
-                    event.preventDefault();
-                    const formData = new FormData(event.currentTarget);
-                    const username = formData.get("username") as string;
-                    const password = formData.get("password") as string;
-                    login(username, {
-                        optimisticData: {
-                            isLoggedIn: true,
-                            username,
-                            password,
-                        },
-                    });
-                }}
-                method="POST"
-            >
-                <label className="block text-lg">
-                    <p>Username</p>
-                    <input
-                        className="border-pink-200 border-2 px-2 py-1 focus:outline-none focus:border-pink-500"
-                        type="text"
-                        name="username"
-                        placeholder=""
-                        defaultValue="notwindstone"
-                        required
-                    />
-                </label>
-                <label className="block text-lg">
-                    <p>Password</p>
-                    <input
-                        className="border-pink-200 border-2 px-2 py-1 focus:outline-none focus:border-pink-500"
-                        type="password"
-                        name="password"
-                        placeholder=""
-                        required
-                    />
-                </label>
-                <div>
-                    <input type="submit" value="Login"/>
-                </div>
-            </form>
         </div>
     );
 }
