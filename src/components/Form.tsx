@@ -5,6 +5,7 @@ import useSession from "@/hooks/use-session";
 import { defaultSession } from "@/lib/sessions";
 import Image from "next/image";
 import Link from "next/link";
+import {REGISTRATION_INPUTS} from "@/app/configs/constants";
 
 export function Form() {
     const { session, isLoading } = useSession();
@@ -48,7 +49,7 @@ function LoginForm() {
                 </p>
                 <div className="h-[1px] w-full bg-gray-200" />
                 <form
-                    className="w-full"
+                    className="w-full flex flex-col gap-4"
                     onSubmit={function (event) {
                         event.preventDefault();
                         const formData = new FormData(event.currentTarget);
@@ -65,39 +66,24 @@ function LoginForm() {
                     }}
                     method="POST"
                 >
-                    <div className="flex flex-col gap-2">
-                        <p className="font-semibold text-gray-800">
-                            Имя пользователя
-                        </p>
-                        <input
-                            className="focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md px-2 py-1 transition-all"
-                            type="text"
-                            name="username"
-                            placeholder=""
-                            defaultValue="notwindstone"
-                            required
-                        />
-                    </div>
-                    <label className="block text-lg">
-                        <p>Email</p>
-                        <input
-                            className="border-pink-200 border-2 px-2 py-1 focus:outline-none focus:border-pink-500"
-                            type="email"
-                            name="email"
-                            placeholder=""
-                            required
-                        />
-                    </label>
-                    <label className="block text-lg">
-                    <p>Password</p>
-                        <input
-                            className="border-pink-200 border-2 px-2 py-1 focus:outline-none focus:border-pink-500"
-                            type="password"
-                            name="password"
-                            placeholder=""
-                            required
-                        />
-                    </label>
+                    {
+                        REGISTRATION_INPUTS.map((currentInput) => {
+                            return (
+                                <div className="flex flex-col gap-2" key={currentInput.name}>
+                                    <p className="font-semibold text-gray-800">
+                                        {currentInput.label}
+                                    </p>
+                                    <input
+                                        className="shadow-sm focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md px-2 py-1 transition-all"
+                                        type={currentInput.type}
+                                        name={currentInput.name}
+                                        placeholder=""
+                                        required
+                                    />
+                                </div>
+                            );
+                        })
+                    }
                     <button type="submit">
                         Продолжить
                     </button>
