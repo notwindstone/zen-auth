@@ -11,3 +11,13 @@ export async function getUserEmail(email: SelectUser['email']): Promise<
         email: usersTable.email,
     }).from(usersTable).where(eq(usersTable.email, email));
 }
+
+export async function getSessionId(sessionId: SelectUser['sessionId']): Promise<
+    Array<{
+        sessionId: string;
+    }>
+> {
+    return db.select({
+        sessionId: usersTable.sessionId,
+    }).from(usersTable).where(eq(usersTable.sessionId, sessionId));
+}

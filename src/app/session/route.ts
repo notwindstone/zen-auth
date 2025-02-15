@@ -7,6 +7,7 @@ import { v4 as generateUUID } from 'uuid';
 import {createUser} from "@/queries/insert";
 import bcrypt from 'bcrypt';
 import {updateSessionId} from "@/queries/update";
+import {getSessionId} from "@/queries/select";
 
 export async function POST(request: NextRequest) {
     const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
@@ -61,9 +62,14 @@ export async function POST(request: NextRequest) {
 export async function GET() {
     const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
 
-    await sleep(250);
-
     if (!session.isLoggedIn) {
+        return Response.json(defaultSession);
+    }
+
+    const sessionId = (await cookies()).get("authless-next-cookies-key-name")?.value ?? "";
+    const foundSessionId = (await getSessionId(sessionId))?.[0]?.sessionId;
+
+    if (!foundSessionId) {
         return Response.json(defaultSession);
     }
 
