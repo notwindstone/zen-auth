@@ -5,7 +5,7 @@ import { defaultSession, sessionOptions } from "@/lib/sessions";
 import { sleep, SessionData } from "@/lib/sessions";
 import { v4 as generateUUID } from 'uuid';
 import {createUser} from "@/queries/insert";
-import {getUser} from "@/queries/select";
+import { bcrypt } from 'bcrypt';
 
 export async function POST(request: NextRequest) {
     const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
