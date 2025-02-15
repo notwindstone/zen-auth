@@ -6,7 +6,7 @@ import { defaultSession } from "@/lib/sessions";
 import Image from "next/image";
 import Link from "next/link";
 import {REGISTRATION_INPUTS} from "@/app/configs/constants";
-import Login from "@/components/Login/Login";
+import SignUp from "@/components/SignUp/SignUp";
 
 export function Form() {
     const { session, isLoading } = useSession();
@@ -26,7 +26,7 @@ export function Form() {
         );
     }
 
-    return <Login />;
+    return <SignUp />;
 }
 
 

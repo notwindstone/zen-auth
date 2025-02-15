@@ -4,7 +4,7 @@ import nextJsLogo from "../../../public/nextjs-icon.svg";
 import {REGISTRATION_INPUTS} from "@/app/configs/constants";
 import Link from "next/link";
 
-export default function Login() {
+export default function SignUp() {
     const { login } = useSession();
 
     return (
