@@ -17,13 +17,6 @@ export default function SignIn() {
     const [incorrectData, setIncorrectData] = useState(false);
     const router = useRouter();
 
-    useEffect(() => {
-        if (session.isLoggedIn) {
-            router.push("/");
-        }
-    }, [session]);
-
-
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
@@ -65,7 +58,7 @@ export default function SignIn() {
             setIsLoading(false)
 
             if (updatedSession.isLoggedIn) {
-                router.push('/');
+                router.push('/protected');
 
                 return;
             }

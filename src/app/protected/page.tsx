@@ -22,16 +22,17 @@ export default function ProtectedClient() {
 
 function Content() {
     const { session, isLoading } = useSession();
-    const router = useRouter();
 
-    useEffect(() => {
-        if (!isLoading && !session.isLoggedIn) {
-            router.push("/sign-in");
-        }
-    }, [isLoading, session.isLoggedIn, router]);
-
-    if (isLoading || !session.isLoggedIn) {
+    if (isLoading) {
         return <p className="text-lg">Loading...</p>;
+    }
+
+    if (!session.isLoggedIn) {
+        return (
+            <p className="text-lg">
+                Please sign in.
+            </p>
+        );
     }
 
     return (

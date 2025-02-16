@@ -6,12 +6,12 @@ import nextJsLogo from "../../../public/nextjs-icon.svg";
 import {REGISTRATION_INPUTS} from "@/configs/constants";
 import Link from "next/link";
 import checkUser from "@/lib/checkUser";
-import {FormEvent, useState} from "react";
+import {FormEvent, useEffect, useState} from "react";
 import {useRouter} from "nextjs-toploader/app";
 import sendEmail from "@/lib/sendEmail";
 
 export default function SignUp() {
-    const { login } = useSession();
+    const { login, session } = useSession();
     const [isLoading, setIsLoading] = useState(false);
     const [isDelayed, setDelayed] = useState(false);
     const [userExists, setUserExists] = useState(false);
@@ -71,7 +71,7 @@ export default function SignUp() {
             setIsLoading(false)
 
             if (updatedSession.isLoggedIn) {
-                router.push('/');
+                router.push('/protected');
 
                 return;
             }

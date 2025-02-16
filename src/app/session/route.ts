@@ -67,12 +67,6 @@ export async function POST(request: NextRequest) {
             hashedPassword = hash;
             saltedPassword = salt;
 
-            session.isLoggedIn = true;
-            session.username = username;
-            session.email = email;
-
-            await session.save();
-
             const newSessionId = (await cookies()).get("authless-next-cookies-key-name")?.value ?? "";
 
             await createUser({
@@ -85,6 +79,12 @@ export async function POST(request: NextRequest) {
             });
         });
     });
+
+    session.isLoggedIn = true;
+    session.username = username;
+    session.email = email;
+
+    await session.save();
 
     return Response.json({
         ...session,
