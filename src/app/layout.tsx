@@ -30,7 +30,7 @@ export default function RootLayout({
             >
                 <NextTopLoader
                     showSpinner={false}
-                    color="#7d7dff"
+                    color="#000000"
                 />
                 {children}
             </body>
