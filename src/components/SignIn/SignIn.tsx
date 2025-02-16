@@ -10,7 +10,7 @@ import {useRouter} from "nextjs-toploader/app";
 import checkUser from "@/lib/checkUser";
 
 export default function SignIn() {
-    const { login, session } = useSession();
+    const { login } = useSession();
     const [isLoading, setIsLoading] = useState(false);
     const [isDelayed, setDelayed] = useState(false);
     const [incorrectData, setIncorrectData] = useState(false);
