@@ -5,10 +5,9 @@ import Image from "next/image";
 import nextJsLogo from "../../../public/nextjs-icon.svg";
 import {LOGIN_INPUTS} from "@/configs/constants";
 import Link from "next/link";
-import {FormEvent, useEffect, useState} from "react";
+import {FormEvent, useState} from "react";
 import {useRouter} from "nextjs-toploader/app";
 import checkUser from "@/lib/checkUser";
-import sendEmail from "@/lib/sendEmail";
 
 export default function SignIn() {
     const { login, session } = useSession();

@@ -1,8 +1,6 @@
 "use client";
 
 import useSession from "@/hooks/use-session";
-import { useEffect } from "react";
-import { useRouter } from "nextjs-toploader/app";
 import Link from "next/link";
 
 export default function ProtectedClient() {
