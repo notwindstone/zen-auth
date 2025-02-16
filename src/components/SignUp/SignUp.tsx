@@ -15,6 +15,7 @@ export default function SignUp() {
     const [isLoading, setIsLoading] = useState(false);
     const [isDelayed, setDelayed] = useState(false);
     const [userExists, setUserExists] = useState(false);
+    const [isBeingVerified, setIsBeingVerified] = useState(false);
     const router = useRouter();
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -47,7 +48,14 @@ export default function SignUp() {
             return;
         }
 
+        setIsBeingVerified(true);
 
+        await sendEmail({
+            code: "",
+            email: email,
+        });
+
+        setIsBeingVerified(false)
 
         login({
             username,
@@ -70,6 +78,10 @@ export default function SignUp() {
 
             return;
         });
+    }
+
+    if (isBeingVerified) {
+
     }
 
     return (
