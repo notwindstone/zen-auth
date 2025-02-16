@@ -84,6 +84,18 @@ export default function SignUp() {
 
     }
 
+    let currentButton;
+
+    if (isLoading) {
+        currentButton = (
+            <div
+                className="bg-zinc-300 cursor-default transition mt-2 rounded-md p-2 text-white h-[40px]"
+            />
+        );
+    } else if (isDelayed) {
+
+    }
+
     return (
         <div className="bg-white drop-shadow-xl py-6 px-12 rounded-md">
             <div className="flex flex-col items-center gap-4">
@@ -123,17 +135,6 @@ export default function SignUp() {
                                 </div>
                             );
                         })
-                    }
-                    {
-                        <button
-                            className={`${isLoading ? "hover:bg-zinc-300 bg-zinc-300 cursor-default" : "hover:bg-zinc-700 bg-zinc-800"} ${userExists && "cursor-default hover:bg-zinc-800"} transition mt-2 rounded-md p-2 text-white h-[40px]`}
-                            type="submit"
-                        >
-                            {
-                                !isLoading
-                                    && (userExists ? "Пользователь с такой почтой уже существует" : "Продолжить")
-                            }
-                        </button>
                     }
                 </form>
                 <p className="text-gray-500 font-medium">

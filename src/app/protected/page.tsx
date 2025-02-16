@@ -11,7 +11,7 @@ export default function ProtectedClient() {
                 <Link
                     href="/"
                 >
-                    ← Back
+                    ← Назад
                 </Link>
             </p>
         </main>
@@ -28,7 +28,7 @@ function Content() {
     if (!session.isLoggedIn) {
         return (
             <p className="text-lg">
-                Please sign in.
+                Вам нужно войти в аккаунт, чтобы увидеть данную страницу.
             </p>
         );
     }
@@ -36,20 +36,19 @@ function Content() {
     return (
         <div className="max-w-xl space-y-2">
             <p>
-                Hello <strong>{session.username}!</strong>
+                Никнейм текущей сессии: <strong>{session.username}</strong>
             </p>
             <p>
-                This page is protected and can only be accessed if you are logged in.
-                Otherwise you will be redirected to the login page.
+                Почта текущей сессии: <strong>{session.email}</strong>
             </p>
-            <p>The check is done via a fetch call on the client using SWR.</p>
             <p>
-                One benefit of using{" "}
-                <a href="https://swr.vercel.app" target="_blank">
-                    SWR
-                </a>
-                : if you open the page in different tabs/windows, and logout from one
-                place, every other tab/window will be synced and logged out.
+                Данная страница защищена от любопытных глаз анонимных пользователей и требует обязательного входа в аккаунт.
+            </p>
+            <p>
+                Проверка осуществляется с помощью сравнения идентификатора сессии, сохранённого в браузере, и идентификатора сессии, сохранённого в базе данных сервера.
+            </p>
+            <p>
+                Если открыть эту страницу в новой вкладке или новом окне, а затем выйти из аккаунта, то другие вкладки тоже синхронизируются.
             </p>
         </div>
     );
