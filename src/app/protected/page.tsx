@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function ProtectedClient() {
     return (
-        <main className="p-10 space-y-5">
+        <main className="p-10 flex flex-col gap-4">
             <Content />
             <p>
                 <Link
@@ -23,19 +23,19 @@ function Content() {
     const { session, isLoading } = useSession();
 
     if (isLoading) {
-        return <p className="text-lg">Loading...</p>;
+        return <p>Loading...</p>;
     }
 
     if (!session.isLoggedIn) {
         return (
-            <p className="text-lg">
+            <p>
                 Вам нужно войти в аккаунт, чтобы увидеть данную страницу.
             </p>
         );
     }
 
     return (
-        <div className="text-lg max-w-xl space-y-2">
+        <div className="max-w-xl flex flex-col gap-2">
             <p>
                 Никнейм текущей сессии: <strong className="text-[#dc8a78]">{session.username}</strong>
             </p>
