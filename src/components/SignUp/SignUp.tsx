@@ -6,54 +6,30 @@ import nextJsLogo from "../../../public/nextjs-icon.svg";
 import {REGISTRATION_INPUTS} from "@/configs/constants";
 import Link from "next/link";
 import checkUser from "@/lib/checkUser";
-import {FormEvent, useState} from "react";
+import {FormEvent, useEffect, useState} from "react";
 import {useRouter} from "nextjs-toploader/app";
 import sendEmail from "@/lib/sendEmail";
+import {createVerificationCode} from "@/queries/insert";
 
 export default function SignUp() {
     const { login } = useSession();
+    const [currentCode, setCurrentCode] = useState<string | null>(null);
+    const [currentFormData, setCurrentFormData] = useState<FormData | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isDelayed, setDelayed] = useState(false);
     const [userExists, setUserExists] = useState(false);
     const [isBeingVerified, setIsBeingVerified] = useState(false);
     const router = useRouter();
 
-    async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-        event.preventDefault();
-
-        if (isDelayed) {
+    useEffect(() => {
+        if (!isBeingVerified) {
             return;
         }
 
-        setUserExists(false);
-        setIsLoading(true);
-        setDelayed(true);
-        setTimeout(() => {
-            setDelayed(false);
-        }, 3000);
-
-        const formData = new FormData(event.currentTarget);
-        const username = formData.get("username") as string;
-        const email = formData.get("email") as string;
-        const password = formData.get("password") as string;
-
-        const { exists } = await checkUser(email);
-
-        if (exists) {
-            setUserExists(true);
-            setIsLoading(false);
-
-            return;
-        }
-
-        setIsBeingVerified(true);
-
-        await sendEmail({
-            code: "",
-            email: email,
-        });
-
-        setIsBeingVerified(false)
+        const formData = currentFormData;
+        const username = formData?.get("username") as string;
+        const email = formData?.get("email") as string;
+        const password = formData?.get("password") as string;
 
         login({
             username,
@@ -76,10 +52,49 @@ export default function SignUp() {
 
             return;
         });
+    }, [login, router, isBeingVerified]);
+
+    async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+
+        if (isDelayed) {
+            return;
+        }
+
+        setUserExists(false);
+        setIsLoading(true);
+        setDelayed(true);
+        setTimeout(() => {
+            setDelayed(false);
+        }, 3000);
+
+        const formData = new FormData(event.currentTarget);
+        const email = formData.get("email") as string;
+
+        const { exists } = await checkUser(email);
+
+        if (exists) {
+            setUserExists(true);
+            setIsLoading(false);
+
+            return;
+        }
+
+        setIsBeingVerified(true);
+        setCurrentFormData(formData);
+
+        const verificationCode = await createVerificationCode(email);
+
+        setCurrentCode(verificationCode);
+
+        await sendEmail({
+            code: verificationCode,
+            email: email,
+        });
     }
 
-    if (isBeingVerified) {
-
+    if (!isBeingVerified) {
+        return;
     }
 
     let currentButton;

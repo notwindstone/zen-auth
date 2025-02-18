@@ -1,3 +1,5 @@
+"use server";
+
 import { db } from '@/db/db';
 import {InsertUser, usersTable, verificationCodesTable} from '@/db/schema';
 import { v4 as generateUUID } from 'uuid';
@@ -20,4 +22,6 @@ export async function createVerificationCode(email: string) {
         expiresAt: expiresAt,
         code: verificationCode,
     });
+
+    return verificationCode;
 }
