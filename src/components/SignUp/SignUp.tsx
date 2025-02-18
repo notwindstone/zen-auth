@@ -25,6 +25,7 @@ export default function SignUp() {
             return;
         }
 
+        setUserExists(false);
         setIsLoading(true);
         setDelayed(true);
         setTimeout(() => {
@@ -40,10 +41,7 @@ export default function SignUp() {
 
         if (exists) {
             setUserExists(true);
-            setIsLoading(false)
-            setTimeout(() => {
-                setUserExists(false);
-            }, 3000);
+            setIsLoading(false);
 
             return;
         }
@@ -98,9 +96,7 @@ export default function SignUp() {
                 type="submit"
                 className="hover:bg-zinc-700 bg-zinc-800 transition mt-2 rounded-md p-2 text-white h-[40px]"
             >
-                {
-                    userExists ? "Пользователь существует" : "Продолжить"
-                }
+                Продолжить
             </button>
         );
     }
@@ -131,8 +127,8 @@ export default function SignUp() {
                         REGISTRATION_INPUTS.map((currentInput) => {
                             return (
                                 <div className="flex flex-col gap-2" key={currentInput.name}>
-                                    <p className="font-semibold text-gray-800">
-                                        {currentInput.label}
+                                    <p className={`font-semibold ${userExists ? "text-red-500" : "text-gray-800"}`}>
+                                        {currentInput.label} {userExists && "(Пользователь существует)"}
                                     </p>
                                     <input
                                         className="shadow-sm focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md px-2 py-1 transition-all"
