@@ -9,9 +9,10 @@ export default function ProtectedClient() {
             <Content />
             <p>
                 <Link
+                    className="bg-black hover:bg-zinc-800 focus:bg-zinc-700 text-white rounded-md py-2 px-4 transition"
                     href="/"
                 >
-                    ← Назад
+                    Назад
                 </Link>
             </p>
         </main>
@@ -34,12 +35,12 @@ function Content() {
     }
 
     return (
-        <div className="max-w-xl space-y-2">
+        <div className="text-lg max-w-xl space-y-2">
             <p>
-                Никнейм текущей сессии: <strong>{session.username}</strong>
+                Никнейм текущей сессии: <strong className="text-[#dc8a78]">{session.username}</strong>
             </p>
             <p>
-                Почта текущей сессии: <strong>{session.email}</strong>
+                Почта текущей сессии: <strong className="text-[#dc8a78]">{session.email}</strong>
             </p>
             <p>
                 Данная страница защищена от любопытных глаз анонимных пользователей и требует обязательного входа в аккаунт.
