@@ -86,14 +86,23 @@ export default function SignUp() {
 
     let currentButton;
 
-    if (isLoading) {
+    if (isLoading || isDelayed) {
         currentButton = (
             <div
-                className="bg-zinc-300 cursor-default transition mt-2 rounded-md p-2 text-white h-[40px]"
+                className="bg-zinc-300 cursor-default mt-2 rounded-md p-2 text-white h-[40px]"
             />
         );
-    } else if (isDelayed) {
-
+    } else {
+        currentButton = (
+            <button
+                type="submit"
+                className="hover:bg-zinc-700 bg-zinc-800 transition mt-2 rounded-md p-2 text-white h-[40px]"
+            >
+                {
+                    userExists ? "Пользователь существует" : "Продолжить"
+                }
+            </button>
+        );
     }
 
     return (
@@ -136,6 +145,7 @@ export default function SignUp() {
                             );
                         })
                     }
+                    {currentButton}
                 </form>
                 <p className="text-gray-500 font-medium">
                     Уже есть аккаунт?{' '}
