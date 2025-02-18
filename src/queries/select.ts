@@ -35,13 +35,3 @@ export async function getHashedPassword(email: SelectUser['email']): Promise<
         hashedPassword: usersTable.password,
     }).from(usersTable).where(eq(usersTable.email, email));
 }
-
-export async function getVerifiedStatus(email: SelectUser['email']): Promise<
-    Array<{
-        verified: boolean;
-    }>
-> {
-    return db.select({
-        verified: usersTable.verified,
-    }).from(usersTable).where(eq(usersTable.email, email));
-}

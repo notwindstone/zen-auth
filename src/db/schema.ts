@@ -7,7 +7,6 @@ export const usersTable = pgTable('users_table', {
     password: text('password').notNull(),
     salt: text('salt').notNull(),
     sessionId: text('sessionId').notNull(),
-    verified: boolean('verified').notNull(),
 });
 
 export const verificationCodesTable = pgTable('verification_codes_table', {

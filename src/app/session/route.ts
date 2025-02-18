@@ -76,7 +76,6 @@ export async function POST(request: NextRequest) {
                 password: hashedPassword,
                 salt: saltedPassword,
                 sessionId: newSessionId,
-                verified: false,
             });
         });
     });
