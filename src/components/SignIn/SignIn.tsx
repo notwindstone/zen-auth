@@ -78,7 +78,7 @@ export default function SignIn() {
                     src={nextJsLogo}
                     alt={"Next.js logo"}
                 />
-                <p className="text-xl font-bold text-black">
+                <p className="text-center text-xl font-bold text-black">
                     Авторизация
                 </p>
                 <p className="text-center text-gray-500 font-medium">
@@ -123,7 +123,7 @@ export default function SignIn() {
                         </button>
                     }
                 </form>
-                <p className="text-gray-500 font-medium">
+                <p className="text-center text-gray-500 font-medium">
                     Ещё нет аккаунта?{' '}
                     <Link
                         className="text-black font-medium"

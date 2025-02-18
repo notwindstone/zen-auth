@@ -9,7 +9,7 @@ export default function ProtectedClient() {
             <Content />
             <p>
                 <Link
-                    className="bg-black hover:bg-zinc-800 focus:bg-zinc-700 text-white rounded-md py-2 px-4 transition"
+                    className="hover:bg-zinc-700 bg-zinc-800 focus:bg-zinc-600 text-white rounded-md py-2 px-4 transition"
                     href="/"
                 >
                     Назад

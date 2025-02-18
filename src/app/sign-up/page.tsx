@@ -1,10 +1,10 @@
-import SignUp from "@/components/SignUp/SignUp";
 import Link from "next/link";
+import {Form} from "@/components/Form";
 
 export default function Page() {
     return (
         <div>
-            <SignUp />
+            <Form type="sign-up" />
             <Link href={"/"}>
                 Домой
             </Link>

@@ -1,10 +1,10 @@
-import SignIn from "@/components/SignIn/SignIn";
 import Link from "next/link";
+import {Form} from "@/components/Form";
 
 export default function Page() {
     return (
         <div>
-            <SignIn />
+            <Form type="sign-in" />
             <Link href={"/"}>
                 Домой
             </Link>
