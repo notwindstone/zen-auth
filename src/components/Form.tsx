@@ -1,9 +1,9 @@
 "use client";
 
 import useSession from "@/hooks/use-session";
-import { defaultSession } from "@/lib/sessions";
 import SignUp from "@/components/SignUp/SignUp";
 import SignIn from "@/components/SignIn/SignIn";
+import Logout from "@/components/Logout/Logout";
 
 export function Form({ type }: { type: "sign-in" | "sign-up" }) {
     const { session, isLoading } = useSession();
@@ -14,15 +14,15 @@ export function Form({ type }: { type: "sign-in" | "sign-up" }) {
 
     if (session.isLoggedIn) {
         return (
-            <>
+            <div>
                 <p className="text-lg">
                     Logged in user: <strong>{session.username}</strong>
                 </p>
                 <p>
                     Email: <strong>{session.email}</strong>
                 </p>
-                <LogoutButton />
-            </>
+                <Logout />
+            </div>
         );
     }
 
@@ -33,25 +33,4 @@ export function Form({ type }: { type: "sign-in" | "sign-up" }) {
         default:
             return <SignUp />;
     }
-}
-
-
-
-function LogoutButton() {
-    const {logout} = useSession();
-
-    return (
-        <p>
-            <a
-                onClick={(event) => {
-                    event.preventDefault();
-                    logout(null, {
-                        optimisticData: defaultSession,
-                    });
-                }}
-            >
-                Logout
-            </a>
-        </p>
-    );
 }
