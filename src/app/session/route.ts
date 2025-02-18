@@ -7,9 +7,9 @@ import { v4 as generateUUID } from 'uuid';
 import {createUser} from "@/queries/insert";
 import bcrypt from 'bcrypt';
 import {updateSessionId} from "@/queries/update";
-import {getHashedPassword, getSessionId} from "@/queries/select";
 import {UserData} from "@/types/UserData.type";
 import {LOGIN_ERRORS} from "@/configs/constants";
+import {checkHashedPassword, getSessionId} from "@/queries/select";
 
 export async function POST(request: NextRequest) {
     const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
@@ -25,8 +25,10 @@ export async function POST(request: NextRequest) {
         const fetchedData = (await getSessionId(email))?.[0];
         const foundName = fetchedData?.name;
 
-        const { hashedPassword } = (await getHashedPassword(email))?.[0];
-        const isPasswordEqual = await bcrypt.compare(password, hashedPassword);
+        const isPasswordEqual = await checkHashedPassword({
+            email: email,
+            password: password,
+        });
 
         if (isPasswordEqual) {
             session.isLoggedIn = true;

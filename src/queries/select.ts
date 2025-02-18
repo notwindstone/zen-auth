@@ -3,6 +3,7 @@
 import { eq } from 'drizzle-orm';
 import { db } from '@/db/db';
 import { SelectUser, usersTable } from '@/db/schema';
+import bcrypt from "bcrypt";
 
 export async function getUserEmail(email: SelectUser['email']): Promise<
     Array<{
@@ -28,12 +29,17 @@ export async function getSessionId(email: SelectUser['email']): Promise<
     }).from(usersTable).where(eq(usersTable.email, email));
 }
 
-export async function getHashedPassword(email: SelectUser['email']): Promise<
-    Array<{
-        hashedPassword: string;
-    }>
-> {
-    return db.select({
+export async function checkHashedPassword({
+    email,
+    password,
+}: {
+    email: SelectUser['email'],
+    password: SelectUser['password'],
+}): Promise<boolean> {
+    const response = db.select({
         hashedPassword: usersTable.password,
     }).from(usersTable).where(eq(usersTable.email, email));
+    const serverPassword = (await response)?.[0].hashedPassword;
+
+    return await bcrypt.compare(password, serverPassword);
 }
