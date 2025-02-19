@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
             saltedPassword = salt;
 
             const newSessionId = (await cookies()).get("authless-next-cookies-key-name")?.value ?? "";
-
+console.log(newSessionId);
             await createUser({
                 uuid: userUUID,
                 name: username,
@@ -88,6 +88,8 @@ export async function POST(request: NextRequest) {
 
     await session.save();
 
+    const newSessionId = (await cookies()).get("authless-next-cookies-key-name")?.value ?? "";
+    console.log(newSessionId);
     return Response.json({
         ...session,
         password: undefined,
