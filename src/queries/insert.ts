@@ -3,12 +3,19 @@
 import { db } from '@/db/db';
 import {InsertUser, usersTable, verificationCodesTable} from '@/db/schema';
 import { v4 as generateUUID } from 'uuid';
+import sendEmail from "@/lib/sendEmail";
 
 export async function createUser(data: InsertUser) {
     await db.insert(usersTable).values(data);
 }
 
-export async function createVerificationCode(email: string) {
+export async function createVerificationCode({
+    email,
+    username,
+}: {
+    email: string;
+    username: string;
+}) {
     const uuid = generateUUID();
     const expiresAt = new Date();
     const verificationCode = (Math.floor(100000 + (Math.random() * 900000))).toString();
@@ -23,5 +30,9 @@ export async function createVerificationCode(email: string) {
         code: verificationCode,
     });
 
-    return verificationCode;
+    await sendEmail({
+        code: verificationCode,
+        email: email,
+        username: username,
+    });
 }

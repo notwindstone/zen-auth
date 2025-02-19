@@ -8,12 +8,11 @@ import Link from "next/link";
 import checkUser from "@/lib/checkUser";
 import {FormEvent, useState} from "react";
 import {useRouter} from "nextjs-toploader/app";
-import sendEmail from "@/lib/sendEmail";
 import {createVerificationCode} from "@/queries/insert";
+import {checkVerificationCodes} from "@/queries/select";
 
 export default function SignUp() {
     const { login } = useSession();
-    const [currentCode, setCurrentCode] = useState<string | null>(null);
     const [currentFormData, setCurrentFormData] = useState<FormData | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isDelayed, setDelayed] = useState(false);
@@ -52,12 +51,7 @@ export default function SignUp() {
         setIsBeingVerified(true);
         setCurrentFormData(formData);
 
-        const verificationCode = await createVerificationCode(email);
-
-        setCurrentCode(verificationCode);
-
-        await sendEmail({
-            code: verificationCode,
+        await createVerificationCode({
             email: email,
             username: username,
         });
@@ -69,16 +63,20 @@ export default function SignUp() {
         const formData = new FormData(event.currentTarget);
         const code = formData?.get("code") as string;
 
-        if (currentCode !== code) {
+        const email = currentFormData?.get("email") as string;
+
+        const isEqual = await checkVerificationCodes({
+            code: code,
+            email: email,
+        });
+
+        if (!isEqual) {
             setAreCodesEqual(false);
 
             return;
         }
 
-        setAreCodesEqual(true);
-
         const username = currentFormData?.get("username") as string;
-        const email = currentFormData?.get("email") as string;
         const password = currentFormData?.get("password") as string;
 
         login({

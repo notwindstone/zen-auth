@@ -2,7 +2,7 @@
 
 import { eq } from 'drizzle-orm';
 import { db } from '@/db/db';
-import { SelectUser, usersTable } from '@/db/schema';
+import {SelectUser, SelectVerificationCode, usersTable, verificationCodesTable} from '@/db/schema';
 import bcrypt from "bcrypt";
 
 export async function getUserEmail(email: SelectUser['email']): Promise<
@@ -42,4 +42,27 @@ export async function checkHashedPassword({
     const serverPassword = (await response)?.[0].hashedPassword;
 
     return await bcrypt.compare(password, serverPassword);
+}
+
+export async function checkVerificationCodes({
+    email,
+    code
+}: {
+    email: SelectVerificationCode['email'],
+    code: SelectVerificationCode['code'],
+}): Promise<boolean> {
+    const response = db.select({
+        code: verificationCodesTable.code,
+        expiresAt: verificationCodesTable.expiresAt,
+        isUsed: verificationCodesTable.isUsed,
+    }).from(verificationCodesTable).where(
+        eq(verificationCodesTable.email, email),
+    );
+    const foundCode = (await response)?.filter((elem) => {
+        const notExpired = elem.expiresAt.getTime() > (new Date()).getTime();
+
+        return !elem.isUsed && (elem.code === code) && notExpired;
+    });
+
+    return Boolean(foundCode?.[0]);
 }
