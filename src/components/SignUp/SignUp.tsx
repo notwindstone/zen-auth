@@ -19,6 +19,7 @@ export default function SignUp() {
     const [isDelayed, setDelayed] = useState(false);
     const [userExists, setUserExists] = useState(false);
     const [isBeingVerified, setIsBeingVerified] = useState(false);
+    const [areCodesEqual, setAreCodesEqual] = useState(true);
     const router = useRouter();
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -69,8 +70,12 @@ export default function SignUp() {
         const code = formData?.get("code") as string;
 
         if (currentCode !== code) {
+            setAreCodesEqual(false);
+
             return;
         }
+
+        setAreCodesEqual(true);
 
         const username = currentFormData?.get("username") as string;
         const email = currentFormData?.get("email") as string;
@@ -118,7 +123,34 @@ export default function SignUp() {
                         Введите код, отправленный на почту, чтобы продолжить.
                     </p>
                     <div className="h-[1px] w-full bg-gray-200"/>
-
+                    <form
+                        className="w-full flex flex-col gap-2"
+                        onSubmit={(event) => handleVerificationSubmit(event)}
+                        method="POST"
+                    >
+                        {
+                            !areCodesEqual && (
+                                <p
+                                    className="text-red-500"
+                                >
+                                    Код не совпадает.
+                                </p>
+                            )
+                        }
+                        <input
+                            className="shadow-sm focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md px-2 py-1 transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            type="number"
+                            name="code"
+                            placeholder=""
+                            required
+                        />
+                        <button
+                            type="submit"
+                            className="hover:bg-zinc-700 bg-zinc-800 transition mt-2 rounded-md p-2 text-white h-[40px]"
+                        >
+                            Подтвердить
+                        </button>
+                    </form>
                 </div>
             </div>
         );
