@@ -17,7 +17,7 @@ export default async function sendEmail({
     username: string;
 }) {
     return resend.emails.send({
-        from: 'onboarding@resend.dev',
+        from: 'Authless <onboarding@windstone.space>',
         to: email,
         subject: 'Верификация Email',
         html: `<p>Добро пожаловать, ${username}. Ваш код подтверждения: ${code}.</p>`
