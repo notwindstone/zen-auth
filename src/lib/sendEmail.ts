@@ -10,14 +10,16 @@ const resend = new Resend(process.env.RESEND_API_KEY!);
 export default async function sendEmail({
     code,
     email,
+    username,
 }: {
     code: string;
     email: string;
+    username: string;
 }) {
     return resend.emails.send({
         from: 'onboarding@resend.dev',
         to: email,
-        subject: 'Email verification',
-        html: `<p>Your verification code: ${code}.</p>`
+        subject: 'Верификация Email',
+        html: `<p>Добро пожаловать, ${username}. Ваш код подтверждения: ${code}.</p>`
     });
 }

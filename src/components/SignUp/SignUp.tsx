@@ -52,7 +52,7 @@ export default function SignUp() {
 
             return;
         });
-    }, [login, router, isBeingVerified]);
+    }, [isBeingVerified]);
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -69,6 +69,7 @@ export default function SignUp() {
         }, 3000);
 
         const formData = new FormData(event.currentTarget);
+        const username = formData?.get("username") as string;
         const email = formData.get("email") as string;
 
         const { exists } = await checkUser(email);
@@ -90,11 +91,32 @@ export default function SignUp() {
         await sendEmail({
             code: verificationCode,
             email: email,
+            username: username,
         });
     }
 
-    if (!isBeingVerified) {
-        return;
+    if (isBeingVerified) {
+        return (
+            <div className="bg-white drop-shadow-xl py-6 px-12 rounded-md">
+                <div className="flex flex-col items-center gap-4">
+                    <Image
+                        className="mb-4"
+                        width={48}
+                        height={48}
+                        src={nextJsLogo}
+                        alt={"Next.js logo"}
+                    />
+                    <p className="text-center text-xl font-bold text-black">
+                        Подтверждение аккаунта
+                    </p>
+                    <p className="text-center text-gray-500 font-medium">
+                        Введите код, отправленный на почту, чтобы продолжить.
+                    </p>
+                    <div className="h-[1px] w-full bg-gray-200"/>
+
+                </div>
+            </div>
+        );
     }
 
     let currentButton;
@@ -132,7 +154,7 @@ export default function SignUp() {
                 <p className="text-center text-gray-500 font-medium">
                     Добро пожаловать! Зарегистрируйтесь, чтобы продолжить.
                 </p>
-                <div className="h-[1px] w-full bg-gray-200" />
+                <div className="h-[1px] w-full bg-gray-200"/>
                 <form
                     className="w-full flex flex-col gap-4"
                     onSubmit={(event) => handleSubmit(event)}
