@@ -10,9 +10,17 @@ export default async function ProtectedClient() {
 
     if (!session.isLoggedIn) {
         return (
-            <p className="p-10">
-                Вам нужно войти в аккаунт, чтобы увидеть данную страницу.
-            </p>
+            <div className="p-10 flex flex-col gap-4">
+                <p>
+                    Вам нужно войти в аккаунт, чтобы увидеть данную страницу.
+                </p>
+                <Link
+                    className="flex-1 text-center hover:bg-zinc-700 bg-zinc-800 focus:bg-zinc-600 text-white rounded-md py-2 px-4 transition"
+                    href="/"
+                >
+                    Главная
+                </Link>
+            </div>
         );
     }
 
@@ -22,15 +30,23 @@ export default async function ProtectedClient() {
 
     if (foundSessionId !== sessionId) {
         return (
-            <p className="p-10">
-                Сессии не совпадают. Пожалуйста, перезайдите в аккаунт.
-            </p>
+            <div className="p-10 flex flex-col gap-4">
+                <p>
+                    Сессии не совпадают. Пожалуйста, перезайдите в аккаунт.
+                </p>
+                <Link
+                    className="flex-1 text-center hover:bg-zinc-700 bg-zinc-800 focus:bg-zinc-600 text-white rounded-md py-2 px-4 transition"
+                    href="/"
+                >
+                    Главная
+                </Link>
+            </div>
         );
     }
 
     return (
         <main className="p-10 flex flex-col gap-4">
-            <ProfileComponent />
+            <ProfileComponent/>
             <p>
                 <Link
                     className="hover:bg-zinc-700 bg-zinc-800 focus:bg-zinc-600 text-white rounded-md py-2 px-4 transition"
