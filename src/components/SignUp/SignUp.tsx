@@ -6,7 +6,7 @@ import nextJsLogo from "../../../public/nextjs-icon.svg";
 import {REGISTRATION_INPUTS} from "@/configs/constants";
 import Link from "next/link";
 import checkUser from "@/lib/checkUser";
-import {FormEvent, useEffect, useState} from "react";
+import {FormEvent, useState} from "react";
 import {useRouter} from "nextjs-toploader/app";
 import sendEmail from "@/lib/sendEmail";
 import {createVerificationCode} from "@/queries/insert";
@@ -20,39 +20,6 @@ export default function SignUp() {
     const [userExists, setUserExists] = useState(false);
     const [isBeingVerified, setIsBeingVerified] = useState(false);
     const router = useRouter();
-
-    useEffect(() => {
-        if (!isBeingVerified) {
-            return;
-        }
-
-        const formData = currentFormData;
-        const username = formData?.get("username") as string;
-        const email = formData?.get("email") as string;
-        const password = formData?.get("password") as string;
-
-        login({
-            username,
-            email,
-            password,
-        }, {
-            optimisticData: {
-                username,
-                email,
-                password,
-            },
-        }).then((updatedSession) => {
-            setIsLoading(false)
-
-            if (updatedSession.isLoggedIn) {
-                router.push('/protected');
-
-                return;
-            }
-
-            return;
-        });
-    }, [isBeingVerified]);
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -92,6 +59,44 @@ export default function SignUp() {
             code: verificationCode,
             email: email,
             username: username,
+        });
+    }
+
+    async function handleVerificationSubmit(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+
+        const formData = new FormData(event.currentTarget);
+        const code = formData?.get("code") as string;
+
+        if (currentCode !== code) {
+            return;
+        }
+
+        const username = currentFormData?.get("username") as string;
+        const email = currentFormData?.get("email") as string;
+        const password = currentFormData?.get("password") as string;
+
+        login({
+            username,
+            email,
+            password,
+        }, {
+            optimisticData: {
+                username,
+                email,
+                password,
+            },
+        }).then((updatedSession) => {
+            setIsLoading(false);
+            setIsBeingVerified(false);
+
+            if (updatedSession.isLoggedIn) {
+                router.push('/protected');
+
+                return;
+            }
+
+            return;
         });
     }
 
