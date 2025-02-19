@@ -41,5 +41,10 @@ bun build
 bun start
 ```
 
-## Деплой
+## Деплой через Vercel
 
+Зарегистрируйтесь на Vercel и нажмите кнопку:
+
+[![Vercel](https://vercel.com/button)](https://vercel.com/new/clone?s=https%3A%2F%2Fgithub.com%2Fnotwindstone%2Fauthless-next-demo)
+
+После создания проекта перейдите во вкладку `Settings` и откройте `Environment variables`. Там укажите значения ключей по шаблону `.env.example`, пользуясь информацией из предыдущей секции, а затем пересоберите веб-сайт.
