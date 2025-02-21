@@ -7,6 +7,7 @@ export async function GET(request: NextRequest): Promise<Response> {
     if (token === null) {
         return new Response(null, {
             status: 401,
+            statusText: "Unauthorized",
         });
     }
 
@@ -15,6 +16,7 @@ export async function GET(request: NextRequest): Promise<Response> {
     if (session === null) {
         return new Response(null, {
             status: 401,
+            statusText: "Unauthorized",
         });
     }
 

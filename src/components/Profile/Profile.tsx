@@ -10,7 +10,11 @@ export default function Profile() {
             const response = await fetch(API_ROUTES.session);
 
             if (response.status !== 200) {
-                return response.statusText;
+                return Promise.reject(
+                    new Error(
+                        `${response.status} ${response.statusText}`,
+                    ),
+                );
             }
 
             return await response.json();
