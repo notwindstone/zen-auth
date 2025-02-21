@@ -8,6 +8,8 @@ export const userTable = pgTable("user_table", {
     email: text('email').notNull().unique(),
     password: text('password').notNull(),
     salt: text('salt').notNull(),
+    createdAt: timestamp('createdAt').notNull(),
+    lastSignedIn: timestamp('lastSignedIn').notNull(),
 });
 
 export const sessionTable = pgTable("session_table", {
