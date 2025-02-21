@@ -17,6 +17,7 @@ const eslintConfig = [
       indent: ["error", 4],
       curly: "error",
       "object-curly-spacing": ["error", "always"],
+      "comma-dangle": ["error", "always-multiline"],
     },
   },
 ];

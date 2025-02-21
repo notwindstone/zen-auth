@@ -6,7 +6,7 @@ export async function GET(request: NextRequest): Promise<Response> {
 
     if (token === null) {
         return new Response(null, {
-            status: 401
+            status: 401,
         });
     }
 
@@ -14,11 +14,12 @@ export async function GET(request: NextRequest): Promise<Response> {
 
     if (session === null) {
         return new Response(null, {
-            status: 401
+            status: 401,
         });
     }
 
-    return new Response(null, {
-        status: 200,
+    return Response.json({
+        session,
+        user,
     });
 }
