@@ -1,7 +1,7 @@
 import { pgTable, serial, text, integer, timestamp } from "drizzle-orm/pg-core";
 
 export const userTable = pgTable("user_table", {
-    id: serial("id").primaryKey()
+    id: serial("id").primaryKey(),
 });
 
 export const sessionTable = pgTable("session_table", {
@@ -11,8 +11,8 @@ export const sessionTable = pgTable("session_table", {
         .references(() => userTable.id),
     expiresAt: timestamp("expires_at", {
         withTimezone: true,
-        mode: "date"
-    }).notNull()
+        mode: "date",
+    }).notNull(),
 });
 
 export type InsertUser = typeof userTable.$inferInsert;

@@ -18,7 +18,7 @@ export async function createSession(token: string, userId: number): Promise<Sele
     const session: SelectSession = {
         id: sessionId,
         userId,
-        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30)
+        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
     };
     
     await db.insert(sessionTable).values(session);
@@ -38,7 +38,7 @@ export async function validateSessionToken(token: string): Promise<SessionValida
     if (result.length < 1) {
         return {
             session: null,
-            user: null
+            user: null,
         };
     }
 
@@ -49,7 +49,7 @@ export async function validateSessionToken(token: string): Promise<SessionValida
 
         return {
             session: null,
-            user: null
+            user: null,
         };
     }
 
@@ -59,14 +59,14 @@ export async function validateSessionToken(token: string): Promise<SessionValida
         await db
             .update(sessionTable)
             .set({
-                expiresAt: session.expiresAt
+                expiresAt: session.expiresAt,
             })
             .where(eq(sessionTable.id, session.id));
     }
 
     return {
         session,
-        user
+        user,
     };
 }
 
