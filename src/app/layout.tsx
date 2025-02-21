@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
+import TanstackQueryProviders from "@/utils/providers/TanstackQueryProviders";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -24,17 +25,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
-            <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-            >
-                <NextTopLoader
-                    height={4}
-                    showSpinner={false}
-                    color="#dc8a78"
-                />
-                {children}
-            </body>
-        </html>
+        <TanstackQueryProviders>
+            <html lang="en">
+                <body
+                    className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+                >
+                    <NextTopLoader
+                        height={4}
+                        showSpinner={false}
+                        color="#dc8a78"
+                    />
+                    {children}
+                </body>
+            </html>
+        </TanstackQueryProviders>
     );
 }
