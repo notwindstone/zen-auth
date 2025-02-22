@@ -1,7 +1,7 @@
 import { SelectSession, SelectUser, sessionTable, userTable } from "@/db/schema";
 import { encodeBase32LowerCaseNoPadding } from "@oslojs/encoding";
 import { db } from "@/db/db";
-import { eq } from "drizzle-orm";
+import { and, eq, not } from "drizzle-orm";
 import getSessionId from "@/utils/misc/getSessionId";
 
 export function generateSessionToken(): string {
@@ -74,8 +74,17 @@ export async function invalidateSession(sessionId: string): Promise<void> {
     await db.delete(sessionTable).where(eq(sessionTable.id, sessionId));
 }
 
-export async function invalidateAllSessions(userId: number): Promise<void> {
-    await db.delete(sessionTable).where(eq(sessionTable.userId, userId));
+export async function invalidateAllSessionsExceptCurrent(sessionId: string, userId: number): Promise<void> {
+    await db
+        .delete(sessionTable)
+        .where(
+            and(
+                eq(sessionTable.userId, userId),
+                not(
+                    eq(sessionTable.id, sessionId),
+                ),
+            ),
+        );
 }
 
 export type SessionValidationResult =
