@@ -87,6 +87,12 @@ export async function invalidateAllSessionsExceptCurrent(sessionId: string, user
         );
 }
 
+export async function queryAllSessions(userId: number): Promise<Array<Pick<SelectSession, "id">>> {
+    return (await db.select({
+        id: sessionTable.id,
+    }).from(sessionTable).where(eq(sessionTable.userId, userId)));
+}
+
 export type SessionValidationResult =
     | { session: SelectSession; user: SelectUser }
     | { session: null; user: null };
