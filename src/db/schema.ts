@@ -14,6 +14,10 @@ export const userTable = pgTable("user_table", {
 
 export const sessionTable = pgTable("session_table", {
     id: text("id").primaryKey(),
+    lastSignedIn: timestamp("lastSignedIn").notNull(),
+    browser: text("browser").notNull(),
+    architecture: text("architecture").notNull(),
+    os: text("os").notNull(),
     userId: integer("user_id")
         .notNull()
         .references(() => userTable.id),
