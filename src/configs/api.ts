@@ -1,4 +1,7 @@
 export const API_ROUTES = {
-    session: "/api/session",
+    session: {
+        current: "/api/session/current",
+        all: "/api/session/all",
+    },
     login: "/api/login",
 };

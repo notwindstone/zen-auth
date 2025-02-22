@@ -11,9 +11,9 @@ export default function Profile() {
         failureCount,
         failureReason,
     } = useQuery({
-        queryKey: [API_ROUTES.session],
+        queryKey: [API_ROUTES.session.current],
         queryFn: async () => {
-            const response = await fetch(API_ROUTES.session);
+            const response = await fetch(API_ROUTES.session.current);
 
             if (!response.ok) {
                 return Promise.reject(
