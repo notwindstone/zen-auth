@@ -1,8 +1,8 @@
 import { SelectSession, SelectUser, sessionTable, userTable } from "@/db/schema";
-import { encodeBase32LowerCaseNoPadding, encodeHexLowerCase } from "@oslojs/encoding";
+import { encodeBase32LowerCaseNoPadding } from "@oslojs/encoding";
 import { db } from "@/db/db";
-import { sha256 } from "@oslojs/crypto/sha2";
 import { eq } from "drizzle-orm";
+import getSessionId from "@/utils/misc/getSessionId";
 
 export function generateSessionToken(): string {
     const bytes = new Uint8Array(20);
@@ -14,7 +14,7 @@ export function generateSessionToken(): string {
 }
 
 export async function createSession(token: string, userId: number): Promise<SelectSession> {
-    const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+    const sessionId = getSessionId(token);
     const session: SelectSession = {
         id: sessionId,
         userId,
@@ -28,7 +28,7 @@ export async function createSession(token: string, userId: number): Promise<Sele
 }
 
 export async function validateSessionToken(token: string): Promise<SessionValidationResult> {
-    const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+    const sessionId = getSessionId(token);
     const result = await db
         .select({ user: userTable, session: sessionTable })
         .from(sessionTable)
