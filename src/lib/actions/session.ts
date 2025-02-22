@@ -13,10 +13,26 @@ export function generateSessionToken(): string {
 
 }
 
-export async function createSession(token: string, userId: number): Promise<SelectSession> {
-    const sessionId = getSessionId(token);
+export async function createSession({
+    token,
+    userId,
+    architecture,
+    browser,
+    os,
+}: {
+    token: string;
+    userId: number;
+    architecture: string;
+    browser: string;
+    os: string;
+}): Promise<SelectSession> {
+    const sessionId = getSessionId({ token });
     const session: SelectSession = {
         id: sessionId,
+        lastSignedIn: new Date(),
+        architecture,
+        browser,
+        os,
         userId,
         expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
     };
@@ -27,8 +43,12 @@ export async function createSession(token: string, userId: number): Promise<Sele
 
 }
 
-export async function validateSessionToken(token: string): Promise<SessionValidationResult> {
-    const sessionId = getSessionId(token);
+export async function validateSessionToken({
+    token,
+}: {
+    token: string;
+}): Promise<SessionValidationResult> {
+    const sessionId = getSessionId({ token });
     const result = await db
         .select({ user: userTable, session: sessionTable })
         .from(sessionTable)
@@ -70,7 +90,11 @@ export async function validateSessionToken(token: string): Promise<SessionValida
     };
 }
 
-export async function invalidateSession(sessionId: string): Promise<void> {
+export async function invalidateSession({
+    sessionId,
+}: {
+    sessionId: string;
+}): Promise<void> {
     await db.delete(sessionTable).where(eq(sessionTable.id, sessionId));
 }
 
@@ -87,7 +111,11 @@ export async function invalidateAllSessionsExceptCurrent(sessionId: string, user
         );
 }
 
-export async function queryAllSessions(userId: number): Promise<Array<Pick<SelectSession, "id">>> {
+export async function queryAllSessions({
+    userId,
+}: {
+    userId: number;
+}): Promise<Array<Pick<SelectSession, "id">>> {
     return (await db.select({
         id: sessionTable.id,
     }).from(sessionTable).where(eq(sessionTable.userId, userId)));

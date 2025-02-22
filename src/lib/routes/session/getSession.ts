@@ -1,7 +1,6 @@
 "use server";
 
-import {queryAllSessions, validateSessionToken} from "@/lib/actions/session";
-import {SelectUser} from "@/db/schema";
+import { queryAllSessions, validateSessionToken } from "@/lib/actions/session";
 
 export async function getSession({
     token,
@@ -14,7 +13,7 @@ export async function getSession({
         });
     }
 
-    const { session, user } = await validateSessionToken(token);
+    const { session, user } = await validateSessionToken({ token });
 
     if (session === null) {
         return new Response(null, {
@@ -39,7 +38,7 @@ export async function getAllSessions({
         });
     }
 
-    const { session, user } = await validateSessionToken(token);
+    const { session, user } = await validateSessionToken({ token });
 
     if (session === null) {
         return new Response(null, {
@@ -48,6 +47,6 @@ export async function getAllSessions({
     }
 
     return Response.json({
-        sessions: await queryAllSessions(user.id),
+        sessions: await queryAllSessions({ userId: user.id }),
     });
 }

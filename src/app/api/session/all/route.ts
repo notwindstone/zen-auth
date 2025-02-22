@@ -13,7 +13,7 @@ export async function GET(request: NextRequest): Promise<Response> {
 
 export async function DELETE(request: NextRequest): Promise<Response> {
     const token = request.cookies.get(COOKIES_KEY)?.value as string;
-    const { session, user } = await validateSessionToken(token);
+    const { session, user } = await validateSessionToken({ token });
 
     if (session === null || user === null) {
         return new Response(null, {

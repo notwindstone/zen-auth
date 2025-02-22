@@ -15,10 +15,10 @@ export async function GET(request: NextRequest): Promise<Response> {
 
 export async function DELETE(request: NextRequest): Promise<Response> {
     const token = request.cookies.get(COOKIES_KEY)?.value as string;
-    const sessionId = getSessionId(token);
+    const sessionId = getSessionId({ token });
 
     await deleteSessionTokenCookie();
-    await invalidateSession(sessionId);
+    await invalidateSession({ sessionId });
 
     return new Response(null, {
         status: 200,
