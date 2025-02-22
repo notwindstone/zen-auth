@@ -1,9 +1,10 @@
 import { getSession } from "@/lib/routes/session/getSession";
 import { cookies } from "next/headers";
+import { COOKIES_KEY } from "@/configs/constants";
 
 export default async function Page() {
     const cookieStore = await cookies();
-    const token = cookieStore.get('zen_auth_session')?.value ?? null;
+    const token = cookieStore.get(COOKIES_KEY)?.value ?? null;
     const response = await getSession({
         token,
     });
@@ -11,7 +12,7 @@ export default async function Page() {
     if (!response.ok) {
         return (
             <div>
-                nah mate, your not passing
+                nah mate, you are not passing
             </div>
         );
     }

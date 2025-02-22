@@ -1,9 +1,10 @@
 import { cookies } from "next/headers";
+import { COOKIES_KEY } from "@/configs/constants";
 
 export async function setSessionTokenCookie(token: string, expiresAt: Date): Promise<void> {
     const cookieStore = await cookies();
 
-    cookieStore.set("zen_auth_session", token, {
+    cookieStore.set(COOKIES_KEY, token, {
         httpOnly: true,
         sameSite: "lax",
         secure: process.env.NODE_ENV === "production",
@@ -15,7 +16,7 @@ export async function setSessionTokenCookie(token: string, expiresAt: Date): Pro
 export async function deleteSessionTokenCookie(): Promise<void> {
     const cookieStore = await cookies();
 
-    cookieStore.set("zen_auth_session", "", {
+    cookieStore.set(COOKIES_KEY, "", {
         httpOnly: true,
         sameSite: "lax",
         secure: process.env.NODE_ENV === "production",

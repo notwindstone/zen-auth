@@ -1,0 +1,1 @@
+export const COOKIES_KEY = "zen_auth_session";

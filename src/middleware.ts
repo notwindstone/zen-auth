@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { COOKIES_KEY } from "@/configs/constants";
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
     if (request.method === "GET") {
         const response = NextResponse.next();
-        const token = request.cookies.get("zen_auth_session")?.value ?? null;
+        const token = request.cookies.get(COOKIES_KEY)?.value ?? null;
 
         if (token !== null) {
-            response.cookies.set("zen_auth_session", token, {
+            response.cookies.set(COOKIES_KEY, token, {
                 path: "/",
                 maxAge: 60 * 60 * 24 * 30,
                 sameSite: "lax",
