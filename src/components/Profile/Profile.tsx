@@ -37,7 +37,7 @@ export default function Profile() {
                 {
                     failureCount > 0 && (
                         <p>
-                            {failureCount} retries. Possible error: {failureReason?.message}
+                            {failureCount} retries. Current error: {failureReason?.message}
                         </p>
                     )
                 }
@@ -46,7 +46,13 @@ export default function Profile() {
     }
 
     if (error) {
-        return 'An error has occurred: ' + error.message;
+        return (
+            <div>
+                <p>
+                    An error has occurred: {error.message}
+                </p>
+            </div>
+        );
     }
 
     return (
