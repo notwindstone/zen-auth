@@ -25,7 +25,9 @@ export default function Profile() {
 
             return await response.json();
         },
-        retry: 3,
+        retry: (failureCount, error) => {
+            return !(Number(error.message) === 401 || failureCount > 3);
+        },
     });
 
     if (isPending) {
