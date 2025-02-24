@@ -12,7 +12,7 @@ export default async function Page() {
     if (!response.ok) {
         return (
             <div>
-                nah mate, you are not passing
+                nah mate, you are not passing {response.status}
             </div>
         );
     }
