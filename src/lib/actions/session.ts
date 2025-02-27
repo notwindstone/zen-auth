@@ -10,7 +10,6 @@ export function generateSessionToken(): string {
     crypto.getRandomValues(bytes);
 
     return encodeBase32LowerCaseNoPadding(bytes);
-
 }
 
 export async function createSession({
