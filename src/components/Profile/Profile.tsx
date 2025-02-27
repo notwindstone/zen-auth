@@ -6,7 +6,7 @@ import { API_ROUTES } from "@/configs/api";
 export default function Profile({
     username,
 }: {
-    username: string | undefined;
+    username?: string | undefined;
 }) {
     const queryKeys = username === undefined
         ? [API_ROUTES.session.current]

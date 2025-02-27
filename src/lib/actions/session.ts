@@ -16,12 +16,14 @@ export function generateSessionToken(): string {
 export async function createSession({
     token,
     userId,
+    ipAddress,
     architecture,
     browser,
     os,
 }: {
     token: string;
     userId: number;
+    ipAddress: string;
     architecture: string;
     browser: string;
     os: string;
@@ -30,6 +32,7 @@ export async function createSession({
     const session: SelectSession = {
         id: sessionId,
         lastSignedIn: new Date(),
+        ipAddress,
         architecture,
         browser,
         os,
