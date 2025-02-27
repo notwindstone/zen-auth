@@ -24,7 +24,15 @@ export async function getSession({
 
     return Response.json({
         session,
-        user,
+        user: {
+            id: user.id,
+            username: user.username,
+            displayName: user.displayName,
+            avatarUrl: user.avatarUrl,
+            email: user.email,
+            createdAt: user.createdAt,
+            lastSignedIn: user.lastSignedIn,
+        },
     });
 }
 
