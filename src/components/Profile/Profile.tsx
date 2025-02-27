@@ -3,7 +3,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { API_ROUTES } from "@/configs/api";
 
-export default function Profile() {
+export default function Profile({
+    userId,
+}: {
+    userId: string | undefined;
+}) {
     const {
         isPending,
         error,
@@ -11,7 +15,7 @@ export default function Profile() {
         failureCount,
         failureReason,
     } = useQuery({
-        queryKey: [API_ROUTES.session.current],
+        queryKey: [API_ROUTES.session.current, userId],
         queryFn: async () => {
             const response = await fetch(API_ROUTES.session.current);
 
