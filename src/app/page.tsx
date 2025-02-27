@@ -7,7 +7,7 @@ export default function Page() {
     return (
         <div className="flex flex-col gap-4">
             <p>
-                This page is temporary client-sided.
+                This page is temporarily client-sided.
             </p>
             <div className="flex flex-col gap-2">
                 <p>
@@ -16,16 +16,22 @@ export default function Page() {
                     }:
                 </p>
                 <button
-                    onClick={async () => await setSessionTokenCookie({
-                        token: "",
-                        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
-                    })}
+                    onClick={async () => {
+                        setSessionTokenCookie({
+                            token: "hbwhpgs2qhc5desuajn44zruxeu3ygp4",
+                            expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+                        }).then(() => {
+                            alert('Now you are an authorized user.');
+                        });
+                    }}
                     className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
                 >
                     Add notwindstone&lsquo;s session token to cookies
                 </button>
                 <button
-                    onClick={async () => await deleteSessionTokenCookie()}
+                    onClick={async () => {
+                        deleteSessionTokenCookie().then(() => alert('Now you are not authorized.'));
+                    }}
                     className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
                 >
                     Remove notwindstone&lsquo;s session token from cookies
