@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
 import TanstackQueryProviders from "@/utils/providers/TanstackQueryProviders";
+import Link from "next/link";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -36,6 +37,11 @@ export default function RootLayout({
                         color="#dc8a78"
                     />
                     {children}
+                    <div className="p-2 text-lg">
+                        <Link href={"/"}>
+                            ← Назад
+                        </Link>
+                    </div>
                 </body>
             </html>
         </TanstackQueryProviders>

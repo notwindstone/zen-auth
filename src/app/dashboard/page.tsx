@@ -12,14 +12,14 @@ export default async function Page() {
     if (!response.ok) {
         return (
             <div>
-                nah mate, you are not passing {response.status}
+                nah mate, you are not passing. This is a server component. Your status code: {response.status}
             </div>
         );
     }
 
     return (
         <div>
-            1234
+            you made it!
         </div>
     );
 }

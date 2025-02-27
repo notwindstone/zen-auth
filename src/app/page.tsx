@@ -17,28 +17,28 @@ export default function Page() {
                 <button
                     className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
                 >
-                    Add session token to cookies
+                    Add notwindstone&lsquo;s session token to cookies
                 </button>
                 <button
                     className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
                 >
-                    Remove session token from cookies
+                    Remove notwindstone&lsquo;s session token from cookies
                 </button>
             </div>
             <div className="flex flex-col">
                 <p>
                     Currently available pages:
                 </p>
-                <Link className="text-zinc-400" href={"/dashboard"}>
+                <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/dashboard"}>
                     dashboard
                 </Link>
-                <Link className="text-zinc-400" href={"/profile"}>
+                <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/profile"}>
                     profile
                 </Link>
-                <Link className="text-zinc-400" href={"/profile/notwindstone"}>
+                <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/profile/notwindstone"}>
                     notwindstone
                 </Link>
-                <Link className="text-zinc-400" href={"/profile/not_existing_user"}>
+                <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/profile/not_existing_user"}>
                     not_existing_user
                 </Link>
             </div>
@@ -46,21 +46,40 @@ export default function Page() {
                 <p>
                     Currently available api routes:
                 </p>
-                <Link className="text-zinc-400" href={"/api/profile"}>
+                <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/api/profile"}>
                     /api/profile
                 </Link>
-                <Link className="text-zinc-400" href={"/api/profile?username=notwindstone"}>
+                <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/api/profile?username=notwindstone"}>
                     /api/profile?username=notwindstone
                 </Link>
-                <Link className="text-zinc-400" href={"/api/profile?username=not_existing_user"}>
+                <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/api/profile?username=not_existing_user"}>
                     /api/profile?username=not_existing_user
                 </Link>
-                <Link className="text-zinc-400" href={"/api/session/current"}>
+                <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/api/session/current"}>
                     /api/session/current
                 </Link>
-                <Link className="text-zinc-400" href={"/api/session/all"}>
+                <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/api/session/all"}>
                     /api/session/all
                 </Link>
+            </div>
+            <div className="flex flex-col">
+                <p>
+                    They are not fully done yet and lack some features. This is a list of some things I want to implement:
+                </p>
+                <ul className="list-[katakana] pl-10 text-zinc-400">
+                    <li>UI, of course</li>
+                    <li>/api/login</li>
+                    <li>/api/session/all - only GET method</li>
+                    <li>Email verification (basically separate codes table in db, actions, Resend API, etc.)</li>
+                    <li>Password reset</li>
+                    <li>Profile customization</li>
+                    <li>Profile picture storage using Cloudinary</li>
+                    <li>Server-side Rate limit</li>
+                    <li>Client-side Rate limit</li>
+                    <li>OAuth2</li>
+                    <li>TOTP authentication</li>
+                    <li>...more</li>
+                </ul>
             </div>
         </div>
     );
