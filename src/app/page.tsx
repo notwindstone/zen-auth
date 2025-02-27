@@ -16,6 +16,13 @@ export default function Home() {
                     >
                         Github репозиторий
                     </a>
+                    <hr />
+                    <div className="text-zinc-800">
+                        Система аутентификации переписывается. Ссылка на деплой:
+                    </div>
+                    <a href="https://zen-auth-git-v2-tom-hollands-projects.vercel.app/">
+                        zen-auth v2
+                    </a>
                 </div>
                 <Form type="sign-up"/>
                 <Link
