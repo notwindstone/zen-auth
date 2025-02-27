@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { API_ROUTES } from "@/configs/api";
+import { NO_RETRY_ERRORS } from "@/configs/constants";
 
 export default function Profile({
     username,
@@ -39,7 +40,7 @@ export default function Profile({
             return await response.json();
         },
         retry: (failureCount, error) => {
-            return !(Number(error.message) === 401 || failureCount > 3);
+            return !(NO_RETRY_ERRORS.has(Number(error.message)) || failureCount > 3);
         },
     });
 
