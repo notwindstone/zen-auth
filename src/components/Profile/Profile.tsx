@@ -6,12 +6,11 @@ import { NO_RETRY_ERRORS } from "@/configs/constants";
 
 export default function Profile({
     username,
+    token,
 }: {
     username?: string | undefined;
+    token?: string | undefined;
 }) {
-    const queryKeys = username === undefined
-        ? [API_ROUTES.session.current]
-        : [API_ROUTES.profile, username];
     const {
         isPending,
         error,
@@ -19,7 +18,7 @@ export default function Profile({
         failureCount,
         failureReason,
     } = useQuery({
-        queryKey: queryKeys,
+        queryKey: [API_ROUTES.session.current, API_ROUTES.profile, token, username],
         queryFn: async () => {
             let response;
 
