@@ -1,4 +1,4 @@
-import {API_STATUS_CODES} from "@/configs/api";
+import { API_STATUS_CODES } from "@/configs/api";
 
 export const COOKIES_KEY = "zen_auth_session";
 export const NO_RETRY_ERRORS = new Set([
