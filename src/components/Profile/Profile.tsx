@@ -4,10 +4,13 @@ import { useQuery } from "@tanstack/react-query";
 import { API_ROUTES } from "@/configs/api";
 
 export default function Profile({
-    userId,
+    username,
 }: {
-    userId: string | undefined;
+    username: string | undefined;
 }) {
+    const queryKeys = username === undefined
+        ? [API_ROUTES.session.current]
+        : [API_ROUTES.profile, username];
     const {
         isPending,
         error,
@@ -15,9 +18,15 @@ export default function Profile({
         failureCount,
         failureReason,
     } = useQuery({
-        queryKey: [API_ROUTES.session.current, userId],
+        queryKey: queryKeys,
         queryFn: async () => {
-            const response = await fetch(API_ROUTES.session.current);
+            let response;
+
+            if (!username) {
+                response = await fetch(API_ROUTES.session.current);
+            } else {
+                response = await fetch(`${API_ROUTES.profile}?username=${username}`);
+            }
 
             if (!response.ok) {
                 return Promise.reject(

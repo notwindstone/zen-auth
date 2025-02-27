@@ -3,5 +3,6 @@ export const API_ROUTES = {
         current: "/api/session/current",
         all: "/api/session/all",
     },
+    profile: "/api/profile",
     login: "/api/login",
 };

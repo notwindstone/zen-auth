@@ -4,14 +4,14 @@ export default async function Page({
     params,
 }: {
     params: Promise<{
-        userid: string;
+        username: string;
     }>
 }) {
-    const { userid } = await params;
+    const { username } = await params;
 
     return (
         <>
-            <Profile userId={userid} />
+            <Profile username={username} />
         </>
     );
 }
