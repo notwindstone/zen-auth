@@ -4,6 +4,7 @@ import { COOKIES_KEY } from "@/configs/constants";
 import { invalidateSession } from "@/lib/actions/session";
 import { deleteSessionTokenCookie } from "@/lib/actions/cookies";
 import getSessionId from "@/utils/misc/getSessionId";
+import { API_STATUS_CODES } from "@/configs/api";
 
 export async function GET(request: NextRequest): Promise<Response> {
     const token = request.cookies.get(COOKIES_KEY)?.value ?? null;
@@ -21,6 +22,6 @@ export async function DELETE(request: NextRequest): Promise<Response> {
     await invalidateSession({ sessionId });
 
     return new Response(null, {
-        status: 200,
+        status: API_STATUS_CODES.SUCCESS.OK,
     });
 }

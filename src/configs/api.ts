@@ -6,3 +6,14 @@ export const API_ROUTES = {
     profile: "/api/profile",
     login: "/api/login",
 };
+export const API_STATUS_CODES = {
+    SUCCESS: {
+        OK: 200,
+    },
+    ERROR: {
+        UNAUTHORIZED: 401,
+        FORBIDDEN: 403,
+        NOT_FOUND: 404,
+        TOO_MANY_REQUESTS: 429,
+    },
+};

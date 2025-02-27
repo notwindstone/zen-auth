@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server";
 import { getPublicProfile } from "@/lib/actions/profile";
+import { API_STATUS_CODES } from "@/configs/api";
 
 export async function GET(request: NextRequest): Promise<Response> {
     const searchParams = request.nextUrl.searchParams;
@@ -10,7 +11,7 @@ export async function GET(request: NextRequest): Promise<Response> {
 
     if (!user) {
         return new Response(null, {
-            status: 401,
+            status: API_STATUS_CODES.ERROR.NOT_FOUND,
         });
     }
 

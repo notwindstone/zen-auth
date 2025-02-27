@@ -1,6 +1,7 @@
 "use server";
 
 import { queryAllSessions, validateSessionToken } from "@/lib/actions/session";
+import { API_STATUS_CODES } from "@/configs/api";
 
 export async function getSession({
     token,
@@ -9,7 +10,7 @@ export async function getSession({
 }) {
     if (token === null) {
         return new Response(null, {
-            status: 401,
+            status: API_STATUS_CODES.ERROR.UNAUTHORIZED,
         });
     }
 
@@ -17,7 +18,7 @@ export async function getSession({
 
     if (session === null) {
         return new Response(null, {
-            status: 401,
+            status: API_STATUS_CODES.ERROR.UNAUTHORIZED,
         });
     }
 
@@ -34,7 +35,7 @@ export async function getAllSessions({
 }) {
     if (token === null) {
         return new Response(null, {
-            status: 401,
+            status: API_STATUS_CODES.ERROR.UNAUTHORIZED,
         });
     }
 
@@ -42,7 +43,7 @@ export async function getAllSessions({
 
     if (session === null) {
         return new Response(null, {
-            status: 401,
+            status: API_STATUS_CODES.ERROR.UNAUTHORIZED,
         });
     }
 

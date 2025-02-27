@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { COOKIES_KEY } from "@/configs/constants";
+import { API_STATUS_CODES } from "@/configs/api";
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
     if (request.method === "GET") {
@@ -25,7 +26,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 
     if (originHeader === null || hostHeader === null) {
         return new NextResponse(null, {
-            status: 403,
+            status: API_STATUS_CODES.ERROR.FORBIDDEN,
         });
     }
 
@@ -35,13 +36,13 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
         origin = new URL(originHeader);
     } catch {
         return new NextResponse(null, {
-            status: 403,
+            status: API_STATUS_CODES.ERROR.FORBIDDEN,
         });
     }
 
     if (origin.host !== hostHeader) {
         return new NextResponse(null, {
-            status: 403,
+            status: API_STATUS_CODES.ERROR.FORBIDDEN,
         });
     }
 
