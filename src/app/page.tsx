@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { deleteSessionTokenCookie, setSessionTokenCookie } from "@/lib/actions/cookies";
 
 export default function Page() {
     return (
@@ -15,11 +16,16 @@ export default function Page() {
                     }:
                 </p>
                 <button
+                    onClick={async () => await setSessionTokenCookie({
+                        token: "",
+                        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+                    })}
                     className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
                 >
                     Add notwindstone&lsquo;s session token to cookies
                 </button>
                 <button
+                    onClick={async () => await deleteSessionTokenCookie()}
                     className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
                 >
                     Remove notwindstone&lsquo;s session token from cookies
