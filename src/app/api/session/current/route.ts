@@ -5,8 +5,19 @@ import { invalidateSession } from "@/lib/actions/session";
 import { deleteSessionTokenCookie } from "@/lib/actions/cookies";
 import getSessionId from "@/utils/secure/getSessionId";
 import { API_STATUS_CODES } from "@/configs/api";
+import { getIpAddress } from "@/utils/secure/getIpAddress";
+import { ratelimit } from "@/lib/ratelimit/upstash";
 
 export async function GET(request: NextRequest): Promise<Response> {
+    const ipAddress = getIpAddress(request);
+    const rateLimitResult = await ratelimit.limit(ipAddress);
+
+    if (!rateLimitResult.success) {
+        return new Response(null, {
+            status: API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS,
+        });
+    }
+
     const token = request.cookies.get(COOKIES_KEY)?.value ?? null;
 
     return getSession({
@@ -15,6 +26,15 @@ export async function GET(request: NextRequest): Promise<Response> {
 }
 
 export async function DELETE(request: NextRequest): Promise<Response> {
+    const ipAddress = getIpAddress(request);
+    const rateLimitResult = await ratelimit.limit(ipAddress);
+
+    if (!rateLimitResult.success) {
+        return new Response(null, {
+            status: API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS,
+        });
+    }
+
     const token = request.cookies.get(COOKIES_KEY)?.value as string;
     const sessionId = getSessionId({ token });
 

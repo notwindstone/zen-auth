@@ -6,8 +6,21 @@ import { generateVerificationCode } from "@/utils/secure/generateVerificationCod
 import { types } from "node:util";
 import { createUser } from "@/lib/actions/user";
 import { generateSecurePassword } from "@/utils/secure/generateSecurePassword";
+import { getIpAddress } from "@/utils/secure/getIpAddress";
+import { ratelimit } from "@/lib/ratelimit/upstash";
 
 export async function POST(request: NextRequest): Promise<Response> {
+    // Yeah, these 18 lines of code are duplicated
+    // But you can't really do anything with that
+    const ipAddress = getIpAddress(request);
+    const rateLimitResult = await ratelimit.limit(ipAddress);
+
+    if (!rateLimitResult.success) {
+        return new Response(null, {
+            status: API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS,
+        });
+    }
+
     let data;
 
     try {
@@ -57,6 +70,15 @@ export async function POST(request: NextRequest): Promise<Response> {
 }
 
 export async function PUT(request: NextRequest): Promise<Response> {
+    const ipAddress = getIpAddress(request);
+    const rateLimitResult = await ratelimit.limit(ipAddress);
+
+    if (!rateLimitResult.success) {
+        return new Response(null, {
+            status: API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS,
+        });
+    }
+
     let data;
 
     try {
