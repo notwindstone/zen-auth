@@ -25,6 +25,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     }
 
     const code = generateVerificationCode();
+    const databaseResponse = await
     const emailResponse = await sendEmail({
         code,
         email,

@@ -1,6 +1,6 @@
 "use server";
 
-import { SelectSession, SelectUser, sessionTable, userTable } from "@/db/schema";
+import { InsertSession, SelectSession, SelectUser, sessionTable, userTable } from "@/db/schema";
 import { db } from "@/db/db";
 import { and, eq, not } from "drizzle-orm";
 import getSessionId from "@/utils/misc/getSessionId";
@@ -21,7 +21,7 @@ export async function createSession({
     os: string;
 }): Promise<SelectSession> {
     const sessionId = getSessionId({ token });
-    const session: SelectSession = {
+    const session: InsertSession = {
         id: sessionId,
         lastSignedIn: new Date(),
         ipAddress,
@@ -35,7 +35,6 @@ export async function createSession({
     await db.insert(sessionTable).values(session);
 
     return session;
-
 }
 
 export async function validateSessionToken({
