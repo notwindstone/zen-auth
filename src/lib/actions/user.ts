@@ -59,6 +59,36 @@ export async function getUser({
     );
 }
 
+export async function checkUserExistence({
+    username,
+    email,
+}: {
+    username: TableUserType['username'];
+    email: TableUserType['email'];
+}): Promise<string | null> {
+    const users = await db.select({
+        username: userTable.username,
+        email: userTable.email,
+    }).from(userTable).where(
+        or(
+            eq(userTable.username, username),
+            eq(userTable.email, email),
+        ),
+    );
+
+    for (const user of users) {
+        if (user.email === email) {
+            return "email";
+        }
+
+        if (user.username === username) {
+            return "username";
+        }
+    }
+
+    return null;
+}
+
 export async function getPublicProfile({
     username,
 }: {

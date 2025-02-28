@@ -4,7 +4,7 @@ import { createVerificationCode, getVerificationCodes, removeVerificationCode } 
 import { sendVerificationCodeEmail } from "@/lib/actions/email";
 import { generateVerificationCode } from "@/utils/secure/generateVerificationCode";
 import { types } from "node:util";
-import { createUser } from "@/lib/actions/user";
+import { checkUserExistence, createUser } from "@/lib/actions/user";
 import { generateSecurePassword } from "@/utils/secure/generateSecurePassword";
 import { getIpAddress } from "@/utils/secure/getIpAddress";
 import { ratelimit } from "@/lib/ratelimit/upstash";
@@ -37,6 +37,18 @@ export async function POST(request: NextRequest): Promise<Response> {
     if (!email || !username) {
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.BAD_REQUEST,
+        });
+    }
+
+    const userExistence = await checkUserExistence({
+        username,
+        email,
+    });
+
+    if (userExistence !== null) {
+        return new Response(null, {
+            status: API_STATUS_CODES.ERROR.CONFLICT,
+            statusText: userExistence,
         });
     }
 
@@ -98,6 +110,18 @@ export async function PUT(request: NextRequest): Promise<Response> {
     if (!email || !code || !username || !displayName || !password) {
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.BAD_REQUEST,
+        });
+    }
+
+    const userExistence = await checkUserExistence({
+        username,
+        email,
+    });
+
+    if (userExistence !== null) {
+        return new Response(null, {
+            status: API_STATUS_CODES.ERROR.CONFLICT,
+            statusText: userExistence,
         });
     }
 
