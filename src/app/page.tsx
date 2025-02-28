@@ -18,10 +18,10 @@ export default function Page() {
 
     async function sendVerificationCode() {
         const response = await fetch('/api/verification', {
-            method: "POST",
+            method: "PUT",
             body: JSON.stringify({
                 email: "notwindstone@gmail.com",
-                username: "notwindstone",
+                code: "notwindstone",
             }),
         });
 
@@ -30,7 +30,7 @@ export default function Page() {
 
             return;
         }
-
+alert(JSON.stringify(await response.json()));
         const id = (await response.json())?.id;
 
         emailLetterId.current = id;

@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { API_STATUS_CODES } from "@/configs/api";
-import { generateVerificationCode } from "@/lib/actions/verification";
+import {generateVerificationCode, getVerificationCodes} from "@/lib/actions/verification";
 import { sendEmail } from "@/lib/actions/email";
 
 export async function POST(request: NextRequest): Promise<Response> {
@@ -38,5 +38,34 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     return Response.json({
         id: emailResponse?.data?.id,
+    });
+}
+
+export async function PUT(request: NextRequest): Promise<Response> {
+    let data;
+
+    try {
+        data = await request.json();
+    } catch {
+        return new Response(null, {
+            status: API_STATUS_CODES.ERROR.BAD_REQUEST,
+        });
+    }
+
+    const email = data?.email;
+    const code = data?.code;
+
+    if (!email || !code) {
+        return new Response(null, {
+            status: API_STATUS_CODES.ERROR.BAD_REQUEST,
+        });
+    }
+
+    const codes = await getVerificationCodes({
+        email,
+    });
+
+    return Response.json({
+        codes: codes.map((elem) => elem.code),
     });
 }
