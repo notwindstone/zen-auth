@@ -116,9 +116,16 @@ export async function queryAllSessions({
     userId,
 }: {
     userId: SelectSession['userId'];
-}): Promise<Array<Pick<SelectSession, "id">>> {
+}): Promise<Array<SelectSession>> {
     return (await db.select({
         id: sessionTable.id,
+        userId: sessionTable.userId,
+        ipAddress: sessionTable.ipAddress,
+        lastSignedIn: sessionTable.lastSignedIn,
+        browser: sessionTable.browser,
+        os: sessionTable.os,
+        architecture: sessionTable.architecture,
+        expiresAt: sessionTable.expiresAt,
     }).from(sessionTable).where(eq(sessionTable.userId, userId)));
 }
 
