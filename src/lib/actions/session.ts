@@ -4,7 +4,7 @@ import { InsertSession, SelectSession, SelectUser, sessionTable, userTable } fro
 import { db } from "@/db/db";
 import { and, eq, not } from "drizzle-orm";
 import getSessionId from "@/utils/misc/getSessionId";
-import {getMonthForwardDate} from "@/utils/misc/getMonthForwardDate";
+import { getMonthForwardDate } from "@/utils/misc/getMonthForwardDate";
 
 export async function createSession({
     token,
