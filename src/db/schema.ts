@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 export const userTable = pgTable("user_table", {
     id: text("id").primaryKey(),
@@ -40,7 +40,16 @@ export const verificationCodesTable = pgTable("verification_codes_table", {
     id: text("id").primaryKey(),
     code: text("code").notNull(),
     email: text("email").notNull(),
-    used: boolean("used").notNull(),
+    expiresAt: timestamp("expires_at", {
+        withTimezone: true,
+        mode: "date",
+    }).notNull(),
+});
+
+export const resetCodesTable = pgTable("reset_codes_table", {
+    id: text("id").primaryKey(),
+    resetToken: text("reset_token").notNull(),
+    email: text("email").notNull().unique(),
     expiresAt: timestamp("expires_at", {
         withTimezone: true,
         mode: "date",
@@ -50,3 +59,4 @@ export const verificationCodesTable = pgTable("verification_codes_table", {
 export type TableUserType = typeof userTable.$inferSelect;
 export type TableSessionType = typeof sessionTable.$inferSelect;
 export type TableVerificationCodeType = typeof verificationCodesTable.$inferSelect;
+export type TableResetCodeType = typeof resetCodesTable.$inferSelect;

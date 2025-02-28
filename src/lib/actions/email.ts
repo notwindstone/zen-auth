@@ -25,17 +25,17 @@ export async function sendVerificationCodeEmail({
 }
 
 export async function sendResetCodeEmail({
-    code,
+    resetToken,
     email,
 }: {
-    code: string;
+    resetToken: string;
     email: string;
 }) {
     return resend.emails.send({
         from: 'Zen-Auth <onboarding@windstone.space>',
         to: email,
         subject: 'Сброс пароля',
-        html: `<p>Используйте этот код, чтобы сбросить пароль для вашей учетной записи. Ваш код подтверждения: ${code}.</p>`,
+        html: `<p>Используйте эту ссылку, чтобы сбросить пароль для вашей учетной записи. Ваша ссылка: ${resetToken}.</p>`,
     });
 }
 
