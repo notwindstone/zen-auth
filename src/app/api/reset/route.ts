@@ -2,12 +2,12 @@ import { NextRequest } from "next/server";
 import { getIpAddress } from "@/utils/secure/getIpAddress";
 import { ratelimit } from "@/lib/ratelimit/upstash";
 import { API_STATUS_CODES } from "@/configs/api";
-import {createResetToken, getResetToken, removeResetToken} from "@/lib/actions/reset";
+import { createResetToken, getResetToken, removeResetToken } from "@/lib/actions/reset";
 import { generateResetToken } from "@/utils/secure/generateResetToken";
 import { checkUserExistence, updateUser } from "@/lib/actions/user";
 import { types } from "node:util";
 import { sendResetCodeEmail } from "@/lib/actions/email";
-import {generateSecurePassword} from "@/utils/secure/generateSecurePassword";
+import { generateSecurePassword } from "@/utils/secure/generateSecurePassword";
 
 export async function POST(request: NextRequest): Promise<Response> {
     const ipAddress = getIpAddress(request);

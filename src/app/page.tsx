@@ -248,12 +248,20 @@ export default function Page() {
                     They are not fully done yet and lack some features. This is a list of some things I want to implement:
                 </p>
                 <ul className="list-[katakana] pl-10 text-zinc-400">
-                    <li>UI, of course</li>
-                    <li>Password reset</li>
+                    <li
+                        className="before:content-['▢'] before:pr-2 before:text-latte-rosewater"
+                    >
+                        UI, of course
+                    </li>
+                    <li
+                        className="before:content-['■'] before:pr-2 before:text-latte-rosewater"
+                    >
+                        Password reset
+                    </li>
                     <li>Profile customization</li>
                     <li>Profile picture storage using Cloudinary</li>
                     <li
-                        className="before:absolute before:content-['Done'] before:left-[360px] before:text-latte-rosewater"
+                        className="before:content-['■'] before:pr-2 before:text-latte-rosewater"
                     >
                         Server-side Rate limit
                     </li>
