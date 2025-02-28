@@ -9,8 +9,9 @@ const redis = new Redis({
     token: process.env.UPSTASH_REDIS_REST_TOKEN!,
 });
 
-// Allows 5 requests per 5 seconds
+// Max tokens: set to 5, allowing a burst of up to 5 requests
+// Refill rate: set to 1.25 per second (refills 5 tokens every 4 seconds)
 export const ratelimit = new Ratelimit({
     redis: redis,
-    limiter: Ratelimit.fixedWindow(5, "5 s"),
+    limiter: Ratelimit.tokenBucket(5, "4 s", 5),
 });

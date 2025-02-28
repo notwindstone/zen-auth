@@ -9,8 +9,6 @@ export async function GET(request: NextRequest): Promise<Response> {
     const rateLimitResult = await ratelimit.limit(ipAddress);
 
     if (!rateLimitResult.success) {
-        console.log(rateLimitResult);
-
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS,
         });
