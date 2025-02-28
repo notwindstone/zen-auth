@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db/db";
-import { InsertVerificationCode, SelectVerificationCode, verificationCodesTable } from "@/db/schema";
+import { TableVerificationCodeType, verificationCodesTable } from "@/db/schema";
 import { v4 as generateUUID } from 'uuid';
 import { and, eq, gt } from "drizzle-orm";
 import { getHourForwardDate } from "@/utils/misc/getHourForwardDate";
@@ -10,10 +10,10 @@ export async function createVerificationCode({
     email,
     code,
 }: {
-    email: InsertVerificationCode['email'],
-    code: InsertVerificationCode['code'],
-}): Promise<SelectVerificationCode | Error> {
-    const verificationCode: InsertVerificationCode = {
+    email: TableVerificationCodeType['email'],
+    code: TableVerificationCodeType['code'],
+}): Promise<TableVerificationCodeType | Error> {
+    const verificationCode: TableVerificationCodeType = {
         id: generateUUID(),
         code: code,
         expiresAt: getHourForwardDate(),
@@ -34,8 +34,8 @@ export async function removeVerificationCode({
     email,
     code,
 }: {
-    email: InsertVerificationCode['email'],
-    code: InsertVerificationCode['code'],
+    email: TableVerificationCodeType['email'],
+    code: TableVerificationCodeType['code'],
 }): Promise<string | Error> {
     try {
         await db

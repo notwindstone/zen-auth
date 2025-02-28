@@ -47,11 +47,6 @@ export const verificationCodesTable = pgTable("verification_codes_table", {
     }).notNull(),
 });
 
-export type InsertUser = typeof userTable.$inferInsert;
-export type SelectUser = typeof userTable.$inferSelect;
-
-export type InsertSession = typeof sessionTable.$inferInsert;
-export type SelectSession = typeof sessionTable.$inferSelect;
-
-export type InsertVerificationCode = typeof verificationCodesTable.$inferInsert;
-export type SelectVerificationCode = typeof verificationCodesTable.$inferSelect;
+export type TableUserType = typeof userTable.$inferSelect;
+export type TableSessionType = typeof sessionTable.$inferSelect;
+export type TableVerificationCodeType = typeof verificationCodesTable.$inferSelect;

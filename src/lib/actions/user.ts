@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db/db";
-import { InsertUser, SelectUser, userTable } from "@/db/schema";
+import { TableUserType, userTable } from "@/db/schema";
 import { eq, or } from "drizzle-orm";
 import { v4 as generateUUID } from 'uuid';
 import { PUBLIC_AVATAR_URL } from "@/configs/constants";
@@ -12,12 +12,12 @@ export async function createUser({
     email,
     password,
 }: {
-    username: InsertUser['username'];
-    displayName: InsertUser['displayName'];
-    email: InsertUser['email'];
-    password: InsertUser['password'];
-}): Promise<InsertUser | Error> {
-    const user: InsertUser = {
+    username: TableUserType['username'];
+    displayName: TableUserType['displayName'];
+    email: TableUserType['email'];
+    password: TableUserType['password'];
+}): Promise<TableUserType | Error> {
+    const user: TableUserType = {
         id: generateUUID(),
         username,
         avatarUrl: PUBLIC_AVATAR_URL,
@@ -40,8 +40,8 @@ export async function createUser({
 export async function getUser({
     login,
 }: {
-    login: SelectUser['email'] | SelectUser['username'];
-}): Promise<Array<SelectUser>> {
+    login: TableUserType['email'] | TableUserType['username'];
+}): Promise<Array<TableUserType>> {
     return db.select({
         id: userTable.id,
         username: userTable.username,
@@ -66,7 +66,7 @@ export async function getPublicProfile({
 }): Promise<
         Array<
             Pick<
-                SelectUser, "username" | "avatarUrl" | "displayName" | "createdAt" | "lastSignedIn"
+                TableUserType, "username" | "avatarUrl" | "displayName" | "createdAt" | "lastSignedIn"
             > | undefined
         >
 > {

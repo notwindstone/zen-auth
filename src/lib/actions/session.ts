@@ -1,6 +1,6 @@
 "use server";
 
-import { InsertSession, SelectSession, SelectUser, sessionTable, userTable } from "@/db/schema";
+import { TableSessionType, TableUserType, sessionTable, userTable } from "@/db/schema";
 import { db } from "@/db/db";
 import { and, eq, not } from "drizzle-orm";
 import getSessionId from "@/utils/secure/getSessionId";
@@ -15,14 +15,14 @@ export async function createSession({
     os,
 }: {
     token: string;
-    userId: InsertSession['userId'];
-    ipAddress: InsertSession['ipAddress'];
-    architecture: InsertSession['architecture'];
-    browser: InsertSession['browser'];
-    os: InsertSession['os'];
-}): Promise<SelectSession> {
+    userId: TableSessionType['userId'];
+    ipAddress: TableSessionType['ipAddress'];
+    architecture: TableSessionType['architecture'];
+    browser: TableSessionType['browser'];
+    os: TableSessionType['os'];
+}): Promise<TableSessionType> {
     const sessionId = getSessionId({ token });
-    const session: InsertSession = {
+    const session: TableSessionType = {
         id: sessionId,
         lastSignedIn: new Date(),
         ipAddress,
@@ -97,8 +97,8 @@ export async function invalidateAllSessionsExceptCurrent({
     userId,
     sessionId,
 }: {
-    sessionId: SelectSession['id'];
-    userId: SelectSession['userId'];
+    sessionId: TableSessionType['id'];
+    userId: TableSessionType['userId'];
 }): Promise<void> {
     await db
         .delete(sessionTable)
@@ -115,8 +115,8 @@ export async function invalidateAllSessionsExceptCurrent({
 export async function queryAllSessions({
     userId,
 }: {
-    userId: SelectSession['userId'];
-}): Promise<Array<SelectSession>> {
+    userId: TableSessionType['userId'];
+}): Promise<Array<TableSessionType>> {
     return (await db.select({
         id: sessionTable.id,
         userId: sessionTable.userId,
@@ -130,5 +130,5 @@ export async function queryAllSessions({
 }
 
 export type SessionValidationResult =
-    | { session: SelectSession; user: SelectUser }
+    | { session: TableSessionType; user: TableUserType }
     | { session: null; user: null };
