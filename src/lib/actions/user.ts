@@ -2,7 +2,7 @@
 
 import { db } from "@/db/db";
 import { InsertUser, SelectUser, userTable } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 import { v4 as generateUUID } from 'uuid';
 import { PUBLIC_AVATAR_URL } from "@/configs/constants";
 
@@ -35,6 +35,28 @@ export async function createUser({
     }
 
     return user;
+}
+
+export async function getUser({
+    login,
+}: {
+    login: SelectUser['email'] | SelectUser['username'];
+}): Promise<Array<SelectUser>> {
+    return db.select({
+        id: userTable.id,
+        username: userTable.username,
+        email: userTable.email,
+        displayName: userTable.displayName,
+        avatarUrl: userTable.avatarUrl,
+        password: userTable.password,
+        createdAt: userTable.createdAt,
+        lastSignedIn: userTable.lastSignedIn,
+    }).from(userTable).where(
+        or(
+            eq(userTable.username, login),
+            eq(userTable.email, login),
+        ),
+    );
 }
 
 export async function getPublicProfile({
