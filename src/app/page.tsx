@@ -102,10 +102,10 @@ export default function Page() {
                 </button>
                 <button
                     onClick={async () => {
-                        const response = await fetch('/api/session/specific', {
-                            method: "DELETE",
+                        const response = await fetch('/api/reset', {
+                            method: "POST",
                             body: JSON.stringify({
-                                sessionId: '5b035999c7963a6449ca5626c659ad5419f913baf1b70d81d79310181d400723',
+                                email: "notwindstone@gmail.com",
                             }),
                         });
 
