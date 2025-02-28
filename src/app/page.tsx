@@ -21,7 +21,7 @@ export default function Page() {
             method: "PUT",
             body: JSON.stringify({
                 email: "notwindstone@gmail.com",
-                code: "notwindstone",
+                code: "121212",
             }),
         });
 
@@ -30,7 +30,7 @@ export default function Page() {
 
             return;
         }
-alert(JSON.stringify(await response.json()));
+
         const id = (await response.json())?.id;
 
         emailLetterId.current = id;

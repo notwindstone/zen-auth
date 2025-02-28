@@ -1,16 +1,9 @@
+"use server";
+
 import { SelectSession, SelectUser, sessionTable, userTable } from "@/db/schema";
-import { encodeBase32LowerCaseNoPadding } from "@oslojs/encoding";
 import { db } from "@/db/db";
 import { and, eq, not } from "drizzle-orm";
 import getSessionId from "@/utils/misc/getSessionId";
-
-export function generateSessionToken(): string {
-    const bytes = new Uint8Array(20);
-
-    crypto.getRandomValues(bytes);
-
-    return encodeBase32LowerCaseNoPadding(bytes);
-}
 
 export async function createSession({
     token,

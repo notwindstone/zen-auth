@@ -1,7 +1,8 @@
 import type { NextRequest } from "next/server";
 import { API_STATUS_CODES } from "@/configs/api";
-import {generateVerificationCode, getVerificationCodes} from "@/lib/actions/verification";
+import { getVerificationCodes } from "@/lib/actions/verification";
 import { sendEmail } from "@/lib/actions/email";
+import { generateVerificationCode } from "@/utils/misc/generateVerificationCode";
 
 export async function POST(request: NextRequest): Promise<Response> {
     let data;
@@ -61,11 +62,21 @@ export async function PUT(request: NextRequest): Promise<Response> {
         });
     }
 
-    const codes = await getVerificationCodes({
+    const codesResponse = await getVerificationCodes({
         email,
     });
+    const codes = new Set(codesResponse.map((elem: {
+        code: string;
+    }) => elem.code));
 
-    return Response.json({
-        codes: codes.map((elem) => elem.code),
+    console.log(codes)
+    if (codes.has(code)) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SUCCESS.OK,
+        });
+    }
+
+    return new Response(null, {
+        status: API_STATUS_CODES.ERROR.UNAUTHORIZED,
     });
 }
