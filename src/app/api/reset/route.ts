@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { getIpAddress } from "@/utils/secure/getIpAddress";
 import { ratelimit } from "@/lib/ratelimit/upstash";
 import { API_STATUS_CODES } from "@/configs/api";
-import { createResetToken, getResetToken } from "@/lib/actions/reset";
+import {createResetToken, getResetToken, removeResetToken} from "@/lib/actions/reset";
 import { generateResetToken } from "@/utils/secure/generateResetToken";
 import { checkUserExistence, updateUser } from "@/lib/actions/user";
 import { types } from "node:util";
@@ -123,7 +123,7 @@ export async function PUT(request: NextRequest): Promise<Response> {
         });
     }
 
-    // Don't remove verification code from database
+    // Don't remove reset token from database
     // until secure password is successfully generated
     const securePasswordResponse = await generateSecurePassword({
         password: newPassword,
@@ -141,6 +141,17 @@ export async function PUT(request: NextRequest): Promise<Response> {
     });
 
     if (types.isNativeError(userUpdateResponse)) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
+        });
+    }
+
+    const resetTokenRemovalResponse = await removeResetToken({
+        email,
+        resetToken,
+    });
+
+    if (types.isNativeError(resetTokenRemovalResponse)) {
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
         });
