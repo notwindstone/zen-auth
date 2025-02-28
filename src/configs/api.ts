@@ -1,10 +1,12 @@
 export const API_ROUTES = {
-    session: {
-        current: "/api/session/current",
-        all: "/api/session/all",
-    },
-    profile: "/api/profile",
     login: "/api/login",
+    profile: "/api/profile",
+    reset: "/api/reset",
+    session: {
+        all: "/api/session/all",
+        current: "/api/session/current",
+    },
+    verification: "/api/verification",
 };
 export const API_STATUS_CODES = {
     SUCCESS: {

@@ -98,7 +98,7 @@ export async function PUT(request: NextRequest): Promise<Response> {
     const newPassword = data?.newPassword;
     const resetToken = data?.resetToken;
 
-    if (!email || !newPassword) {
+    if (!email || !newPassword || !resetToken) {
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.BAD_REQUEST,
         });

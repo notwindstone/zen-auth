@@ -79,6 +79,50 @@ export default function Page() {
                 </p>
                 <button
                     onClick={async () => {
+                        const response = await fetch('/api/reset', {
+                            method: "PUT",
+                            body: JSON.stringify({
+                                email: 'notwindstone@gmail.com',
+                                newPassword: "sheesh",
+                                resetToken: "bBxmKUrkfZAXrrcAKOsMnhYLgExgmDWjlHhLsoXHxmVPPAmILYheRreYtGMIfijh",
+                            }),
+                        });
+
+                        if (!response.ok) {
+                            alert('Response is not ok');
+
+                            return;
+                        }
+
+                        alert("Truth.");
+                    }}
+                    className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
+                >
+                    Reset password
+                </button>
+                <button
+                    onClick={async () => {
+                        const response = await fetch('/api/reset', {
+                            method: "POST",
+                            body: JSON.stringify({
+                                email: 'notwindstone@gmail.com',
+                            }),
+                        });
+
+                        if (!response.ok) {
+                            alert('Response is not ok');
+
+                            return;
+                        }
+
+                        alert("Truth.");
+                    }}
+                    className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
+                >
+                    Send reset token
+                </button>
+                <button
+                    onClick={async () => {
                         await verifyEmail();
                     }}
                     className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
@@ -126,7 +170,7 @@ export default function Page() {
                                     method: "POST",
                                     body: JSON.stringify({
                                         login: "notwindstone",
-                                        password: "sheet",
+                                        password: "sheesh",
                                     }),
                                 });
 
