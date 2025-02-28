@@ -4,6 +4,21 @@ import Link from "next/link";
 import { deleteSessionTokenCookie, setSessionTokenCookie } from "@/lib/actions/cookies";
 
 export default function Page() {
+    async function sendVerificationCode() {
+        const response = await fetch('/api/verification', {
+            method: "POST",
+            body: JSON.stringify({
+                email: "notwindstone@gmail.com",
+            }),
+        });
+
+        if (!response.ok) {
+            return;
+        }
+
+        return;
+    }
+
     return (
         <div className="flex flex-col gap-4">
             <p>
@@ -15,6 +30,14 @@ export default function Page() {
                         <span className="text-zinc-400">(session token это не session id)</span>
                     }:
                 </p>
+                <button
+                    onClick={async () => {
+                        await sendVerificationCode();
+                    }}
+                    className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
+                >
+                    Send verification code
+                </button>
                 <button
                     onClick={async () => {
                         setSessionTokenCookie({
