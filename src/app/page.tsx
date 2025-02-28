@@ -7,6 +7,28 @@ import { useRef } from "react";
 
 export default function Page() {
     const emailLetterId = useRef('');
+    const isVerified = useRef(false);
+
+    async function verifyEmail() {
+        const response = await fetch('/api/verification', {
+            method: "PUT",
+            body: JSON.stringify({
+                email: 'notwindstone@gmail.com',
+                code: "100000",
+            }),
+        });
+
+        if (!response.ok) {
+            alert('Response is not ok');
+
+            return;
+        }
+
+        isVerified.current = true;
+        alert(true);
+
+        return;
+    }
 
     async function checkEmailLetter() {
         const response = await getEmailInfo({
@@ -18,10 +40,10 @@ export default function Page() {
 
     async function sendVerificationCode() {
         const response = await fetch('/api/verification', {
-            method: "PUT",
+            method: "POST",
             body: JSON.stringify({
                 email: "notwindstone@gmail.com",
-                code: "121212",
+                username: "notwindstone",
             }),
         });
 
@@ -50,6 +72,14 @@ export default function Page() {
                         <span className="text-zinc-400">(session token это не session id)</span>
                     }:
                 </p>
+                <button
+                    onClick={async () => {
+                        await verifyEmail();
+                    }}
+                    className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
+                >
+                    Verify email
+                </button>
                 <button
                     onClick={async () => {
                         await checkEmailLetter();

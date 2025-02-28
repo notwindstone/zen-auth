@@ -69,7 +69,6 @@ export async function PUT(request: NextRequest): Promise<Response> {
         code: string;
     }) => elem.code));
 
-    console.log(codes)
     if (codes.has(code)) {
         return new Response(null, {
             status: API_STATUS_CODES.SUCCESS.OK,
