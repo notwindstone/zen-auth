@@ -1,4 +1,4 @@
-import type { NextRequest } from "next/server";
+import {NextRequest, userAgent} from "next/server";
 import { API_STATUS_CODES } from "@/configs/api";
 import { getUser } from "@/lib/actions/user";
 import { comparePasswords } from "@/utils/secure/comparePasswords";
@@ -42,12 +42,18 @@ export async function POST(request: NextRequest): Promise<Response> {
         });
     }
 
+    const {
+        cpu,
+        os,
+        browser,
+    } = userAgent(request);
+
     const sessionResponse = await createSession({
         token: generateSessionToken(),
         userId: user.id,
-        architecture: "",
-        os: "",
-        browser: "",
+        architecture: cpu.architecture as string,
+        os: `${os} ${os.version}`,
+        browser: `${browser.name} ${browser.major} ${browser.version}`,
         ipAddress: "",
     });
 
