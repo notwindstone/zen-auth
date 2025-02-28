@@ -3,6 +3,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { API_ROUTES } from "@/configs/api";
 import { NO_RETRY_ERRORS } from "@/configs/constants";
+import ProfileUser from "@/components/Profile/ProfileUser/ProfileUser";
+import {TableSessionType, TableUserType} from "@/db/schema";
+import ProfileSession from "@/components/Profile/ProfileSession/ProfileSession";
 
 export default function Profile({
     username,
@@ -19,7 +22,10 @@ export default function Profile({
         failureReason,
     } = useQuery({
         queryKey: [API_ROUTES.session.current, API_ROUTES.profile, token, username],
-        queryFn: async () => {
+        queryFn: async (): Promise<{
+            session: TableSessionType;
+            user: TableUserType;
+        }> => {
             let response;
 
             if (!username) {
@@ -70,9 +76,17 @@ export default function Profile({
         );
     }
 
+    const user = data?.user;
+    const session = data?.session;
+
     return (
         <div>
-            {JSON.stringify(data)}
+            <ProfileSession
+                { ...session }
+            />
+            <ProfileUser
+                { ...user }
+            />
         </div>
     );
 }
