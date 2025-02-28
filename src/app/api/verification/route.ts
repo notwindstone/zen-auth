@@ -98,6 +98,8 @@ export async function PUT(request: NextRequest): Promise<Response> {
         });
     }
 
+
+
     return new Response(null, {
         status: API_STATUS_CODES.SUCCESS.OK,
     });

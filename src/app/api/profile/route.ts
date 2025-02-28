@@ -1,5 +1,5 @@
 import type { NextRequest } from "next/server";
-import { getPublicProfile } from "@/lib/actions/profile";
+import { getPublicProfile } from "@/lib/actions/user";
 import { API_STATUS_CODES } from "@/configs/api";
 
 export async function GET(request: NextRequest): Promise<Response> {
