@@ -128,7 +128,7 @@ export default function Page() {
                     }}
                     className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
                 >
-                    Login using notwindstone&lsquo;s credentials
+                    Log in using notwindstone&lsquo;s credentials
                 </button>
                 <button
                     onClick={async () => {
@@ -140,7 +140,7 @@ export default function Page() {
                     }}
                     className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
                 >
-                    Logout
+                    Log out
                 </button>
             </div>
             <div className="flex flex-col">
@@ -168,19 +168,25 @@ export default function Page() {
                     Currently available api routes:
                 </p>
                 <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/api/profile"}>
-                    /api/profile
+                    /api/profile - GET
                 </Link>
                 <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/api/profile?username=notwindstone"}>
-                    /api/profile?username=notwindstone
+                    /api/profile?username=notwindstone - GET
                 </Link>
                 <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/api/profile?username=not_existing_user"}>
-                    /api/profile?username=not_existing_user
+                    /api/profile?username=not_existing_user - GET
                 </Link>
                 <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/api/session/current"}>
-                    /api/session/current
+                    /api/session/current - GET, DELETE
                 </Link>
                 <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/api/session/all"}>
-                    /api/session/all
+                    /api/session/all - GET, DELETE
+                </Link>
+                <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/api/login"}>
+                    /api/login - POST
+                </Link>
+                <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/api/verification"}>
+                    /api/verification - POST (verification code creation), PUT (account verification and creation)
                 </Link>
             </div>
             <div className="flex flex-col">
@@ -189,9 +195,6 @@ export default function Page() {
                 </p>
                 <ul className="list-[katakana] pl-10 text-zinc-400">
                     <li>UI, of course</li>
-                    <li>/api/login</li>
-                    <li>/api/session/all - only GET method</li>
-                    <li>Email verification (basically separate codes table in db, actions, Resend API, etc.)</li>
                     <li>Password reset</li>
                     <li>Profile customization</li>
                     <li>Profile picture storage using Cloudinary</li>
