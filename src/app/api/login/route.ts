@@ -1,4 +1,4 @@
-import {NextRequest, userAgent} from "next/server";
+import { NextRequest, userAgent } from "next/server";
 import { API_STATUS_CODES } from "@/configs/api";
 import { getUser } from "@/lib/actions/user";
 import { comparePasswords } from "@/utils/secure/comparePasswords";
@@ -47,17 +47,21 @@ export async function POST(request: NextRequest): Promise<Response> {
         os,
         browser,
     } = userAgent(request);
+    const ipAddress = (request.headers.get('x-forwarded-for') ?? '127.0.0.1').split(',')?.[0];
 
-    const sessionResponse = await createSession({
-        token: generateSessionToken(),
+    // sessionToken is NOT a sessionId
+    const sessionToken = generateSessionToken();
+
+    await createSession({
+        token: sessionToken,
         userId: user.id,
         architecture: cpu.architecture as string,
         os: `${os} ${os.version}`,
         browser: `${browser.name} ${browser.major} ${browser.version}`,
-        ipAddress: "",
+        ipAddress: ipAddress,
     });
 
     return Response.json({
-        sessionId: sessionResponse.id,
+        sessionToken: sessionToken,
     });
 }
