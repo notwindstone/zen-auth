@@ -3,7 +3,7 @@
 import { InsertSession, SelectSession, SelectUser, sessionTable, userTable } from "@/db/schema";
 import { db } from "@/db/db";
 import { and, eq, not } from "drizzle-orm";
-import getSessionId from "@/utils/misc/getSessionId";
+import getSessionId from "@/utils/secure/getSessionId";
 import { getMonthForwardDate } from "@/utils/misc/getMonthForwardDate";
 
 export async function createSession({

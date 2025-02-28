@@ -15,7 +15,10 @@ export default function Page() {
             method: "PUT",
             body: JSON.stringify({
                 email: 'notwindstone@gmail.com',
-                code: "867289",
+                code: "883239",
+                username: "notwindstone",
+                displayName: 'windstone',
+                password: 'sheet',
             }),
         });
 

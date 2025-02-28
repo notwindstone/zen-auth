@@ -3,7 +3,7 @@ import { getSession } from "@/lib/routes/session/getSession";
 import { COOKIES_KEY } from "@/configs/constants";
 import { invalidateSession } from "@/lib/actions/session";
 import { deleteSessionTokenCookie } from "@/lib/actions/cookies";
-import getSessionId from "@/utils/misc/getSessionId";
+import getSessionId from "@/utils/secure/getSessionId";
 import { API_STATUS_CODES } from "@/configs/api";
 
 export async function GET(request: NextRequest): Promise<Response> {

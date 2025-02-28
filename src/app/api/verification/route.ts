@@ -2,10 +2,10 @@ import type { NextRequest } from "next/server";
 import { API_STATUS_CODES } from "@/configs/api";
 import { createVerificationCode, getVerificationCodes, removeVerificationCode } from "@/lib/actions/verification";
 import { sendEmail } from "@/lib/actions/email";
-import { generateVerificationCode } from "@/utils/misc/generateVerificationCode";
+import { generateVerificationCode } from "@/utils/secure/generateVerificationCode";
 import { types } from "node:util";
 import { createUser } from "@/lib/actions/user";
-import { generateSecurePassword } from "@/utils/misc/generateSecurePassword";
+import { generateSecurePassword } from "@/utils/secure/generateSecurePassword";
 
 export async function POST(request: NextRequest): Promise<Response> {
     let data;
@@ -73,7 +73,7 @@ export async function PUT(request: NextRequest): Promise<Response> {
     const password = data?.password;
     const code = data?.code;
 
-    if (!email || !code) {
+    if (!email || !code || !username || !displayName || !password) {
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.BAD_REQUEST,
         });
@@ -92,6 +92,18 @@ export async function PUT(request: NextRequest): Promise<Response> {
         });
     }
 
+    // Don't remove verification code from database
+    // until secure password is successfully generated
+    const securePasswordResponse = await generateSecurePassword({
+        password: password,
+    });
+
+    if (types.isNativeError(securePasswordResponse)) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
+        });
+    }
+
     const verificationDatabaseResponse = await removeVerificationCode({
         email,
         code,
@@ -103,9 +115,7 @@ export async function PUT(request: NextRequest): Promise<Response> {
         });
     }
 
-    const { hash } = await generateSecurePassword({
-        password: password,
-    });
+    const { hash } = securePasswordResponse;
 
     const userDatabaseResponse = await createUser({
         username,
