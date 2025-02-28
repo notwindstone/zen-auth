@@ -1,5 +1,3 @@
-"use server";
-
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { config } from "dotenv";
@@ -12,7 +10,7 @@ const redis = new Redis({
 });
 
 // Allows 5 requests per 5 seconds
-const ratelimit = new Ratelimit({
+export const ratelimit = new Ratelimit({
     redis: redis,
     limiter: Ratelimit.fixedWindow(5, "5 s"),
 });

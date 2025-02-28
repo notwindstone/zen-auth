@@ -4,8 +4,21 @@ import { getUser } from "@/lib/actions/user";
 import { comparePasswords } from "@/utils/secure/comparePasswords";
 import { createSession } from "@/lib/actions/session";
 import { generateSessionToken } from "@/utils/secure/generateSessionToken";
+import { getIpAddress } from "@/utils/secure/getIpAddress";
+import { ratelimit } from "@/lib/ratelimit/upstash";
 
 export async function POST(request: NextRequest): Promise<Response> {
+    const ipAddress = getIpAddress(request);
+    const rateLimitResult = await ratelimit.limit(ipAddress);
+
+    if (!rateLimitResult.success) {
+        console.log(rateLimitResult);
+
+        return new Response(null, {
+            status: API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS,
+        });
+    }
+
     let data;
 
     try {
@@ -47,7 +60,6 @@ export async function POST(request: NextRequest): Promise<Response> {
         os,
         browser,
     } = userAgent(request);
-    const ipAddress = (request.headers.get('x-forwarded-for') ?? '127.0.0.1').split(',')?.[0];
 
     // sessionToken is NOT a sessionId
     const sessionToken = generateSessionToken();

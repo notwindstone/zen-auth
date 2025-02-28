@@ -1,8 +1,21 @@
 import type { NextRequest } from "next/server";
 import { getPublicProfile } from "@/lib/actions/user";
 import { API_STATUS_CODES } from "@/configs/api";
+import { getIpAddress } from "@/utils/secure/getIpAddress";
+import { ratelimit } from "@/lib/ratelimit/upstash";
 
 export async function GET(request: NextRequest): Promise<Response> {
+    const ipAddress = getIpAddress(request);
+    const rateLimitResult = await ratelimit.limit(ipAddress);
+
+    if (!rateLimitResult.success) {
+        console.log(rateLimitResult);
+
+        return new Response(null, {
+            status: API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS,
+        });
+    }
+
     const searchParams = request.nextUrl.searchParams;
     const searchUsername = searchParams.get('username');
 
