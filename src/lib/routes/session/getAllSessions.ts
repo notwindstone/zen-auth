@@ -1,9 +1,9 @@
 "use server";
 
-import { validateSessionToken } from "@/lib/actions/session";
 import { API_STATUS_CODES } from "@/configs/api";
+import { queryAllSessions, validateSessionToken } from "@/lib/actions/session";
 
-export async function getSession({
+export async function getAllSessions({
     token,
 }: {
     token: string | null;
@@ -23,15 +23,6 @@ export async function getSession({
     }
 
     return Response.json({
-        session,
-        user: {
-            id: user.id,
-            username: user.username,
-            displayName: user.displayName,
-            avatarUrl: user.avatarUrl,
-            email: user.email,
-            createdAt: user.createdAt,
-            lastSignedIn: user.lastSignedIn,
-        },
+        sessions: await queryAllSessions({ userId: user.id }),
     });
 }

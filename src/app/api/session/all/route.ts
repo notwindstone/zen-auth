@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { COOKIES_KEY } from "@/configs/constants";
 import { invalidateAllSessionsExceptCurrent, validateSessionToken } from "@/lib/actions/session";
-import { getAllSessions } from "@/lib/routes/session/getSession";
+import { getAllSessions } from "@/lib/routes/session/getAllSessions";
 import { API_STATUS_CODES } from "@/configs/api";
 
 export async function GET(request: NextRequest): Promise<Response> {
