@@ -1,13 +1,13 @@
 import type { NextRequest } from "next/server";
 import { COOKIES_KEY } from "@/configs/constants";
 import { invalidateAllSessionsExceptCurrent, validateSessionToken } from "@/lib/actions/session";
-import { getSession } from "@/lib/routes/session/getSession";
+import { getAllSessions } from "@/lib/routes/session/getSession";
 import { API_STATUS_CODES } from "@/configs/api";
 
 export async function GET(request: NextRequest): Promise<Response> {
     const token = request.cookies.get(COOKIES_KEY)?.value ?? null;
 
-    return getSession({
+    return getAllSessions({
         token,
     });
 }

@@ -140,7 +140,7 @@ export default function Page() {
                     }}
                     className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
                 >
-                    Remove notwindstone&lsquo;s session token from cookies
+                    Logout
                 </button>
             </div>
             <div className="flex flex-col">
@@ -154,10 +154,13 @@ export default function Page() {
                     profile
                 </Link>
                 <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/profile/notwindstone"}>
-                    notwindstone
+                    profile/notwindstone
                 </Link>
                 <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/profile/not_existing_user"}>
-                    not_existing_user
+                    profile/not_existing_user
+                </Link>
+                <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/sessions"}>
+                    sessions
                 </Link>
             </div>
             <div className="flex flex-col">
