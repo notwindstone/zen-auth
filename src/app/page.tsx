@@ -102,8 +102,25 @@ export default function Page() {
                 </button>
                 <button
                     onClick={async () => {
+                        const response = await fetch('/api/login', {
+                            method: "POST",
+                            body: JSON.stringify({
+                                login: "notwindstone",
+                                password: "sheet",
+                            }),
+                        });
+
+                        if (!response.ok) {
+                            alert('bruh what are you doing');
+
+                            return;
+                        }
+
+                        const data = await response.json();
+                        const { sessionToken } = data;
+
                         setSessionTokenCookie({
-                            token: "hbwhpgs2qhc5desuajn44zruxeu3ygp4",
+                            token: sessionToken,
                             expiresAt: getMonthForwardDate(),
                         }).then(() => {
                             alert('Now you are an authorized user.');
@@ -111,10 +128,14 @@ export default function Page() {
                     }}
                     className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
                 >
-                    Add notwindstone&lsquo;s session token to cookies
+                    Login using notwindstone&lsquo;s credentials
                 </button>
                 <button
                     onClick={async () => {
+                        await fetch('/api/session/current', {
+                            method: "DELETE",
+                        });
+
                         deleteSessionTokenCookie().then(() => alert('Now you are not authorized.'));
                     }}
                     className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
