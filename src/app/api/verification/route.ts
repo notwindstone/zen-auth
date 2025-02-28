@@ -29,14 +29,14 @@ export async function POST(request: NextRequest): Promise<Response> {
         email,
         username,
     });
-console.log(emailResponse);
+
     if (emailResponse.error) {
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
         });
     }
 
-    return new Response(null, {
-        status: API_STATUS_CODES.SUCCESS.OK,
+    return Response.json({
+        id: emailResponse?.data?.id,
     });
 }

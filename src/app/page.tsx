@@ -3,28 +3,38 @@
 import Link from "next/link";
 import { deleteSessionTokenCookie, setSessionTokenCookie } from "@/lib/actions/cookies";
 import { getEmailInfo } from "@/lib/actions/email";
+import { useRef } from "react";
 
 export default function Page() {
+    const emailLetterId = useRef('');
+
     async function checkEmailLetter() {
         const response = await getEmailInfo({
-            id: "3962e009-4a9f-4818-b9da-e7d0e6428822",
+            id: emailLetterId.current,
         });
 
-        console.log(response?.data?.last_event);
+        alert(response?.data?.last_event);
     }
 
     async function sendVerificationCode() {
         const response = await fetch('/api/verification', {
             method: "POST",
             body: JSON.stringify({
-                email: "peoned@elegantarthub.com",
+                email: "notwindstone@gmail.com",
                 username: "notwindstone",
             }),
         });
 
         if (!response.ok) {
+            alert('Response is not ok');
+
             return;
         }
+
+        const id = (await response.json())?.id;
+
+        emailLetterId.current = id;
+        alert(id);
 
         return;
     }
