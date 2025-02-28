@@ -7,6 +7,7 @@ import { generateResetToken } from "@/utils/secure/generateResetToken";
 import { checkUserExistence, updateUser } from "@/lib/actions/user";
 import { types } from "node:util";
 import { sendResetCodeEmail } from "@/lib/actions/email";
+import {generateSecurePassword} from "@/utils/secure/generateSecurePassword";
 
 export async function POST(request: NextRequest): Promise<Response> {
     const ipAddress = getIpAddress(request);
@@ -122,9 +123,21 @@ export async function PUT(request: NextRequest): Promise<Response> {
         });
     }
 
+    // Don't remove verification code from database
+    // until secure password is successfully generated
+    const securePasswordResponse = await generateSecurePassword({
+        password: newPassword,
+    });
+
+    if (types.isNativeError(securePasswordResponse)) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
+        });
+    }
+
     const userUpdateResponse = await updateUser({
         email,
-        newPassword,
+        newPassword: securePasswordResponse.hash,
     });
 
     if (types.isNativeError(userUpdateResponse)) {
