@@ -93,7 +93,13 @@ export async function invalidateSession({
     await db.delete(sessionTable).where(eq(sessionTable.id, sessionId));
 }
 
-export async function invalidateAllSessionsExceptCurrent(sessionId: string, userId: InsertSession['userId']): Promise<void> {
+export async function invalidateAllSessionsExceptCurrent({
+    userId,
+    sessionId,
+}: {
+    sessionId: SelectSession['id'];
+    userId: SelectSession['userId'];
+}): Promise<void> {
     await db
         .delete(sessionTable)
         .where(
@@ -109,7 +115,7 @@ export async function invalidateAllSessionsExceptCurrent(sessionId: string, user
 export async function queryAllSessions({
     userId,
 }: {
-    userId: number;
+    userId: SelectSession['userId'];
 }): Promise<Array<Pick<SelectSession, "id">>> {
     return (await db.select({
         id: sessionTable.id,

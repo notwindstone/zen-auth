@@ -22,7 +22,10 @@ export async function DELETE(request: NextRequest): Promise<Response> {
         });
     }
 
-    await invalidateAllSessionsExceptCurrent(session.id, user.id);
+    await invalidateAllSessionsExceptCurrent({
+        userId: user.id,
+        sessionId: session.id,
+    });
 
     return new Response(null, {
         status: API_STATUS_CODES.SUCCESS.OK,

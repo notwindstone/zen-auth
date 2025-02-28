@@ -7,7 +7,6 @@ export const userTable = pgTable("user_table", {
     avatarUrl: text('avatar_url').notNull(),
     email: text('email').notNull().unique(),
     password: text('password').notNull(),
-    salt: text('salt').notNull(),
     createdAt: timestamp('created_at', {
         withTimezone: true,
         mode: "date",

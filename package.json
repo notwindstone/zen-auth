@@ -21,6 +21,7 @@
     "next": "15.1.7",
     "next-cloudinary": "^6.16.0",
     "nextjs-toploader": "^3.7.15",
+    "oslo": "^1.2.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "resend": "^4.1.2",

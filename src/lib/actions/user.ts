@@ -11,13 +11,11 @@ export async function createUser({
     displayName,
     email,
     password,
-    salt,
 }: {
     username: InsertUser['username'];
     displayName: InsertUser['displayName'];
     email: InsertUser['email'];
     password: InsertUser['password'];
-    salt: InsertUser['salt'];
 }): Promise<InsertUser | Error> {
     const user: InsertUser = {
         id: generateUUID(),
@@ -26,7 +24,6 @@ export async function createUser({
         displayName,
         email,
         password,
-        salt,
         createdAt: new Date(),
         lastSignedIn: new Date(),
     };

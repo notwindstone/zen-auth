@@ -1,19 +1,16 @@
-export function generateSecurePassword({
+import { Argon2id } from "oslo/password";
+
+export async function generateSecurePassword({
     password,
 }: {
     password: string;
-}): {
-    hashed: string;
-    salt: string;
-} {
-    let hashed: string;
-    let salt: string;
-
-    const saltRounds = 10;
-
+}): Promise<{
+    hash: string;
+}> {
+    const argon2id = new Argon2id();
+    const hash = await argon2id.hash(password);
 
     return {
-        hashed,
-        salt,
+        hash,
     };
 }

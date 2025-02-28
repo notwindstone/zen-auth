@@ -5,6 +5,7 @@ import { sendEmail } from "@/lib/actions/email";
 import { generateVerificationCode } from "@/utils/misc/generateVerificationCode";
 import { types } from "node:util";
 import { createUser } from "@/lib/actions/user";
+import { generateSecurePassword } from "@/utils/misc/generateSecurePassword";
 
 export async function POST(request: NextRequest): Promise<Response> {
     let data;
@@ -102,14 +103,15 @@ export async function PUT(request: NextRequest): Promise<Response> {
         });
     }
 
-
+    const { hash } = await generateSecurePassword({
+        password: password,
+    });
 
     const userDatabaseResponse = await createUser({
         username,
         displayName,
         email,
-        salt: "",
-        password: "",
+        password: hash,
     });
 
     if (types.isNativeError(userDatabaseResponse)) {
