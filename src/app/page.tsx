@@ -4,7 +4,7 @@ import Link from "next/link";
 import { deleteSessionTokenCookie, setSessionTokenCookie } from "@/lib/actions/cookies";
 import { getEmailInfo } from "@/lib/actions/email";
 import { useRef } from "react";
-import {getMonthForwardDate} from "@/utils/misc/getMonthForwardDate";
+import { getMonthForwardDate } from "@/utils/misc/getMonthForwardDate";
 
 export default function Page() {
     const emailLetterId = useRef('');

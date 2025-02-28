@@ -1,10 +1,10 @@
 "use server";
 
 import { db } from "@/db/db";
-import {InsertVerificationCode, SelectVerificationCode, verificationCodesTable} from "@/db/schema";
+import { InsertVerificationCode, SelectVerificationCode, verificationCodesTable } from "@/db/schema";
 import { v4 as generateUUID } from 'uuid';
 import { and, eq, gt } from "drizzle-orm";
-import {getMonthForwardDate} from "@/utils/misc/getMonthForwardDate";
+import { getMonthForwardDate } from "@/utils/misc/getMonthForwardDate";
 
 export async function createVerificationCode({
     email,
@@ -12,7 +12,7 @@ export async function createVerificationCode({
 }: {
     email: InsertVerificationCode['email'],
     code: InsertVerificationCode['code'],
-}): Promise<SelectVerificationCode> {
+}): Promise<SelectVerificationCode | Error> {
     const verificationCode: InsertVerificationCode = {
         id: generateUUID(),
         code: code,
@@ -21,7 +21,11 @@ export async function createVerificationCode({
         used: false,
     };
 
-    await db.insert(verificationCodesTable).values(verificationCode);
+    try {
+        await db.insert(verificationCodesTable).values(verificationCode);
+    } catch {
+        return new Error("Internal server error.");
+    }
 
     return verificationCode;
 }

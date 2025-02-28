@@ -1,8 +1,9 @@
 import type { NextRequest } from "next/server";
 import { API_STATUS_CODES } from "@/configs/api";
-import { getVerificationCodes } from "@/lib/actions/verification";
+import { createVerificationCode, getVerificationCodes } from "@/lib/actions/verification";
 import { sendEmail } from "@/lib/actions/email";
 import { generateVerificationCode } from "@/utils/misc/generateVerificationCode";
+import { types } from "node:util";
 
 export async function POST(request: NextRequest): Promise<Response> {
     let data;
@@ -25,7 +26,17 @@ export async function POST(request: NextRequest): Promise<Response> {
     }
 
     const code = generateVerificationCode();
-    const databaseResponse = await
+    const databaseResponse = await createVerificationCode({
+        email,
+        code,
+    });
+
+    if (types.isNativeError(databaseResponse)) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
+        });
+    }
+
     const emailResponse = await sendEmail({
         code,
         email,
