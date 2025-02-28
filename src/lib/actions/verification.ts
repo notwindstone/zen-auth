@@ -4,7 +4,7 @@ import { db } from "@/db/db";
 import { InsertVerificationCode, SelectVerificationCode, verificationCodesTable } from "@/db/schema";
 import { v4 as generateUUID } from 'uuid';
 import { and, eq, gt } from "drizzle-orm";
-import { getMonthForwardDate } from "@/utils/misc/getMonthForwardDate";
+import { getHourForwardDate } from "@/utils/misc/getHourForwardDate";
 
 export async function createVerificationCode({
     email,
@@ -16,7 +16,7 @@ export async function createVerificationCode({
     const verificationCode: InsertVerificationCode = {
         id: generateUUID(),
         code: code,
-        expiresAt: getMonthForwardDate(),
+        expiresAt: getHourForwardDate(),
         email: email,
         used: false,
     };

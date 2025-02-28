@@ -4,6 +4,7 @@ import { createVerificationCode, getVerificationCodes, removeVerificationCode } 
 import { sendEmail } from "@/lib/actions/email";
 import { generateVerificationCode } from "@/utils/misc/generateVerificationCode";
 import { types } from "node:util";
+import { createUser } from "@/lib/actions/user";
 
 export async function POST(request: NextRequest): Promise<Response> {
     let data;
@@ -65,7 +66,10 @@ export async function PUT(request: NextRequest): Promise<Response> {
         });
     }
 
+    const username = data?.username;
+    const displayName = data?.displayName;
     const email = data?.email;
+    const password = data?.password;
     const code = data?.code;
 
     if (!email || !code) {
@@ -99,6 +103,20 @@ export async function PUT(request: NextRequest): Promise<Response> {
     }
 
 
+
+    const userDatabaseResponse = await createUser({
+        username,
+        displayName,
+        email,
+        salt: "",
+        password: "",
+    });
+
+    if (types.isNativeError(userDatabaseResponse)) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
+        });
+    }
 
     return new Response(null, {
         status: API_STATUS_CODES.SUCCESS.OK,

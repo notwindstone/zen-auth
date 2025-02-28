@@ -15,11 +15,11 @@ export async function createSession({
     os,
 }: {
     token: string;
-    userId: number;
-    ipAddress: string;
-    architecture: string;
-    browser: string;
-    os: string;
+    userId: InsertSession['userId'];
+    ipAddress: InsertSession['ipAddress'];
+    architecture: InsertSession['architecture'];
+    browser: InsertSession['browser'];
+    os: InsertSession['os'];
 }): Promise<SelectSession> {
     const sessionId = getSessionId({ token });
     const session: InsertSession = {
@@ -93,7 +93,7 @@ export async function invalidateSession({
     await db.delete(sessionTable).where(eq(sessionTable.id, sessionId));
 }
 
-export async function invalidateAllSessionsExceptCurrent(sessionId: string, userId: number): Promise<void> {
+export async function invalidateAllSessionsExceptCurrent(sessionId: string, userId: InsertSession['userId']): Promise<void> {
     await db
         .delete(sessionTable)
         .where(

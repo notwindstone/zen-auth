@@ -6,3 +6,4 @@ export const NO_RETRY_ERRORS = new Set([
     API_STATUS_CODES.ERROR.FORBIDDEN,
     API_STATUS_CODES.ERROR.NOT_FOUND,
 ]);
+export const PUBLIC_AVATAR_URL = "public_user_avatar";

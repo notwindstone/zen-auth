@@ -1,8 +1,44 @@
 "use server";
 
 import { db } from "@/db/db";
-import { SelectUser, userTable } from "@/db/schema";
+import { InsertUser, SelectUser, userTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { v4 as generateUUID } from 'uuid';
+import { PUBLIC_AVATAR_URL } from "@/configs/constants";
+
+export async function createUser({
+    username,
+    displayName,
+    email,
+    password,
+    salt,
+}: {
+    username: InsertUser['username'];
+    displayName: InsertUser['displayName'];
+    email: InsertUser['email'];
+    password: InsertUser['password'];
+    salt: InsertUser['salt'];
+}): Promise<InsertUser | Error> {
+    const user: InsertUser = {
+        id: generateUUID(),
+        username,
+        avatarUrl: PUBLIC_AVATAR_URL,
+        displayName,
+        email,
+        password,
+        salt,
+        createdAt: new Date(),
+        lastSignedIn: new Date(),
+    };
+
+    try {
+        await db.insert(userTable).values(user);
+    } catch {
+        return new Error("Internal server error.");
+    }
+
+    return user;
+}
 
 export async function getPublicProfile({
     username,
