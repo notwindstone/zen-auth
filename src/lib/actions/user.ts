@@ -37,6 +37,24 @@ export async function createUser({
     return user;
 }
 
+export async function updateUser({
+    email,
+    newPassword,
+}: {
+    email: TableUserType['email'];
+    newPassword: TableUserType['password'];
+}): Promise<null | Error> {
+    try {
+        await db.update(userTable).set({
+            password: newPassword,
+        }).where(eq(userTable.email, email));
+    } catch {
+        return new Error("Internal server error.");
+    }
+
+    return null;
+}
+
 export async function getUser({
     login,
 }: {
