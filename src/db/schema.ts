@@ -8,14 +8,23 @@ export const userTable = pgTable("user_table", {
     email: text('email').notNull().unique(),
     password: text('password').notNull(),
     salt: text('salt').notNull(),
-    createdAt: timestamp('created_at').notNull(),
-    lastSignedIn: timestamp('last_signed_in').notNull(),
+    createdAt: timestamp('created_at', {
+        withTimezone: true,
+        mode: "date",
+    }).notNull(),
+    lastSignedIn: timestamp('last_signed_in', {
+        withTimezone: true,
+        mode: "date",
+    }).notNull(),
 });
 
 export const sessionTable = pgTable("session_table", {
     id: text("id").primaryKey(),
     ipAddress: text("ip_address").notNull(),
-    lastSignedIn: timestamp("last_signed_in").notNull(),
+    lastSignedIn: timestamp("last_signed_in", {
+        withTimezone: true,
+        mode: "date",
+    }).notNull(),
     browser: text("browser").notNull(),
     architecture: text("architecture").notNull(),
     os: text("os").notNull(),
@@ -33,7 +42,10 @@ export const verificationCodesTable = pgTable("verification_codes_table", {
     code: text("code").notNull(),
     email: text("email").notNull(),
     used: boolean("used").notNull(),
-    expiresAt: timestamp("expires_at").notNull(),
+    expiresAt: timestamp("expires_at", {
+        withTimezone: true,
+        mode: "date",
+    }).notNull(),
 });
 
 export type InsertUser = typeof userTable.$inferInsert;
