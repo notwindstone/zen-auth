@@ -104,11 +104,9 @@ export async function PUT(request: NextRequest): Promise<Response> {
     const codesResponse = await getVerificationCodes({
         email,
     });
-    const codes = new Set(codesResponse.map((elem: {
-        code: string;
-    }) => elem.code));
+    const existingCode = codesResponse?.[0]?.code;
 
-    if (!codes.has(code)) {
+    if (code !== existingCode) {
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.UNAUTHORIZED,
         });

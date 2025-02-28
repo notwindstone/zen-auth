@@ -8,3 +8,4 @@ export const NO_RETRY_ERRORS = new Set([
     API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS,
 ]);
 export const PUBLIC_AVATAR_URL = "public_user_avatar";
+export const RESET_TOKEN_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";

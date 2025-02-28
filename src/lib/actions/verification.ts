@@ -18,11 +18,20 @@ export async function createVerificationCode({
         code: code,
         expiresAt: getHourForwardDate(),
         email: email,
-        used: false,
     };
 
     try {
-        await db.insert(verificationCodesTable).values(verificationCode);
+        await db
+            .insert(verificationCodesTable)
+            .values(verificationCode)
+            .onConflictDoUpdate({
+                target: verificationCodesTable.email,
+                set: {
+                    id: verificationCode.id,
+                    code: verificationCode.code,
+                    expiresAt: verificationCode.expiresAt,
+                },
+            });
     } catch {
         return new Error("Internal server error.");
     }
@@ -68,7 +77,6 @@ export async function getVerificationCodes({
         .where(
             and(
                 eq(verificationCodesTable.email, email),
-                eq(verificationCodesTable.used, false),
                 gt(verificationCodesTable.expiresAt, new Date()),
             ),
         );

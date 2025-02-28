@@ -39,7 +39,7 @@ export const sessionTable = pgTable("session_table", {
 export const verificationCodesTable = pgTable("verification_codes_table", {
     id: text("id").primaryKey(),
     code: text("code").notNull(),
-    email: text("email").notNull(),
+    email: text("email").notNull().unique(),
     expiresAt: timestamp("expires_at", {
         withTimezone: true,
         mode: "date",
