@@ -1,9 +1,10 @@
 "use server";
 
 import { db } from "@/db/db";
-import { InsertVerificationCode, verificationCodesTable } from "@/db/schema";
+import {InsertVerificationCode, SelectVerificationCode, verificationCodesTable} from "@/db/schema";
 import { v4 as generateUUID } from 'uuid';
 import { and, eq, gt } from "drizzle-orm";
+import {getMonthForwardDate} from "@/utils/misc/getMonthForwardDate";
 
 export async function createVerificationCode({
     email,
@@ -11,18 +12,18 @@ export async function createVerificationCode({
 }: {
     email: InsertVerificationCode['email'],
     code: InsertVerificationCode['code'],
-}): Promise<any> {
+}): Promise<SelectVerificationCode> {
     const verificationCode: InsertVerificationCode = {
         id: generateUUID(),
         code: code,
-        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+        expiresAt: getMonthForwardDate(),
         email: email,
         used: false,
     };
 
     await db.insert(verificationCodesTable).values(verificationCode);
 
-    return;
+    return verificationCode;
 }
 
 export async function getVerificationCodes({

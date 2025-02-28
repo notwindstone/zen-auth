@@ -4,6 +4,7 @@ import Link from "next/link";
 import { deleteSessionTokenCookie, setSessionTokenCookie } from "@/lib/actions/cookies";
 import { getEmailInfo } from "@/lib/actions/email";
 import { useRef } from "react";
+import {getMonthForwardDate} from "@/utils/misc/getMonthForwardDate";
 
 export default function Page() {
     const emailLetterId = useRef('');
@@ -100,7 +101,7 @@ export default function Page() {
                     onClick={async () => {
                         setSessionTokenCookie({
                             token: "hbwhpgs2qhc5desuajn44zruxeu3ygp4",
-                            expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+                            expiresAt: getMonthForwardDate(),
                         }).then(() => {
                             alert('Now you are an authorized user.');
                         });

@@ -4,6 +4,7 @@ import { InsertSession, SelectSession, SelectUser, sessionTable, userTable } fro
 import { db } from "@/db/db";
 import { and, eq, not } from "drizzle-orm";
 import getSessionId from "@/utils/misc/getSessionId";
+import {getMonthForwardDate} from "@/utils/misc/getMonthForwardDate";
 
 export async function createSession({
     token,
@@ -29,7 +30,7 @@ export async function createSession({
         browser,
         os,
         userId,
-        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+        expiresAt: getMonthForwardDate(),
     };
     
     await db.insert(sessionTable).values(session);
@@ -68,7 +69,7 @@ export async function validateSessionToken({
     }
 
     if (Date.now() >= session.expiresAt.getTime() - 1000 * 60 * 60 * 24 * 15) {
-        session.expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
+        session.expiresAt = getMonthForwardDate();
 
         await db
             .update(sessionTable)
