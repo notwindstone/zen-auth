@@ -17,4 +17,7 @@ export const API_STATUS_CODES = {
         NOT_FOUND: 404,
         TOO_MANY_REQUESTS: 429,
     },
+    SERVER: {
+        INTERNAL_SERVER_ERROR: 500,
+    },
 };

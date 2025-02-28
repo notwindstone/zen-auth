@@ -7,7 +7,7 @@ config({ path: ".env.local" });
 
 const resend = new Resend(process.env.RESEND_API_KEY!);
 
-export default async function sendEmail({
+export async function sendEmail({
     code,
     email,
     username,
@@ -22,4 +22,12 @@ export default async function sendEmail({
         subject: 'Верификация Email',
         html: `<p>Добро пожаловать, ${username}. Ваш код подтверждения: ${code}.</p>`,
     });
+}
+
+export async function getEmailInfo({
+    id,
+}: {
+    id: string;
+}) {
+    return resend.emails.get(id);
 }

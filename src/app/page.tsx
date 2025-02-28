@@ -2,13 +2,23 @@
 
 import Link from "next/link";
 import { deleteSessionTokenCookie, setSessionTokenCookie } from "@/lib/actions/cookies";
+import { getEmailInfo } from "@/lib/actions/email";
 
 export default function Page() {
+    async function checkEmailLetter() {
+        const response = await getEmailInfo({
+            id: "3962e009-4a9f-4818-b9da-e7d0e6428822",
+        });
+
+        console.log(response?.data?.last_event);
+    }
+
     async function sendVerificationCode() {
         const response = await fetch('/api/verification', {
             method: "POST",
             body: JSON.stringify({
-                email: "notwindstone@gmail.com",
+                email: "peoned@elegantarthub.com",
+                username: "notwindstone",
             }),
         });
 
@@ -30,6 +40,14 @@ export default function Page() {
                         <span className="text-zinc-400">(session token это не session id)</span>
                     }:
                 </p>
+                <button
+                    onClick={async () => {
+                        await checkEmailLetter();
+                    }}
+                    className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
+                >
+                    Check email letter
+                </button>
                 <button
                     onClick={async () => {
                         await sendVerificationCode();
