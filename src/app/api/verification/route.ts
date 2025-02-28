@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { API_STATUS_CODES } from "@/configs/api";
 import { createVerificationCode, getVerificationCodes, removeVerificationCode } from "@/lib/actions/verification";
-import { sendEmail } from "@/lib/actions/email";
+import { sendVerificationCodeEmail } from "@/lib/actions/email";
 import { generateVerificationCode } from "@/utils/secure/generateVerificationCode";
 import { types } from "node:util";
 import { createUser } from "@/lib/actions/user";
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         });
     }
 
-    const emailResponse = await sendEmail({
+    const emailResponse = await sendVerificationCodeEmail({
         code,
         email,
         username,

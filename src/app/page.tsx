@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { deleteSessionTokenCookie, setSessionTokenCookie } from "@/lib/actions/cookies";
-import { getEmailInfo } from "@/lib/actions/email";
+import { getLastEmailInfo } from "@/lib/actions/email";
 import { useRef, useState } from "react";
 import { getMonthForwardDate } from "@/utils/misc/getMonthForwardDate";
 
@@ -36,7 +36,7 @@ export default function Page() {
     }
 
     async function checkEmailLetter() {
-        const response = await getEmailInfo({
+        const response = await getLastEmailInfo({
             id: emailLetterId.current,
         });
 
@@ -208,7 +208,11 @@ export default function Page() {
                     <li>Password reset</li>
                     <li>Profile customization</li>
                     <li>Profile picture storage using Cloudinary</li>
-                    <li>Server-side Rate limit</li>
+                    <li
+                        className="before:absolute before:content-['Done'] before:left-[360px] before:text-latte-rosewater"
+                    >
+                        Server-side Rate limit
+                    </li>
                     <li>Client-side Rate limit</li>
                     <li>OAuth2</li>
                     <li>TOTP authentication</li>
