@@ -15,7 +15,7 @@ export default function Page() {
             method: "PUT",
             body: JSON.stringify({
                 email: 'notwindstone@gmail.com',
-                code: "100000",
+                code: "867289",
             }),
         });
 

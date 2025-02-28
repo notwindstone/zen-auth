@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { API_STATUS_CODES } from "@/configs/api";
-import { createVerificationCode, getVerificationCodes } from "@/lib/actions/verification";
+import { createVerificationCode, getVerificationCodes, removeVerificationCode } from "@/lib/actions/verification";
 import { sendEmail } from "@/lib/actions/email";
 import { generateVerificationCode } from "@/utils/misc/generateVerificationCode";
 import { types } from "node:util";
@@ -81,13 +81,24 @@ export async function PUT(request: NextRequest): Promise<Response> {
         code: string;
     }) => elem.code));
 
-    if (codes.has(code)) {
+    if (!codes.has(code)) {
         return new Response(null, {
-            status: API_STATUS_CODES.SUCCESS.OK,
+            status: API_STATUS_CODES.ERROR.UNAUTHORIZED,
+        });
+    }
+
+    const verificationDatabaseResponse = await removeVerificationCode({
+        email,
+        code,
+    });
+
+    if (types.isNativeError(verificationDatabaseResponse)) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
         });
     }
 
     return new Response(null, {
-        status: API_STATUS_CODES.ERROR.UNAUTHORIZED,
+        status: API_STATUS_CODES.SUCCESS.OK,
     });
 }

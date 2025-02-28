@@ -30,6 +30,29 @@ export async function createVerificationCode({
     return verificationCode;
 }
 
+export async function removeVerificationCode({
+    email,
+    code,
+}: {
+    email: InsertVerificationCode['email'],
+    code: InsertVerificationCode['code'],
+}): Promise<string | Error> {
+    try {
+        await db
+            .delete(verificationCodesTable)
+            .where(
+                and(
+                    eq(verificationCodesTable.email, email),
+                    eq(verificationCodesTable.code, code),
+                ),
+            );
+    } catch {
+        return new Error("Internal server error.");
+    }
+
+    return "Done!";
+}
+
 export async function getVerificationCodes({
     email,
 }: {
