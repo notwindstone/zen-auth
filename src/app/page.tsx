@@ -3,12 +3,13 @@
 import Link from "next/link";
 import { deleteSessionTokenCookie, setSessionTokenCookie } from "@/lib/actions/cookies";
 import { getEmailInfo } from "@/lib/actions/email";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { getMonthForwardDate } from "@/utils/misc/getMonthForwardDate";
 
 export default function Page() {
     const emailLetterId = useRef('');
     const isVerified = useRef(false);
+    const [isSignedIn, setIsSignedIn] = useState(false);
 
     async function verifyEmail() {
         const response = await fetch('/api/verification', {
@@ -73,7 +74,7 @@ export default function Page() {
             <div className="flex flex-col gap-2">
                 <p>
                     Currently available buttons {
-                        <span className="text-zinc-400">(session token это не session id)</span>
+                        <span className="text-zinc-400">(бля почему на английском фразы менее кринжово звучат, даже если смысл один)</span>
                     }:
                 </p>
                 <button
@@ -100,48 +101,57 @@ export default function Page() {
                 >
                     Send verification code
                 </button>
-                <button
-                    onClick={async () => {
-                        const response = await fetch('/api/login', {
-                            method: "POST",
-                            body: JSON.stringify({
-                                login: "notwindstone",
-                                password: "sheet",
-                            }),
-                        });
+                {
+                    isSignedIn ? (
+                        <button
+                            onClick={async () => {
+                                setIsSignedIn(false);
 
-                        if (!response.ok) {
-                            alert('bruh what are you doing');
+                                await fetch('/api/session/current', {
+                                    method: "DELETE",
+                                });
 
-                            return;
-                        }
+                                deleteSessionTokenCookie().then(() => alert('Now you are not authorized.'));
+                            }}
+                            className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
+                        >
+                            Log out
+                        </button>
+                    ) : (
+                        <button
+                            onClick={async () => {
+                                setIsSignedIn(true);
 
-                        const data = await response.json();
-                        const { sessionToken } = data;
+                                const response = await fetch('/api/login', {
+                                    method: "POST",
+                                    body: JSON.stringify({
+                                        login: "notwindstone",
+                                        password: "sheet",
+                                    }),
+                                });
 
-                        setSessionTokenCookie({
-                            token: sessionToken,
-                            expiresAt: getMonthForwardDate(),
-                        }).then(() => {
-                            alert('Now you are an authorized user.');
-                        });
-                    }}
-                    className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
-                >
-                    Log in using notwindstone&lsquo;s credentials
-                </button>
-                <button
-                    onClick={async () => {
-                        await fetch('/api/session/current', {
-                            method: "DELETE",
-                        });
+                                if (!response.ok) {
+                                    alert('bruh what are you doing');
 
-                        deleteSessionTokenCookie().then(() => alert('Now you are not authorized.'));
-                    }}
-                    className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
-                >
-                    Log out
-                </button>
+                                    return;
+                                }
+
+                                const data = await response.json();
+                                const { sessionToken } = data;
+
+                                setSessionTokenCookie({
+                                    token: sessionToken,
+                                    expiresAt: getMonthForwardDate(),
+                                }).then(() => {
+                                    alert('Now you are an authorized user.');
+                                });
+                            }}
+                            className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
+                        >
+                            Log in using notwindstone&lsquo;s credentials
+                        </button>
+                    )
+                }
             </div>
             <div className="flex flex-col">
                 <p>

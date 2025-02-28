@@ -24,8 +24,12 @@ export default function Page() {
         },
     });
 
-    if (isPending || error) {
-        return;
+    if (isPending) {
+        return <div>Loading...asdfjlasdkjf;lkasdjf;l</div>;
+    }
+
+    if (error) {
+        return <div>Error</div>;
     }
 
     return (
