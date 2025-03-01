@@ -1,6 +1,8 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import ProfileSession from "@/components/Profile/ProfileSession/ProfileSession";
+import {TableSessionType} from "@/db/schema";
 
 export default function Page() {
     const {
@@ -34,7 +36,11 @@ export default function Page() {
 
     return (
         <div>
-            {JSON.stringify(data)}
+            {data?.sessions?.map((session: TableSessionType) => {
+                return (
+                    <ProfileSession key={session?.id} { ...session } />
+                );
+            })}
         </div>
     );
 }
