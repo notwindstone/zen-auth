@@ -14,16 +14,14 @@ export default function ProfileSession({
 }: TableSessionType) {
     const queryClient = useQueryClient();
     const {
-        data,
-        error,
-        isPending,
         mutate,
     } = useMutation({
         mutationKey: [API_ROUTES.session.all],
         mutationFn: async (sessionId: string) => {
-            console.log(sessionId);
+
+            return sessionId;
         },
-        onMutate: async (sessionId: string) => {
+        onSuccess: async (sessionId: string) => {
             queryClient.setQueryData([API_ROUTES.session.all], (oldData: {
                 sessions: TableSessionType[];
             }) => {
