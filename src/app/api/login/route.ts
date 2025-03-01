@@ -67,7 +67,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         userId: user.id,
         architecture: cpu.architecture as string,
         os: `${os.name} ${os.version}`,
-        browser: `${browser.name} ${browser.major} ${browser.version}`,
+        browser: `${browser.name} ${browser.version}`,
         ipAddress: ipAddress,
     });
 
