@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import ProfileSession from "@/components/Profile/ProfileSession/ProfileSession";
 import {TableSessionType} from "@/db/schema";
+import {API_ROUTES} from "@/configs/api";
 
 export default function Page() {
     const {
@@ -10,7 +11,7 @@ export default function Page() {
         error,
         data,
     } = useQuery({
-        queryKey: ["sessions"],
+        queryKey: [API_ROUTES.session.all],
         queryFn: async () => {
             const response = await fetch(`/api/session/all`);
 
