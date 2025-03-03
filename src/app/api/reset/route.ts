@@ -75,6 +75,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         id: emailResponse?.data?.id,
     });
 }
+
 export async function PUT(request: NextRequest): Promise<Response> {
     const ipAddress = getIpAddress(request);
     const rateLimitResult = await ratelimit.limit(ipAddress);
