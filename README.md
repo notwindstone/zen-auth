@@ -1,3 +1,7 @@
+this is just an authorization code example that was written in a hurry. don't use it because it has some vulnerabilities that i wanted to fix, but decided instead to fully rewrite auth from scratch
+
+if you want to check refactoring progress: https://github.com/notwindstone/zen-auth/tree/v2 (it uses argon2id instead of bcrypt)
+
 ## Запуск
 
 Для запуска потребуется установка зависимостей:
