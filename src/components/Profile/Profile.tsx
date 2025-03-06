@@ -21,7 +21,7 @@ export default function Profile({
         failureCount,
         failureReason,
     } = useQuery({
-        queryKey: [API_ROUTES.session.current, API_ROUTES.profile, token, username],
+        queryKey: [API_ROUTES.session.current, API_ROUTES.profile, username, token],
         queryFn: async (): Promise<{
             session: TableSessionType;
             user: TableUserType;
