@@ -45,14 +45,14 @@ export default function LoginForm() {
         event.preventDefault();
 
         const formData = new FormData(event.currentTarget);
-        const email = formData.get("email");
+        const login = formData.get("login");
 
         // passwords in the form are provided as plain text.
         // HTTPS will handle everything, no need to encrypt it here.
         // and of course passwords are being stored in database only after hashing and salting
         const password = formData.get("password");
 
-        if (!email || !password) {
+        if (!login || !password) {
             // TODO
             alert('you are stupid')
 
@@ -62,7 +62,7 @@ export default function LoginForm() {
         const response = await fetch(API_ROUTES.login, {
             method: "POST",
             body: JSON.stringify({
-                login: email,
+                login: login,
                 password: password,
             }),
         });
@@ -133,12 +133,12 @@ export default function LoginForm() {
                         >
                             <div className="flex flex-col gap-2">
                                 <p className={`font-semibold text-zinc-800`}>
-                                    Почта
+                                    Почта или никнейм
                                 </p>
                                 <input
                                     className={`shadow-sm focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md px-2 py-1 transition-all text-black`}
-                                    type={"email"}
-                                    name={"email"}
+                                    type={"text"}
+                                    name={"login"}
                                     placeholder=""
                                     required
                                 />
