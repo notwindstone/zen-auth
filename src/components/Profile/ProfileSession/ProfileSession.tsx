@@ -1,6 +1,8 @@
-import {TableSessionType} from "@/db/schema";
-import {useMutation, useQueryClient} from "@tanstack/react-query";
-import {API_ROUTES} from "@/configs/api";
+import { TableSessionType } from "@/db/schema";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { API_ROUTES } from "@/configs/api";
+import { getPlatformName } from "@/utils/misc/getPlatformName";
+import { Cpu, LaptopMinimal, Monitor, MonitorCog, Smartphone } from "lucide-react";
 
 export default function ProfileSession({
     id,
@@ -34,10 +36,32 @@ export default function ProfileSession({
         },
     });
 
+    let icon;
+
+    switch (getPlatformName(os)) {
+    // sorry for the 4 spaces instead of 8, eslint is going insane
+    case "windows":
+        icon = <Monitor size={48} />;
+        break;
+    case "phone":
+        icon = <Smartphone size={48} />;
+        break;
+    case "linux":
+        icon = <MonitorCog size={48} />;
+        break;
+    case "mac":
+        icon = <LaptopMinimal size={48} />;
+        break;
+    case "unknown":
+    default:
+        icon = <Cpu size={48} />;
+        break;
+    }
+
     return (
-        <div className="flex gap-4 flex-nowrap">
-            <div className="flex justify-center items-center w-12 h-12">
-                {os}
+        <div className="flex flex-nowrap">
+            <div className="flex justify-center items-center w-[72px] h-[72px]">
+                {icon}
             </div>
             <div className="flex flex-col">
                 <p className="font-semibold">
