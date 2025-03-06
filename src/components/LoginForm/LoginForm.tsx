@@ -11,7 +11,11 @@ import {useQuery} from "@tanstack/react-query";
 import {TableSessionType, TableUserType} from "@/db/schema";
 import {NO_RETRY_ERRORS} from "@/configs/constants";
 
-export default function LoginForm() {
+export default function LoginForm({
+    token,
+}: {
+    token: string;
+}) {
     const router = useRouter();
     const {
         isPending,
@@ -19,7 +23,7 @@ export default function LoginForm() {
         failureCount,
         failureReason,
     } = useQuery({
-        queryKey: [API_ROUTES.session.current],
+        queryKey: [API_ROUTES.session.current, token],
         queryFn: async (): Promise<{
             session: TableSessionType;
             user: TableUserType;
