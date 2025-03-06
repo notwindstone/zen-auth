@@ -265,6 +265,9 @@ export default function Page() {
                     >
                         Server-side Rate limit
                     </li>
+                    <li>
+                        Use LRU cache instead of Upstash redis for server-side rate limit
+                    </li>
                     <li>Client-side Rate limit</li>
                     <li>OAuth2</li>
                     <li>TOTP authentication</li>
