@@ -11,7 +11,6 @@ export default function ProfileSession({
     browser,
     ipAddress,
     lastSignedIn,
-    userId,
     os,
 }: TableSessionType) {
     const queryClient = useQueryClient();

@@ -3,7 +3,7 @@
 import { API_STATUS_CODES } from "@/configs/api";
 import { queryAllSessions, validateSessionToken } from "@/lib/actions/session";
 import { TableSessionType } from "@/db/schema";
-import {NextResponse} from "next/server";
+import { NextResponse } from "next/server";
 
 export async function getAllSessions({
     token,

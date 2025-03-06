@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { API_ROUTES } from "@/configs/api";
 import { NO_RETRY_ERRORS } from "@/configs/constants";
 import ProfileUser from "@/components/Profile/ProfileUser/ProfileUser";
-import {TableSessionType, TableUserType} from "@/db/schema";
+import { TableSessionType, TableUserType } from "@/db/schema";
 import ProfileSession from "@/components/Profile/ProfileSession/ProfileSession";
 
 export default function Profile({

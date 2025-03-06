@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { Shield } from "lucide-react";
-import {setSessionTokenCookie} from "@/lib/actions/cookies";
-import {getMonthForwardDate} from "@/utils/misc/getMonthForwardDate";
-import {FormEvent} from "react";
-import {API_ROUTES, API_STATUS_CODES} from "@/configs/api";
-import {useRouter} from "nextjs-toploader/app";
-import {useQuery} from "@tanstack/react-query";
-import {TableSessionType, TableUserType} from "@/db/schema";
-import {NO_RETRY_ERRORS} from "@/configs/constants";
+import { setSessionTokenCookie } from "@/lib/actions/cookies";
+import { getMonthForwardDate } from "@/utils/misc/getMonthForwardDate";
+import { FormEvent } from "react";
+import { API_ROUTES, API_STATUS_CODES } from "@/configs/api";
+import { useRouter } from "nextjs-toploader/app";
+import { useQuery } from "@tanstack/react-query";
+import { TableSessionType, TableUserType } from "@/db/schema";
+import { NO_RETRY_ERRORS } from "@/configs/constants";
 
 export default function LoginForm({
     token,
@@ -58,7 +58,7 @@ export default function LoginForm({
 
         if (!login || !password) {
             // TODO
-            alert('you are stupid')
+            alert('you are stupid');
 
             return;
         }

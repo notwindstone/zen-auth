@@ -2,8 +2,8 @@
 
 import { useQuery } from "@tanstack/react-query";
 import ProfileSession from "@/components/Profile/ProfileSession/ProfileSession";
-import {TableSessionType} from "@/db/schema";
-import {API_ROUTES} from "@/configs/api";
+import { TableSessionType } from "@/db/schema";
+import { API_ROUTES } from "@/configs/api";
 
 export default function Page() {
     const {

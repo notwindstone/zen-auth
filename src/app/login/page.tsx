@@ -1,6 +1,6 @@
 import LoginForm from "@/components/LoginForm/LoginForm";
-import {cookies} from "next/headers";
-import {COOKIES_KEY} from "@/configs/constants";
+import { cookies } from "next/headers";
+import { COOKIES_KEY } from "@/configs/constants";
 
 export default async function Page() {
     const cookieStorage = await cookies();

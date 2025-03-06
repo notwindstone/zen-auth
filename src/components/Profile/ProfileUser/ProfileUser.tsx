@@ -9,6 +9,8 @@ export default function ProfileUser({
     createdAt,
     lastSignedIn,
 }: TableUserType) {
+    console.log(displayName, avatarUrl, email, createdAt, lastSignedIn);
+
     return (
         <div>
             {id}{username}
