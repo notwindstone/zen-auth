@@ -4,11 +4,11 @@ import { invalidateAllSessionsExceptCurrent, validateSessionToken } from "@/lib/
 import { getAllSessions } from "@/lib/routes/session/getAllSessions";
 import { API_STATUS_CODES } from "@/configs/api";
 import { getIpAddress } from "@/utils/secure/getIpAddress";
-import { ratelimit } from "@/lib/ratelimit/upstash";
+import { generalRateLimit } from "@/lib/ratelimit/upstash";
 
 export async function GET(request: NextRequest): Promise<Response> {
     const ipAddress = getIpAddress(request);
-    const rateLimitResult = await ratelimit.limit(ipAddress);
+    const rateLimitResult = await generalRateLimit.limit(ipAddress);
 
     if (!rateLimitResult.success) {
         return new Response(null, {
@@ -25,7 +25,7 @@ export async function GET(request: NextRequest): Promise<Response> {
 
 export async function DELETE(request: NextRequest): Promise<Response> {
     const ipAddress = getIpAddress(request);
-    const rateLimitResult = await ratelimit.limit(ipAddress);
+    const rateLimitResult = await generalRateLimit.limit(ipAddress);
 
     if (!rateLimitResult.success) {
         return new Response(null, {

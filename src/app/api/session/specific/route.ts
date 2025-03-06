@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { getIpAddress } from "@/utils/secure/getIpAddress";
-import { ratelimit } from "@/lib/ratelimit/upstash";
+import { generalRateLimit } from "@/lib/ratelimit/upstash";
 import { API_STATUS_CODES } from "@/configs/api";
 import { COOKIES_KEY } from "@/configs/constants";
 import { invalidateSession } from "@/lib/actions/session";
@@ -9,7 +9,7 @@ import { TableSessionType } from "@/db/schema";
 
 export async function DELETE(request: NextRequest): Promise<Response> {
     const ipAddress = getIpAddress(request);
-    const rateLimitResult = await ratelimit.limit(ipAddress);
+    const rateLimitResult = await generalRateLimit.limit(ipAddress);
 
     if (!rateLimitResult.success) {
         return new Response(null, {

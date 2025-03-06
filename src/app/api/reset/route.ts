@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { getIpAddress } from "@/utils/secure/getIpAddress";
-import { ratelimit } from "@/lib/ratelimit/upstash";
+import { generalRateLimit } from "@/lib/ratelimit/upstash";
 import { API_STATUS_CODES } from "@/configs/api";
 import { createResetToken, getResetToken, removeResetToken } from "@/lib/actions/reset";
 import { generateResetToken } from "@/utils/secure/generateResetToken";
@@ -11,7 +11,7 @@ import { generateSecurePassword } from "@/utils/secure/generateSecurePassword";
 
 export async function POST(request: NextRequest): Promise<Response> {
     const ipAddress = getIpAddress(request);
-    const rateLimitResult = await ratelimit.limit(ipAddress);
+    const rateLimitResult = await generalRateLimit.limit(ipAddress);
 
     if (!rateLimitResult.success) {
         return new Response(null, {
@@ -78,7 +78,7 @@ export async function POST(request: NextRequest): Promise<Response> {
 
 export async function PUT(request: NextRequest): Promise<Response> {
     const ipAddress = getIpAddress(request);
-    const rateLimitResult = await ratelimit.limit(ipAddress);
+    const rateLimitResult = await generalRateLimit.limit(ipAddress);
 
     if (!rateLimitResult.success) {
         return new Response(null, {
