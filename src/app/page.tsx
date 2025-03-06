@@ -79,6 +79,24 @@ export default function Page() {
                 </p>
                 <button
                     onClick={async () => {
+                        const response = await fetch('/api/session/all', {
+                            method: "DELETE",
+                        });
+
+                        if (!response.ok) {
+                            alert('Response is not ok');
+
+                            return;
+                        }
+
+                        alert("Truth.");
+                    }}
+                    className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
+                >
+                    Remove all sessions except current
+                </button>
+                <button
+                    onClick={async () => {
                         const response = await fetch('/api/reset', {
                             method: "PUT",
                             body: JSON.stringify({
@@ -215,6 +233,9 @@ export default function Page() {
                 </Link>
                 <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/sessions"}>
                     sessions
+                </Link>
+                <Link className="text-zinc-400 transition hover:text-zinc-200 before:content-['■'] before:pr-2 before:text-latte-rosewater" href={"/login"}>
+                    login
                 </Link>
             </div>
             <div className="flex flex-col">

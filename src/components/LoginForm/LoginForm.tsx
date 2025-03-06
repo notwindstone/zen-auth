@@ -2,8 +2,59 @@
 
 import Link from "next/link";
 import { Shield } from "lucide-react";
+import {setSessionTokenCookie} from "@/lib/actions/cookies";
+import {getMonthForwardDate} from "@/utils/misc/getMonthForwardDate";
+import {FormEvent} from "react";
+import {API_ROUTES} from "@/configs/api";
+import {useRouter} from "nextjs-toploader/app";
 
 export default function LoginForm() {
+    const router = useRouter();
+
+
+    async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
+        event.preventDefault();
+
+        const formData = new FormData(event.currentTarget);
+        const email = formData.get("email");
+
+        // passwords in the form are provided as plain text.
+        // HTTPS will handle everything, no need to encrypt it here.
+        // and of course passwords are being stored in database only after hashing and salting
+        const password = formData.get("password");
+
+        if (!email || !password) {
+            // TODO
+            alert('you are stupid')
+
+            return;
+        }
+
+        const response = await fetch(API_ROUTES.login, {
+            method: "POST",
+            body: JSON.stringify({
+                login: email,
+                password: password,
+            }),
+        });
+
+        if (!response.ok) {
+            // TODO
+            alert('bruh what are you doing');
+
+            return;
+        }
+
+        const data = await response.json();
+        const { sessionToken } = data;
+
+        setSessionTokenCookie({
+            token: sessionToken,
+            expiresAt: getMonthForwardDate(),
+        }).then(() => {
+            router.push('/profile');
+        });
+    }
 
 
     return (
@@ -31,8 +82,7 @@ export default function LoginForm() {
                     </div>
                     <form
                         className="w-full flex flex-col gap-4"
-                        onSubmit={() => {
-                        }}
+                        onSubmit={(event: FormEvent<HTMLFormElement>) => handleSubmit(event)}
                         method="POST"
                     >
                         <div className="flex flex-col gap-2">
@@ -54,7 +104,7 @@ export default function LoginForm() {
                             <input
                                 className={`shadow-sm focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md px-2 py-1 transition-all text-black`}
                                 type={"password"}
-                                name={"email"}
+                                name={"password"}
                                 placeholder=""
                                 required
                             />
