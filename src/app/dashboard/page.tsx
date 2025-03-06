@@ -1,10 +1,22 @@
 import { getSession } from "@/lib/routes/session/getSession";
 import { cookies } from "next/headers";
 import { COOKIES_KEY } from "@/configs/constants";
+import { generalRateLimit } from "@/lib/ratelimit/upstash";
 
 export default async function Page() {
     const cookieStore = await cookies();
     const token = cookieStore.get(COOKIES_KEY)?.value ?? null;
+
+    const rateLimitResult = await generalRateLimit.limit(token as string);
+
+    if (!rateLimitResult.success) {
+        return (
+            <div>
+                STOP SPAMMING REQUESTS
+            </div>
+        );
+    }
+
     const response = await getSession({
         token,
     });
