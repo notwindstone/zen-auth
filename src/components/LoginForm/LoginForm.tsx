@@ -168,7 +168,7 @@ export default function LoginForm({
                         </form>
                     </div>
                 </div>
-                <div className="py-4">
+                <div className="py-4 flex flex-col gap-2">
                     <p className="text-center text-gray-500 font-medium">
                         Ещё нет аккаунта?{' '}
                         <Link
@@ -176,6 +176,18 @@ export default function LoginForm({
                             href={""}
                         >
                             Зарегистрируйтесь
+                        </Link>
+                    </p>
+                    <div className="px-12 ">
+                        <div className="w-full h-[1px] bg-gray-200"/>
+                    </div>
+                    <p className="text-center text-gray-500 font-medium">
+                        Забыли пароль?{' '}
+                        <Link
+                            className="text-black font-medium transition hover:text-zinc-700"
+                            href={""}
+                        >
+                            Сбросьте его
                         </Link>
                     </p>
                 </div>
