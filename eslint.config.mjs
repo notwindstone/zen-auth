@@ -17,7 +17,7 @@ const eslintConfig = [
   {
     rules: {
       semi: "error",
-      indent: ["error", 4],
+      indent: ["error", 4, { "SwitchCase": 1 }],
       curly: "error",
       "object-curly-spacing": ["error", "always"],
       "comma-dangle": ["error", "always-multiline"],

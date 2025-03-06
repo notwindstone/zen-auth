@@ -38,23 +38,22 @@ export default function ProfileSession({
     let icon;
 
     switch (getPlatformName(os)) {
-    // sorry for the 4 spaces instead of 8, eslint is going insane
-    case "windows":
-        icon = <Monitor size={48} />;
-        break;
-    case "phone":
-        icon = <Smartphone size={48} />;
-        break;
-    case "linux":
-        icon = <MonitorCog size={48} />;
-        break;
-    case "mac":
-        icon = <LaptopMinimal size={48} />;
-        break;
-    case "unknown":
-    default:
-        icon = <Cpu size={48} />;
-        break;
+        case "windows":
+            icon = <Monitor size={48} />;
+            break;
+        case "phone":
+            icon = <Smartphone size={48} />;
+            break;
+        case "linux":
+            icon = <MonitorCog size={48} />;
+            break;
+        case "mac":
+            icon = <LaptopMinimal size={48} />;
+            break;
+        case "unknown":
+        default:
+            icon = <Cpu size={48} />;
+            break;
     }
 
     return (
