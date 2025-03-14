@@ -35,6 +35,18 @@ export default function ProfileSession({
         },
     });
 
+    if (
+        !id
+        || !expiresAt
+        || !architecture
+        || !browser
+        || !ipAddress
+        || !lastSignedIn
+        || !os
+    ) {
+        return;
+    }
+
     let icon;
 
     switch (getPlatformName(os)) {
