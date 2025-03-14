@@ -78,7 +78,7 @@ export default function Profile({
 
     const user = data?.user;
     const session = data?.session;
-
+console.log(data)
     return (
         <div>
             <ProfileSession

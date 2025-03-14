@@ -41,10 +41,12 @@ export async function GET(request: NextRequest): Promise<Response> {
     } = user;
 
     return Response.json({
-        username,
-        displayName,
-        avatarUrl,
-        lastSignedIn,
-        createdAt,
+        user: {
+            username,
+            displayName,
+            avatarUrl,
+            lastSignedIn,
+            createdAt,
+        },
     });
 }
