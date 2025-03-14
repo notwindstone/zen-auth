@@ -1,6 +1,5 @@
-import { TableSessionType } from "@/db/schema";
+import { TableSessionType, TableUserType } from "@/db/schema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { API_ROUTES } from "@/configs/api";
 import { getPlatformName } from "@/utils/misc/getPlatformName";
 import { Cpu, LaptopMinimal, Monitor, MonitorCog, Smartphone } from "lucide-react";
 
@@ -12,24 +11,37 @@ export default function ProfileSession({
     ipAddress,
     lastSignedIn,
     os,
-}: TableSessionType) {
+    mutationKey,
+}: TableSessionType & {
+    mutationKey: Array<string | undefined>;
+}) {
     const queryClient = useQueryClient();
     const {
         mutate,
     } = useMutation({
-        mutationKey: [API_ROUTES.session.all],
+        mutationKey: mutationKey,
         mutationFn: async (sessionId: string) => {
 
             return sessionId;
         },
         onSuccess: async (sessionId: string) => {
-            queryClient.setQueryData([API_ROUTES.session.all], (oldData: {
+            queryClient.setQueryData(mutationKey, (oldData: {
                 sessions: TableSessionType[];
+            } | {
+                session: TableSessionType;
+                user: TableUserType;
             }) => {
+                if ('sessions' in oldData) {
+                    return {
+                        sessions: oldData.sessions.filter((oldSession: TableSessionType) => {
+                            return oldSession.id !== sessionId;
+                        }),
+                    };
+                }
+
                 return {
-                    sessions: oldData.sessions.filter((oldSession: TableSessionType) => {
-                        return oldSession.id !== sessionId;
-                    }),
+                    user: oldData.user,
+                    session: null,
                 };
             });
         },

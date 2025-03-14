@@ -6,12 +6,13 @@ import { TableSessionType } from "@/db/schema";
 import { API_ROUTES } from "@/configs/api";
 
 export default function Page() {
+    const queryKey = [API_ROUTES.session.all];
     const {
         isPending,
         error,
         data,
     } = useQuery({
-        queryKey: [API_ROUTES.session.all],
+        queryKey: queryKey,
         queryFn: async () => {
             const response = await fetch(`/api/session/all`);
 
@@ -39,7 +40,11 @@ export default function Page() {
         <div>
             {data?.sessions?.map((session: TableSessionType) => {
                 return (
-                    <ProfileSession key={session?.id} { ...session } />
+                    <ProfileSession
+                        key={session?.id}
+                        mutationKey={queryKey}
+                        { ...session }
+                    />
                 );
             })}
         </div>

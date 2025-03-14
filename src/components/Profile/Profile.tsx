@@ -14,6 +14,7 @@ export default function Profile({
     username?: string | undefined;
     token?: string | undefined;
 }) {
+    const queryKey = [API_ROUTES.session.current, API_ROUTES.profile, username, token];
     const {
         isPending,
         error,
@@ -21,7 +22,7 @@ export default function Profile({
         failureCount,
         failureReason,
     } = useQuery({
-        queryKey: [API_ROUTES.session.current, API_ROUTES.profile, username, token],
+        queryKey: queryKey,
         queryFn: async (): Promise<{
             session: TableSessionType;
             user: TableUserType;
@@ -82,6 +83,7 @@ export default function Profile({
     return (
         <div>
             <ProfileSession
+                mutationKey={queryKey}
                 { ...session }
             />
             <ProfileUser
