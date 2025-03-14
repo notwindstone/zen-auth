@@ -6,6 +6,7 @@ import { createSession } from "@/lib/actions/session";
 import { generateSessionToken } from "@/utils/secure/generateSessionToken";
 import { getIpAddress } from "@/utils/secure/getIpAddress";
 import { generalRateLimit } from "@/lib/ratelimit/upstash";
+import { types } from "node:util";
 
 export async function POST(request: NextRequest): Promise<Response> {
     const ipAddress = getIpAddress(request);
@@ -40,6 +41,13 @@ export async function POST(request: NextRequest): Promise<Response> {
     const users = await getUser({
         login,
     });
+
+    if (types.isNativeError(users)) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
+        });
+    }
+
     const user = users?.[0];
 
     const isValid = await comparePasswords({
@@ -61,8 +69,7 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     // sessionToken is NOT a sessionId
     const sessionToken = generateSessionToken();
-
-    await createSession({
+    const sessionResponse = await createSession({
         token: sessionToken,
         userId: user.id,
         architecture: cpu.architecture as string,
@@ -70,6 +77,12 @@ export async function POST(request: NextRequest): Promise<Response> {
         browser: `${browser.name} ${browser.version}`,
         ipAddress: ipAddress,
     });
+
+    if (types.isNativeError(sessionResponse)) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
+        });
+    }
 
     return Response.json({
         sessionToken: sessionToken,
