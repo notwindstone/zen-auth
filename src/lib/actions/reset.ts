@@ -68,16 +68,24 @@ export async function getResetToken({
     email: string;
 }): Promise<Array<{
     resetToken: TableResetCodeType['resetToken'];
-}>> {
-    return db
-        .select({
-            resetToken: resetCodesTable.resetToken,
-        })
-        .from(resetCodesTable)
-        .where(
-            and(
-                eq(resetCodesTable.email, email),
-                gt(resetCodesTable.expiresAt, new Date()),
-            ),
-        );
+}> | Error> {
+    let result;
+
+    try {
+        result = await db
+            .select({
+                resetToken: resetCodesTable.resetToken,
+            })
+            .from(resetCodesTable)
+            .where(
+                and(
+                    eq(resetCodesTable.email, email),
+                    gt(resetCodesTable.expiresAt, new Date()),
+                ),
+            );
+    } catch {
+        return new Error("Internal server error.");
+    }
+
+    return result;
 }

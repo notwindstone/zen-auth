@@ -68,16 +68,24 @@ export async function getVerificationCodes({
     email: string;
 }): Promise<Array<{
     code: string;
-}>> {
-    return db
-        .select({
-            code: verificationCodesTable.code,
-        })
-        .from(verificationCodesTable)
-        .where(
-            and(
-                eq(verificationCodesTable.email, email),
-                gt(verificationCodesTable.expiresAt, new Date()),
-            ),
-        );
+}> | Error> {
+    let result;
+
+    try {
+        result = await db
+            .select({
+                code: verificationCodesTable.code,
+            })
+            .from(verificationCodesTable)
+            .where(
+                and(
+                    eq(verificationCodesTable.email, email),
+                    gt(verificationCodesTable.expiresAt, new Date()),
+                ),
+            );
+    } catch {
+        return new Error("Internal server error.");
+    }
+
+    return result;
 }

@@ -43,7 +43,7 @@ export async function updateUser({
 }: {
     email: TableUserType['email'];
     newPassword: TableUserType['password'];
-}): Promise<null | Error> {
+}): Promise<string | Error> {
     try {
         await db.update(userTable).set({
             password: newPassword,
@@ -52,29 +52,37 @@ export async function updateUser({
         return new Error("Internal server error.");
     }
 
-    return null;
+    return "Done!";
 }
 
 export async function getUser({
     login,
 }: {
     login: TableUserType['email'] | TableUserType['username'];
-}): Promise<Array<TableUserType>> {
-    return db.select({
-        id: userTable.id,
-        username: userTable.username,
-        email: userTable.email,
-        displayName: userTable.displayName,
-        avatarUrl: userTable.avatarUrl,
-        password: userTable.password,
-        createdAt: userTable.createdAt,
-        lastSignedIn: userTable.lastSignedIn,
-    }).from(userTable).where(
-        or(
-            eq(userTable.username, login),
-            eq(userTable.email, login),
-        ),
-    );
+}): Promise<Array<TableUserType> | Error> {
+    let result;
+
+    try {
+        result = await db.select({
+            id: userTable.id,
+            username: userTable.username,
+            email: userTable.email,
+            displayName: userTable.displayName,
+            avatarUrl: userTable.avatarUrl,
+            password: userTable.password,
+            createdAt: userTable.createdAt,
+            lastSignedIn: userTable.lastSignedIn,
+        }).from(userTable).where(
+            or(
+                eq(userTable.username, login),
+                eq(userTable.email, login),
+            ),
+        );
+    } catch {
+        return new Error("Internal server error.");
+    }
+
+    return result;
 }
 
 export async function checkUserExistence({
@@ -83,16 +91,22 @@ export async function checkUserExistence({
 }: {
     username: TableUserType['username'];
     email: TableUserType['email'];
-}): Promise<string | null> {
-    const users = await db.select({
-        username: userTable.username,
-        email: userTable.email,
-    }).from(userTable).where(
-        or(
-            eq(userTable.username, username),
-            eq(userTable.email, email),
-        ),
-    );
+}): Promise<string | null | Error> {
+    let users;
+
+    try {
+        users = await db.select({
+            username: userTable.username,
+            email: userTable.email,
+        }).from(userTable).where(
+            or(
+                eq(userTable.username, username),
+                eq(userTable.email, email),
+            ),
+        );
+    } catch {
+        return new Error("Internal server error.");
+    }
 
     for (const user of users) {
         if (user.email === email) {
@@ -116,13 +130,21 @@ export async function getPublicProfile({
             Pick<
                 TableUserType, "username" | "avatarUrl" | "displayName" | "createdAt" | "lastSignedIn"
             > | undefined
-        >
+        > | Error
 > {
-    return (await db.select({
-        username: userTable.username,
-        avatarUrl: userTable.avatarUrl,
-        displayName: userTable.displayName,
-        createdAt: userTable.createdAt,
-        lastSignedIn: userTable.lastSignedIn,
-    }).from(userTable).where(eq(userTable.username, username)));
+    let result;
+
+    try {
+        result = await db.select({
+            username: userTable.username,
+            avatarUrl: userTable.avatarUrl,
+            displayName: userTable.displayName,
+            createdAt: userTable.createdAt,
+            lastSignedIn: userTable.lastSignedIn,
+        }).from(userTable).where(eq(userTable.username, username));
+    } catch {
+        return new Error("Internal server error.");
+    }
+
+    return result;
 }

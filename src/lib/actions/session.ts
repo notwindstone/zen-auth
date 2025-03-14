@@ -20,7 +20,7 @@ export async function createSession({
     architecture: TableSessionType['architecture'];
     browser: TableSessionType['browser'];
     os: TableSessionType['os'];
-}): Promise<TableSessionType> {
+}): Promise<TableSessionType | Error> {
     const sessionId = getSessionId({ token });
     const session: TableSessionType = {
         id: sessionId,
@@ -33,7 +33,11 @@ export async function createSession({
         expiresAt: getMonthForwardDate(),
     };
     
-    await db.insert(sessionTable).values(session);
+    try {
+        await db.insert(sessionTable).values(session);
+    } catch {
+        return new Error("Internal server error.");
+    }
 
     return session;
 }
@@ -42,13 +46,19 @@ export async function validateSessionToken({
     token,
 }: {
     token: string;
-}): Promise<SessionValidationResult> {
+}): Promise<SessionValidationResult | Error> {
     const sessionId = getSessionId({ token });
-    const result = await db
-        .select({ user: userTable, session: sessionTable })
-        .from(sessionTable)
-        .innerJoin(userTable, eq(sessionTable.userId, userTable.id))
-        .where(eq(sessionTable.id, sessionId));
+    let result;
+
+    try {
+        result = await db
+            .select({ user: userTable, session: sessionTable })
+            .from(sessionTable)
+            .innerJoin(userTable, eq(sessionTable.userId, userTable.id))
+            .where(eq(sessionTable.id, sessionId));
+    } catch {
+        return new Error("Internal server error.");
+    }
 
     if (result.length < 1) {
         return {
@@ -60,7 +70,13 @@ export async function validateSessionToken({
     const { user, session } = result[0];
 
     if (Date.now() >= session.expiresAt.getTime()) {
-        await db.delete(sessionTable).where(eq(sessionTable.id, session.id));
+        try {
+            await db
+                .delete(sessionTable)
+                .where(eq(sessionTable.id, session.id));
+        } catch {
+            return new Error("Internal server error.");
+        }
 
         return {
             session: null,
@@ -71,12 +87,16 @@ export async function validateSessionToken({
     if (Date.now() >= session.expiresAt.getTime() - 1000 * 60 * 60 * 24 * 15) {
         session.expiresAt = getMonthForwardDate();
 
-        await db
-            .update(sessionTable)
-            .set({
-                expiresAt: session.expiresAt,
-            })
-            .where(eq(sessionTable.id, session.id));
+        try {
+            await db
+                .update(sessionTable)
+                .set({
+                    expiresAt: session.expiresAt,
+                })
+                .where(eq(sessionTable.id, session.id));
+        } catch {
+            return new Error("Internal server error.");
+        }
     }
 
     return {
@@ -89,8 +109,14 @@ export async function invalidateSession({
     sessionId,
 }: {
     sessionId: string;
-}): Promise<void> {
-    await db.delete(sessionTable).where(eq(sessionTable.id, sessionId));
+}): Promise<string | Error> {
+    try {
+        await db.delete(sessionTable).where(eq(sessionTable.id, sessionId));
+    } catch {
+        return new Error("Internal server error.");
+    }
+
+    return "Done!";
 }
 
 export async function invalidateAllSessionsExceptCurrent({
@@ -99,34 +125,48 @@ export async function invalidateAllSessionsExceptCurrent({
 }: {
     sessionId: TableSessionType['id'];
     userId: TableSessionType['userId'];
-}): Promise<void> {
-    await db
-        .delete(sessionTable)
-        .where(
-            and(
-                eq(sessionTable.userId, userId),
-                not(
-                    eq(sessionTable.id, sessionId),
+}): Promise<string | Error> {
+    try {
+        await db
+            .delete(sessionTable)
+            .where(
+                and(
+                    eq(sessionTable.userId, userId),
+                    not(
+                        eq(sessionTable.id, sessionId),
+                    ),
                 ),
-            ),
-        );
+            );
+    } catch {
+        return new Error("Internal server error.");
+    }
+
+    return "Done!";
 }
 
 export async function queryAllSessions({
     userId,
 }: {
     userId: TableSessionType['userId'];
-}): Promise<Array<TableSessionType>> {
-    return (await db.select({
-        id: sessionTable.id,
-        userId: sessionTable.userId,
-        ipAddress: sessionTable.ipAddress,
-        lastSignedIn: sessionTable.lastSignedIn,
-        browser: sessionTable.browser,
-        os: sessionTable.os,
-        architecture: sessionTable.architecture,
-        expiresAt: sessionTable.expiresAt,
-    }).from(sessionTable).where(eq(sessionTable.userId, userId)));
+}): Promise<Array<TableSessionType> | Error> {
+    let result;
+
+    try {
+        result = await db.select({
+            id: sessionTable.id,
+            userId: sessionTable.userId,
+            ipAddress: sessionTable.ipAddress,
+            lastSignedIn: sessionTable.lastSignedIn,
+            browser: sessionTable.browser,
+            os: sessionTable.os,
+            architecture: sessionTable.architecture,
+            expiresAt: sessionTable.expiresAt,
+        }).from(sessionTable).where(eq(sessionTable.userId, userId));
+    } catch {
+        return new Error("Internal server error.");
+    }
+
+    return result;
 }
 
 export type SessionValidationResult =
