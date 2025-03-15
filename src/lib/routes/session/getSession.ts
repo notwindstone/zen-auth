@@ -2,6 +2,7 @@
 
 import { validateSessionToken } from "@/lib/actions/session";
 import { API_STATUS_CODES } from "@/configs/api";
+import { types } from "node:util";
 
 export async function getSession({
     token,
@@ -14,7 +15,15 @@ export async function getSession({
         });
     }
 
-    const { session, user } = await validateSessionToken({ token });
+    const validationResponse = await validateSessionToken({ token });
+
+    if (types.isNativeError(validationResponse)) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
+        });
+    }
+
+    const { session, user } = validationResponse;
 
     if (session === null) {
         return new Response(null, {
