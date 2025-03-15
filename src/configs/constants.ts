@@ -10,3 +10,4 @@ export const NO_RETRY_ERRORS = new Set([
 export const PUBLIC_AVATAR_URL = "public_user_avatar";
 export const RESET_TOKEN_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 export const PLACEHOLDER_STRING = "no errors";
+export const CODE_DIGITS_COUNT = 6;

@@ -2,13 +2,14 @@
 
 import { useSearchParams } from "next/navigation";
 import { Shield } from "lucide-react";
-import { FormEvent } from "react";
+import {FormEvent, useRef, useState} from "react";
 import Link from "next/link";
-import {API_ROUTES} from "@/configs/api";
+import { API_ROUTES } from "@/configs/api";
 import { useRouter } from "nextjs-toploader/app";
-import {getLastEmailInfo} from "@/lib/actions/email";
-import {setSessionTokenCookie} from "@/lib/actions/cookies";
-import {getMonthForwardDate} from "@/utils/misc/getMonthForwardDate";
+import { getLastEmailInfo } from "@/lib/actions/email";
+import { setSessionTokenCookie } from "@/lib/actions/cookies";
+import { getMonthForwardDate } from "@/utils/misc/getMonthForwardDate";
+import { CODE_DIGITS_COUNT } from "@/configs/constants";
 
 export default function CodeVerification() {
     const router = useRouter();
@@ -16,6 +17,70 @@ export default function CodeVerification() {
     const username = searchParams.get("username");
     const email = searchParams.get("email");
     const emailLetterId = searchParams.get("id");
+
+    const [otp, setOtp] = useState(Array(CODE_DIGITS_COUNT).fill(""));
+    const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+        if (
+            !/^[0-9]{1}$/.test(event.key)
+            && event.key !== "Backspace"
+            && event.key !== "Delete"
+            && event.key !== "Tab"
+            && !event.metaKey
+        ) {
+            event.preventDefault();
+        }
+
+        const index = inputRefs.current.indexOf(event?.target);
+
+        if (event.key === "Delete" || event.key === "Backspace") {
+            if (index >= 0) {
+                setOtp((prevOtp) => [
+                    ...prevOtp.slice(0, index),
+                    "",
+                    ...prevOtp.slice(index + 1),
+                ]);
+
+                inputRefs.current[index - 1]?.focus();
+            }
+        }
+    };
+
+    const handleInput = (event: KeyboardEvent) => {
+        const { currentTarget } = event;
+        const index = inputRefs.current.indexOf(currentTarget);
+
+        if (currentTarget?.value) {
+            setOtp((prevOtp) => [
+                ...prevOtp.slice(0, index),
+                currentTarget?.value,
+                ...prevOtp.slice(index + 1),
+            ]);
+
+            if (index < otp.length - 1) {
+                inputRefs.current[index + 1]?.focus();
+            }
+        }
+    };
+
+    const handleFocus = (event) => {
+        event.target.select();
+    };
+
+    const handlePaste = (event) => {
+        event.preventDefault();
+
+        const text = event.clipboardData.getData("text");
+
+        if (!new RegExp(`^[0-9]{${otp.length}}$`).test(text)) {
+            return;
+        }
+
+        const digits = text.split("");
+
+        setOtp(digits);
+    };
 
     async function checkEmailStatus() {
         alert(JSON.stringify(await getLastEmailInfo({ id: emailLetterId as string })));
@@ -53,10 +118,9 @@ export default function CodeVerification() {
         event.preventDefault();
 
         const formData = new FormData(event.currentTarget);
-        const code = formData.get("code");
         const password = formData.get("password");
 
-        if (!username || !email || !emailLetterId || !code || !password) {
+        if (!username || !email || !emailLetterId || !password) {
             // TODO
             alert('you are stupid');
 
@@ -67,7 +131,7 @@ export default function CodeVerification() {
             method: "PUT",
             body: JSON.stringify({
                 email: email,
-                code: code,
+                code: otp.join(''),
                 username: username,
                 displayName: username,
                 password: password,
@@ -131,13 +195,29 @@ export default function CodeVerification() {
                             <p className={`font-semibold text-zinc-800`}>
                                 Код
                             </p>
-                            <input
-                                className={`shadow-sm focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md px-2 py-1 transition-all text-black`}
-                                type={"text"}
-                                name={"code"}
-                                placeholder=""
-                                required
-                            />
+                            <div className="flex gap-2">
+                                {
+                                    otp.map((digit, index) => {
+                                        return (
+                                            <input
+                                                ref={(el) => (inputRefs.current[index] = el)}
+                                                key={index}
+                                                className={`w-8 text-center shadow-sm focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md py-1 transition-all text-black`}
+                                                type={"text"}
+                                                name={`code_${index}`}
+                                                placeholder=""
+                                                maxLength={1}
+                                                value={digit}
+                                                onChange={handleInput}
+                                                onKeyDown={handleKeyDown}
+                                                onFocus={handleFocus}
+                                                onPaste={handlePaste}
+                                                required
+                                            />
+                                        );
+                                    })
+                                }
+                            </div>
                         </div>
                         <div className="flex flex-col gap-2">
                             <p className={`font-semibold text-zinc-800`}>
