@@ -8,10 +8,19 @@ import { checkUserExistence, updateUser } from "@/lib/actions/user";
 import { types } from "node:util";
 import { sendResetCodeEmail } from "@/lib/actions/email";
 import { generateSecurePassword } from "@/utils/secure/generateSecurePassword";
+import {RateLimit} from "@/lib/ratelimit/ratelimit";
 
 export async function POST(request: NextRequest): Promise<Response> {
     const ipAddress = getIpAddress(request);
-    const rateLimitResult = await generalRateLimit.limit(ipAddress);
+    const rateLimitResult = await RateLimit({
+        token: ipAddress,
+    });
+
+    if (types.isNativeError(rateLimitResult)) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
+        });
+    }
 
     if (!rateLimitResult.success) {
         return new Response(null, {
@@ -84,7 +93,15 @@ export async function POST(request: NextRequest): Promise<Response> {
 
 export async function PUT(request: NextRequest): Promise<Response> {
     const ipAddress = getIpAddress(request);
-    const rateLimitResult = await generalRateLimit.limit(ipAddress);
+    const rateLimitResult = await RateLimit({
+        token: ipAddress,
+    });
+
+    if (types.isNativeError(rateLimitResult)) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
+        });
+    }
 
     if (!rateLimitResult.success) {
         return new Response(null, {

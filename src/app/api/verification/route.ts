@@ -8,12 +8,21 @@ import { checkUserExistence, createUser } from "@/lib/actions/user";
 import { generateSecurePassword } from "@/utils/secure/generateSecurePassword";
 import { getIpAddress } from "@/utils/secure/getIpAddress";
 import { generalRateLimit } from "@/lib/ratelimit/upstash";
+import {RateLimit} from "@/lib/ratelimit/ratelimit";
 
 export async function POST(request: NextRequest): Promise<Response> {
     // Yeah, these 18 lines of code are duplicated
     // But you can't really do anything with that
     const ipAddress = getIpAddress(request);
-    const rateLimitResult = await generalRateLimit.limit(ipAddress);
+    const rateLimitResult = await RateLimit({
+        token: ipAddress,
+    });
+
+    if (types.isNativeError(rateLimitResult)) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
+        });
+    }
 
     if (!rateLimitResult.success) {
         return new Response(null, {
@@ -89,7 +98,15 @@ export async function POST(request: NextRequest): Promise<Response> {
 
 export async function PUT(request: NextRequest): Promise<Response> {
     const ipAddress = getIpAddress(request);
-    const rateLimitResult = await generalRateLimit.limit(ipAddress);
+    const rateLimitResult = await RateLimit({
+        token: ipAddress,
+    });
+
+    if (types.isNativeError(rateLimitResult)) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
+        });
+    }
 
     if (!rateLimitResult.success) {
         return new Response(null, {

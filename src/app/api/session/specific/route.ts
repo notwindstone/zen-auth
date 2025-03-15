@@ -6,10 +6,20 @@ import { COOKIES_KEY } from "@/configs/constants";
 import { invalidateSession } from "@/lib/actions/session";
 import { getAllSessions } from "@/lib/routes/session/getAllSessions";
 import { TableSessionType } from "@/db/schema";
+import {RateLimit} from "@/lib/ratelimit/ratelimit";
+import {types} from "node:util";
 
 export async function DELETE(request: NextRequest): Promise<Response> {
     const ipAddress = getIpAddress(request);
-    const rateLimitResult = await generalRateLimit.limit(ipAddress);
+    const rateLimitResult = await RateLimit({
+        token: ipAddress,
+    });
+
+    if (types.isNativeError(rateLimitResult)) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
+        });
+    }
 
     if (!rateLimitResult.success) {
         return new Response(null, {
