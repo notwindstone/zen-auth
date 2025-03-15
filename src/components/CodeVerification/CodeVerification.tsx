@@ -7,6 +7,8 @@ import Link from "next/link";
 import {API_ROUTES} from "@/configs/api";
 import { useRouter } from "nextjs-toploader/app";
 import {getLastEmailInfo} from "@/lib/actions/email";
+import {setSessionTokenCookie} from "@/lib/actions/cookies";
+import {getMonthForwardDate} from "@/utils/misc/getMonthForwardDate";
 
 export default function CodeVerification() {
     const router = useRouter();
@@ -61,7 +63,7 @@ export default function CodeVerification() {
             return;
         }
 
-        const response = await fetch(API_ROUTES.verification, {
+        const verificationResponse = await fetch(API_ROUTES.verification, {
             method: "PUT",
             body: JSON.stringify({
                 email: email,
@@ -72,14 +74,37 @@ export default function CodeVerification() {
             }),
         });
 
-        if (!response.ok) {
+        if (!verificationResponse.ok) {
             // TODO
             alert('bruh what are you doing');
 
             return;
         }
 
-        router.push('/profile');
+        const loginResponse = await fetch(API_ROUTES.login, {
+            method: "POST",
+            body: JSON.stringify({
+                login: username,
+                password: password,
+            }),
+        });
+
+        if (!loginResponse.ok) {
+            // TODO
+            alert('registration was successful, but login failed');
+
+            return;
+        }
+
+        const data = await loginResponse.json();
+        const { sessionToken } = data;
+
+        setSessionTokenCookie({
+            token: sessionToken,
+            expiresAt: getMonthForwardDate(),
+        }).then(() => {
+            router.push('/profile');
+        });
     }
 
     return (
