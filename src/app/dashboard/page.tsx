@@ -2,6 +2,7 @@ import { getSession } from "@/lib/routes/session/getSession";
 import { cookies } from "next/headers";
 import { COOKIES_KEY } from "@/configs/constants";
 import { generalRateLimit } from "@/lib/ratelimit/upstash";
+import {ratelimit} from "@/lib/ratelimit/ioredis";
 
 export default async function Page() {
     const cookieStore = await cookies();
@@ -28,7 +29,7 @@ export default async function Page() {
             </div>
         );
     }
-
+    ratelimit()
     return (
         <div>
             you made it!
