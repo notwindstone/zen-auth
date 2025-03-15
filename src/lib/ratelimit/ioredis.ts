@@ -10,13 +10,37 @@ const redis = new Redis({
     password: process.env.LOCAL_REDIS_PASSWORD!,
 });
 
-export async function ratelimit() {
-    redis.set('mykey', 'value');
-    redis.get("mykey", (err, result) => {
-        if (err) {
-            console.error(err);
-        } else {
-            console.log(result); // Prints "value"
-        }
-    });
+export async function generalRateLimit({
+    ip,
+    limit,
+    duration,
+}: {
+    ip: string;
+    limit: number;
+    duration: number;
+}): Promise<{
+    limit: number;
+    remaining: number;
+    success: boolean;
+}> {
+    const key = `rate_limit:${ip}`;
+    const currentCount = await redis.get(key);
+    const count = parseInt(currentCount as string, 10) || 0;
+
+    if (count >= limit) {
+        return {
+            limit,
+            remaining: limit - count,
+            success: false,
+        };
+    }
+
+    redis.incr(key);
+    redis.expire(key, duration);
+
+    return {
+        limit,
+        remaining: limit - (count + 1),
+        success: true,
+    };
 }
