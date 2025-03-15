@@ -7,8 +7,7 @@ import { types } from "node:util";
 import { checkUserExistence, createUser } from "@/lib/actions/user";
 import { generateSecurePassword } from "@/utils/secure/generateSecurePassword";
 import { getIpAddress } from "@/utils/secure/getIpAddress";
-import { generalRateLimit } from "@/lib/ratelimit/upstash";
-import {RateLimit} from "@/lib/ratelimit/ratelimit";
+import { RateLimit } from "@/lib/ratelimit/ratelimit";
 
 export async function POST(request: NextRequest): Promise<Response> {
     // Yeah, these 18 lines of code are duplicated

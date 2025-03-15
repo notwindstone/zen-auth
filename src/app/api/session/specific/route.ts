@@ -1,13 +1,12 @@
 import type { NextRequest } from "next/server";
 import { getIpAddress } from "@/utils/secure/getIpAddress";
-import { generalRateLimit } from "@/lib/ratelimit/upstash";
 import { API_STATUS_CODES } from "@/configs/api";
 import { COOKIES_KEY } from "@/configs/constants";
 import { invalidateSession } from "@/lib/actions/session";
 import { getAllSessions } from "@/lib/routes/session/getAllSessions";
 import { TableSessionType } from "@/db/schema";
-import {RateLimit} from "@/lib/ratelimit/ratelimit";
-import {types} from "node:util";
+import { RateLimit } from "@/lib/ratelimit/ratelimit";
+import { types } from "node:util";
 
 export async function DELETE(request: NextRequest): Promise<Response> {
     const ipAddress = getIpAddress(request);

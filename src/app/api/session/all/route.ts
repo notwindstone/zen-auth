@@ -4,9 +4,8 @@ import { invalidateAllSessionsExceptCurrent, validateSessionToken } from "@/lib/
 import { getAllSessions } from "@/lib/routes/session/getAllSessions";
 import { API_STATUS_CODES } from "@/configs/api";
 import { getIpAddress } from "@/utils/secure/getIpAddress";
-import { generalRateLimit } from "@/lib/ratelimit/upstash";
 import { types } from "node:util";
-import {RateLimit} from "@/lib/ratelimit/ratelimit";
+import { RateLimit } from "@/lib/ratelimit/ratelimit";
 
 export async function GET(request: NextRequest): Promise<Response> {
     const ipAddress = getIpAddress(request);
