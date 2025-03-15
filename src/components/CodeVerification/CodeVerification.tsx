@@ -19,6 +19,34 @@ export default function CodeVerification() {
         alert(JSON.stringify(await getLastEmailInfo({ id: emailLetterId as string })));
     }
 
+    async function handleResend() {
+        if (!username || !email) {
+            // TODO
+            alert('you are stupid');
+
+            return;
+        }
+
+        const response = await fetch(API_ROUTES.verification, {
+            method: "POST",
+            body: JSON.stringify({
+                username: username,
+                email: email,
+            }),
+        });
+
+        if (!response.ok) {
+            // TODO
+            alert('bruh what are you doing');
+
+            return;
+        }
+
+        const emailLetterId = (await response.json())?.id;
+
+        router.push(`/verification?username=${username}&email=${email}&id=${emailLetterId}`);
+    }
+
     async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
 
@@ -129,10 +157,27 @@ export default function CodeVerification() {
                 <p className="text-center text-gray-500 font-medium">
                     <button
                         className="text-black font-medium transition hover:text-zinc-700"
-                        onClick={checkEmailStatus}
+                        onClick={handleResend}
                     >
                         Отправьте код ещё раз
                     </button>
+                </p>
+                <div
+                    className="w-full px-12 flex flex-nowrap items-center gap-4"
+                >
+                    <div className="w-full h-[1px] bg-gray-200"/>
+                    <p className="text-gray-500">
+                        или
+                    </p>
+                    <div className="w-full h-[1px] bg-gray-200"/>
+                </div>
+                <p className="text-center text-gray-500 font-medium">
+                    <Link
+                        className="text-black font-medium transition hover:text-zinc-700"
+                        href={`/register?username=${username ?? ""}&email=${email ?? ""}`}
+                    >
+                        Измените данные
+                    </Link>
                 </p>
             </div>
         </div>

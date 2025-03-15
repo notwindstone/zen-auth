@@ -44,5 +44,5 @@ export async function getLastEmailInfo({
 }: {
     id: string;
 }) {
-    return resend.emails.get(id);
+    return (await resend.emails.get(id))?.data?.['last_event'];
 }

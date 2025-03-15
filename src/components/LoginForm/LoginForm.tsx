@@ -173,7 +173,7 @@ export default function LoginForm({
                         Ещё нет аккаунта?{' '}
                         <Link
                             className="text-black font-medium transition hover:text-zinc-700"
-                            href={""}
+                            href={"/register"}
                         >
                             Зарегистрируйтесь
                         </Link>
