@@ -163,57 +163,52 @@ console.log(response)
                 >
                     Send verification code
                 </button>
-                {
-                    isSignedIn ? (
-                        <button
-                            onClick={async () => {
-                                setIsSignedIn(false);
+                <button
+                    onClick={async () => {
+                        setIsSignedIn(false);
 
-                                await fetch('/api/session/current', {
-                                    method: "DELETE",
-                                });
+                        await fetch('/api/session/current', {
+                            method: "DELETE",
+                        });
 
-                                deleteSessionTokenCookie().then(() => alert('Now you are not authorized.'));
-                            }}
-                            className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
-                        >
-                            Log out
-                        </button>
-                    ) : (
-                        <button
-                            onClick={async () => {
-                                setIsSignedIn(true);
+                        deleteSessionTokenCookie().then(() => alert('Now you are not authorized.'));
+                    }}
+                    className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
+                >
+                    Log out
+                </button>
+                <button
+                    onClick={async () => {
+                        setIsSignedIn(true);
 
-                                const response = await fetch('/api/login', {
-                                    method: "POST",
-                                    body: JSON.stringify({
-                                        login: "notwindstone",
-                                        password: "sheesh",
-                                    }),
-                                });
+                        const response = await fetch('/api/login', {
+                            method: "POST",
+                            body: JSON.stringify({
+                                login: "notwindstone",
+                                password: "sheesh",
+                            }),
+                        });
 
-                                if (!response.ok) {
-                                    alert('bruh what are you doing');
+                        if (!response.ok) {
+                            alert('bruh what are you doing');
 
-                                    return;
-                                }
+                            return;
+                        }
 
-                                const data = await response.json();
-                                const { sessionToken } = data;
+                        const data = await response.json();
+                        const { sessionToken } = data;
 
-                                setSessionTokenCookie({
-                                    token: sessionToken,
-                                    expiresAt: getMonthForwardDate(),
-                                }).then(() => {
-                                    alert('Now you are an authorized user.');
-                                });
-                            }}
-                            className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
-                        >
-                            Log in using notwindstone&lsquo;s credentials
-                        </button>
-                    )
-                }
+                        setSessionTokenCookie({
+                            token: sessionToken,
+                            expiresAt: getMonthForwardDate(),
+                        }).then(() => {
+                            alert('Now you are an authorized user.');
+                        });
+                    }}
+                    className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
+                >
+                    Log in using notwindstone&lsquo;s credentials
+                </button>
             </div>
             <div className="flex flex-col">
                 <p>

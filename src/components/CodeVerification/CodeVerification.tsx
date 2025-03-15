@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { Shield } from "lucide-react";
-import {FormEvent, useRef, useState} from "react";
+import { FormEvent, useRef, useState } from "react";
 import Link from "next/link";
 import { API_ROUTES } from "@/configs/api";
 import { useRouter } from "nextjs-toploader/app";
