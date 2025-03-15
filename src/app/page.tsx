@@ -57,7 +57,7 @@ export default function Page() {
 
             return;
         }
-
+console.log(response)
         const id = (await response.json())?.id;
 
         emailLetterId.current = id;
@@ -236,6 +236,12 @@ export default function Page() {
                 </Link>
                 <Link className="text-zinc-400 transition hover:text-zinc-200 before:content-['■'] before:pr-2 before:text-latte-rosewater" href={"/login"}>
                     login
+                </Link>
+                <Link className="text-zinc-400 transition hover:text-zinc-200 before:content-['■'] before:pr-2 before:text-latte-rosewater" href={"/register"}>
+                    register
+                </Link>
+                <Link className="text-zinc-400 transition hover:text-zinc-200 before:content-['■'] before:pr-2 before:text-latte-rosewater" href={"/verification"}>
+                    verification
                 </Link>
             </div>
             <div className="flex flex-col">
