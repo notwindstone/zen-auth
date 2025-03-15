@@ -5,6 +5,7 @@ import { db } from "@/db/db";
 import { and, eq, not } from "drizzle-orm";
 import getSessionId from "@/utils/secure/getSessionId";
 import { getMonthForwardDate } from "@/utils/misc/getMonthForwardDate";
+import {PLACEHOLDER_STRING} from "@/configs/constants";
 
 export async function createSession({
     token,
@@ -116,7 +117,7 @@ export async function invalidateSession({
         return new Error("Internal server error.");
     }
 
-    return "Done!";
+    return PLACEHOLDER_STRING;
 }
 
 export async function invalidateAllSessionsExceptCurrent({
@@ -141,7 +142,7 @@ export async function invalidateAllSessionsExceptCurrent({
         return new Error("Internal server error.");
     }
 
-    return "Done!";
+    return PLACEHOLDER_STRING;
 }
 
 export async function queryAllSessions({

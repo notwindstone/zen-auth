@@ -4,7 +4,7 @@ import { db } from "@/db/db";
 import { TableUserType, userTable } from "@/db/schema";
 import { eq, or } from "drizzle-orm";
 import { v4 as generateUUID } from 'uuid';
-import { PUBLIC_AVATAR_URL } from "@/configs/constants";
+import {PLACEHOLDER_STRING, PUBLIC_AVATAR_URL} from "@/configs/constants";
 
 export async function createUser({
     username,
@@ -52,7 +52,7 @@ export async function updateUser({
         return new Error("Internal server error.");
     }
 
-    return "Done!";
+    return PLACEHOLDER_STRING;
 }
 
 export async function getUser({

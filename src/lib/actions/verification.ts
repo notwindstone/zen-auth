@@ -5,6 +5,7 @@ import { TableVerificationCodeType, verificationCodesTable } from "@/db/schema";
 import { v4 as generateUUID } from 'uuid';
 import { and, eq, gt } from "drizzle-orm";
 import { getHourForwardDate } from "@/utils/misc/getHourForwardDate";
+import {PLACEHOLDER_STRING} from "@/configs/constants";
 
 export async function createVerificationCode({
     email,
@@ -59,7 +60,7 @@ export async function removeVerificationCode({
         return new Error("Internal server error.");
     }
 
-    return "Done!";
+    return PLACEHOLDER_STRING;
 }
 
 export async function getVerificationCodes({

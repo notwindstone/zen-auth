@@ -5,6 +5,7 @@ import { v4 as generateUUID } from "uuid";
 import { getHourForwardDate } from "@/utils/misc/getHourForwardDate";
 import { db } from "@/db/db";
 import { and, eq, gt } from "drizzle-orm";
+import {PLACEHOLDER_STRING} from "@/configs/constants";
 
 export async function createResetToken({
     email,
@@ -59,7 +60,7 @@ export async function removeResetToken({
         return new Error("Internal server error.");
     }
 
-    return "Done!";
+    return PLACEHOLDER_STRING;
 }
 
 export async function getResetToken({
