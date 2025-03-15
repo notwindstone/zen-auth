@@ -42,6 +42,12 @@ export async function POST(request: NextRequest): Promise<Response> {
         email,
     });
 
+    if (types.isNativeError(userExistence)) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
+        });
+    }
+
     if (userExistence === null) {
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.NOT_FOUND,

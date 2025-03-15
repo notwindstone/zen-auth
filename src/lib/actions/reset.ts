@@ -5,7 +5,7 @@ import { v4 as generateUUID } from "uuid";
 import { getHourForwardDate } from "@/utils/misc/getHourForwardDate";
 import { db } from "@/db/db";
 import { and, eq, gt } from "drizzle-orm";
-import {PLACEHOLDER_STRING} from "@/configs/constants";
+import { PLACEHOLDER_STRING } from "@/configs/constants";
 
 export async function createResetToken({
     email,

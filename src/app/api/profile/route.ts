@@ -3,6 +3,7 @@ import { getPublicProfile } from "@/lib/actions/user";
 import { API_STATUS_CODES } from "@/configs/api";
 import { getIpAddress } from "@/utils/secure/getIpAddress";
 import { generalRateLimit } from "@/lib/ratelimit/upstash";
+import { types } from "node:util";
 
 export async function GET(request: NextRequest): Promise<Response> {
     const ipAddress = getIpAddress(request);
@@ -24,6 +25,13 @@ export async function GET(request: NextRequest): Promise<Response> {
     }
 
     const users = await getPublicProfile({ username: searchUsername });
+
+    if (types.isNativeError(users)) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
+        });
+    }
+
     const user = users?.[0];
 
     if (!user) {

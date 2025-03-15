@@ -5,7 +5,7 @@ import { db } from "@/db/db";
 import { and, eq, not } from "drizzle-orm";
 import getSessionId from "@/utils/secure/getSessionId";
 import { getMonthForwardDate } from "@/utils/misc/getMonthForwardDate";
-import {PLACEHOLDER_STRING} from "@/configs/constants";
+import { PLACEHOLDER_STRING } from "@/configs/constants";
 
 export async function createSession({
     token,

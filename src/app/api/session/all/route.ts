@@ -5,6 +5,7 @@ import { getAllSessions } from "@/lib/routes/session/getAllSessions";
 import { API_STATUS_CODES } from "@/configs/api";
 import { getIpAddress } from "@/utils/secure/getIpAddress";
 import { generalRateLimit } from "@/lib/ratelimit/upstash";
+import { types } from "node:util";
 
 export async function GET(request: NextRequest): Promise<Response> {
     const ipAddress = getIpAddress(request);
@@ -18,7 +19,7 @@ export async function GET(request: NextRequest): Promise<Response> {
 
     const token = request.cookies.get(COOKIES_KEY)?.value ?? null;
 
-    return getAllSessions({
+    return await getAllSessions({
         token,
     });
 }
@@ -34,7 +35,15 @@ export async function DELETE(request: NextRequest): Promise<Response> {
     }
 
     const token = request.cookies.get(COOKIES_KEY)?.value as string;
-    const { session, user } = await validateSessionToken({ token });
+    const sessionValidationResponse = await validateSessionToken({ token });
+
+    if (types.isNativeError(sessionValidationResponse)) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
+        });
+    }
+
+    const { session, user } = sessionValidationResponse;
 
     if (session === null || user === null) {
         return new Response(null, {
@@ -42,10 +51,16 @@ export async function DELETE(request: NextRequest): Promise<Response> {
         });
     }
 
-    await invalidateAllSessionsExceptCurrent({
+    const invalidationResponse = await invalidateAllSessionsExceptCurrent({
         userId: user.id,
         sessionId: session.id,
     });
+
+    if (types.isNativeError(invalidationResponse)) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
+        });
+    }
 
     return new Response(null, {
         status: API_STATUS_CODES.SUCCESS.OK,
