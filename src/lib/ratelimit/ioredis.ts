@@ -6,10 +6,10 @@ import { config } from "dotenv";
 config({ path: ".env.local" });
 
 const redis = new Redis({
-    port: Number(process.env.LOCAL_REDIS_PORT!),
-    host: process.env.LOCAL_REDIS_URL!,
-    username: process.env.LOCAL_REDIS_USERNAME!,
-    password: process.env.LOCAL_REDIS_PASSWORD!,
+    port: Number(process.env.LOCAL_REDIS_PORT!) ?? 0,
+    host: process.env.LOCAL_REDIS_URL! ?? "",
+    username: process.env.LOCAL_REDIS_USERNAME! ?? "",
+    password: process.env.LOCAL_REDIS_PASSWORD! ?? "",
 });
 
 export async function generalRateLimit({
