@@ -3,13 +3,12 @@
 import Link from "next/link";
 import { deleteSessionTokenCookie, setSessionTokenCookie } from "@/lib/actions/cookies";
 import { getLastEmailInfo } from "@/lib/actions/email";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { getMonthForwardDate } from "@/utils/misc/getMonthForwardDate";
 
 export default function Page() {
     const emailLetterId = useRef('');
     const isVerified = useRef(false);
-    const [isSignedIn, setIsSignedIn] = useState(false);
 
     async function verifyEmail() {
         const response = await fetch('/api/verification', {
@@ -40,7 +39,7 @@ export default function Page() {
             id: emailLetterId.current,
         });
 
-        alert(response?.data?.last_event);
+        alert(response);
     }
 
     async function sendVerificationCode() {
@@ -57,7 +56,7 @@ export default function Page() {
 
             return;
         }
-console.log(response)
+
         const id = (await response.json())?.id;
 
         emailLetterId.current = id;
@@ -165,8 +164,6 @@ console.log(response)
                 </button>
                 <button
                     onClick={async () => {
-                        setIsSignedIn(false);
-
                         await fetch('/api/session/current', {
                             method: "DELETE",
                         });
@@ -179,8 +176,6 @@ console.log(response)
                 </button>
                 <button
                     onClick={async () => {
-                        setIsSignedIn(true);
-
                         const response = await fetch('/api/login', {
                             method: "POST",
                             body: JSON.stringify({

@@ -8,7 +8,7 @@ import { NO_RETRY_ERRORS } from "@/configs/constants";
 import { FormEvent } from "react";
 import { Shield } from "lucide-react";
 import Link from "next/link";
-import {useSearchParams} from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 export default function RegisterForm({
     token,
