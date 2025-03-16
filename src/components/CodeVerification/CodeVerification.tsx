@@ -18,7 +18,7 @@ export default function CodeVerification() {
     const email = searchParams.get("email");
     const emailLetterId = searchParams.get("id");
 
-    const [otp, setOtp] = useState(Array(CODE_DIGITS_COUNT).fill(""));
+    const [otp, setOtp] = useState<Array<string | number>>(Array(CODE_DIGITS_COUNT).fill(""));
     const inputRefs = useRef([]);
 
     function handleChange(index: number, value: string) {
@@ -43,6 +43,26 @@ export default function CodeVerification() {
         if (event.key === "Backspace" && !event.target.value && index > 0) {
             inputRefs.current[index - 1]?.focus();
         }
+    }
+
+    function handlePaste(event) {
+        event.preventDefault();
+
+        const clipboardValue = event.clipboardData.getData("text/plain") as string;
+        const trimmedValue = clipboardValue.trim();
+
+        if (Number.isNaN(trimmedValue)) {
+            return;
+        }
+
+        const newOtp = trimmedValue.split('');
+        const slicedOtp = newOtp.slice(0, 6);
+
+        for (let i = slicedOtp.length; i < otp.length; i++) {
+            slicedOtp.push("");
+        }
+
+        setOtp(slicedOtp);
     }
 
     async function checkEmailStatus() {
@@ -158,14 +178,14 @@ export default function CodeVerification() {
                             <p className={`font-semibold text-zinc-800`}>
                                 Код
                             </p>
-                            <div className="flex gap-2">
+                            <div className="flex w-full gap-2">
                                 {
                                     otp.map((digit, index) => {
                                         return (
                                             <input
                                                 ref={(el) => (inputRefs.current[index] = el)}
                                                 key={index}
-                                                className={`w-8 text-center shadow-sm focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md py-1 transition-all text-black`}
+                                                className={`h-16 w-full text-center shadow-sm focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md transition-all text-black`}
                                                 type={"text"}
                                                 name={`code_${index}`}
                                                 placeholder=""
@@ -173,6 +193,7 @@ export default function CodeVerification() {
                                                 value={digit}
                                                 onKeyDown={(e) => handleBackspace(index, e)}
                                                 onChange={(e) => handleChange(index, e.target.value)}
+                                                onPaste={(e) => handlePaste(e)}
                                                 required
                                             />
                                         );
