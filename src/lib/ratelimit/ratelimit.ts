@@ -13,7 +13,7 @@ export async function RateLimit({
         case "local":
             return await localGeneralRateLimit({
                 ip: token,
-                limit: 5,
+                limit: 10,
                 duration: 4,
             });
         case "upstash":

@@ -10,6 +10,7 @@ import { useRouter } from "nextjs-toploader/app";
 import { useQuery } from "@tanstack/react-query";
 import { TableSessionType, TableUserType } from "@/db/schema";
 import { NO_RETRY_ERRORS } from "@/configs/constants";
+import PasswordInput from "@/components/PasswordInput/PasswordInput";
 
 export default function LoginForm({
     token,
@@ -140,25 +141,14 @@ export default function LoginForm({
                                     Почта или никнейм
                                 </p>
                                 <input
-                                    className={`shadow-sm focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md px-2 py-1 transition-all text-black`}
+                                    className={`h-8 shadow-sm focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md px-2 py-1 transition-all text-black`}
                                     type={"text"}
                                     name={"login"}
                                     placeholder=""
                                     required
                                 />
                             </div>
-                            <div className="flex flex-col gap-2">
-                                <p className={`font-semibold text-zinc-800`}>
-                                    Пароль
-                                </p>
-                                <input
-                                    className={`shadow-sm focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md px-2 py-1 transition-all text-black`}
-                                    type={"password"}
-                                    name={"password"}
-                                    placeholder=""
-                                    required
-                                />
-                            </div>
+                            <PasswordInput />
                             <button
                                 className={`hover:bg-zinc-700 bg-zinc-800 transition mt-2 rounded-md p-2 text-white h-[40px]`}
                                 type="submit"

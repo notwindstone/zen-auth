@@ -13,7 +13,7 @@ const redis = new Redis({
 // Refill rate: set to 5 tokens per 4 seconds
 export const generalRateLimit = new Ratelimit({
     redis: redis,
-    limiter: Ratelimit.tokenBucket(5, "4 s", 10),
+    limiter: Ratelimit.tokenBucket(10, "4 s", 15),
 });
 
 export const verificationRateLimit = new Ratelimit({
