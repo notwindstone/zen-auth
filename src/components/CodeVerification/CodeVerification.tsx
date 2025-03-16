@@ -19,14 +19,14 @@ export default function CodeVerification() {
     const emailLetterId = searchParams.get("id");
 
     const [otp, setOtp] = useState<Array<string | number>>(Array(CODE_DIGITS_COUNT).fill(""));
-    const inputRefs = useRef([]);
+    const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
     function handleChange(index: number, value: string) {
         if (![0,1,2,3,4,5,6,7,8,9].includes(Number(value))) {
             return;
         }
 
-        setOtp((prevOtp: string[]) => {
+        setOtp((prevOtp: Array<string | number>) => {
             const newOtp = [...prevOtp];
 
             newOtp[index] = value.replace(/[^0-9]/g, "");
@@ -39,19 +39,23 @@ export default function CodeVerification() {
         }
     }
 
-    function handleBackspace(index: number, event: KeyboardEvent) {
-        if (event.key === "Backspace" && !event.target.value && index > 0) {
+    function handleBackspace(index: number, event: React.KeyboardEvent<HTMLInputElement>) {
+        if (!event.target || !('value' in event.target)) {
+            return;
+        }
+
+        if (event.key === "Backspace" && !event?.target?.value && index > 0) {
             inputRefs.current[index - 1]?.focus();
         }
     }
 
-    function handlePaste(event) {
+    function handlePaste(event: React.ClipboardEvent<HTMLInputElement>) {
         event.preventDefault();
 
         const clipboardValue = event.clipboardData.getData("text/plain") as string;
         const trimmedValue = clipboardValue.trim();
 
-        if (Number.isNaN(trimmedValue)) {
+        if (isNaN(Number(trimmedValue))) {
             return;
         }
 
@@ -183,7 +187,9 @@ export default function CodeVerification() {
                                     otp.map((digit, index) => {
                                         return (
                                             <input
-                                                ref={(el) => (inputRefs.current[index] = el)}
+                                                ref={(el) => {
+                                                    inputRefs.current[index] = el;
+                                                }}
                                                 key={index}
                                                 className={`h-16 w-full text-center shadow-sm focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md transition-all text-black`}
                                                 type={"text"}
@@ -191,9 +197,9 @@ export default function CodeVerification() {
                                                 placeholder=""
                                                 maxLength={1}
                                                 value={digit}
-                                                onKeyDown={(e) => handleBackspace(index, e)}
-                                                onChange={(e) => handleChange(index, e.target.value)}
-                                                onPaste={(e) => handlePaste(e)}
+                                                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => handleBackspace(index, e)}
+                                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(index, e.target.value)}
+                                                onPaste={(e: React.ClipboardEvent<HTMLInputElement>) => handlePaste(e)}
                                                 required
                                             />
                                         );
