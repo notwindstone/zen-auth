@@ -39,6 +39,17 @@ export default async function Page() {
         );
     }
 
+    const data = await response.json();
+    const user = data.user;
+    
+    if (user.username !== 'notwindstone') {
+        return (
+            <div>
+                you are logged in, but you are not admin.
+            </div>
+        );
+    }
+
     return (
         <div>
             you made it!

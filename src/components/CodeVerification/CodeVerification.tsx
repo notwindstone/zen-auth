@@ -162,7 +162,7 @@ export default function CodeVerification({
     }
 
     return (
-        <div className="h-fit w-full max-w-[512px] bg-zinc-100 drop-shadow-xl rounded-md">
+        <div className="h-fit w-full max-w-[464px] bg-zinc-100 drop-shadow-xl rounded-md">
             <div className="py-6 px-12 rounded-md drop-shadow-sm bg-white">
                 <div className="flex flex-col items-center gap-4">
                     <Shield
@@ -193,6 +193,7 @@ export default function CodeVerification({
                                                 ref={(el) => {
                                                     inputRefs.current[index] = el;
                                                 }}
+                                                autoFocus={index === 0}
                                                 key={index}
                                                 className={`h-16 w-full text-center shadow-sm focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md transition-all text-black`}
                                                 type={"text"}

@@ -6,6 +6,7 @@ import { NO_RETRY_ERRORS } from "@/configs/constants";
 import ProfileUser from "@/components/Profile/ProfileUser/ProfileUser";
 import { TableSessionType, TableUserType } from "@/db/schema";
 import ProfileSession from "@/components/Profile/ProfileSession/ProfileSession";
+import LogOut from "@/components/LogOut/LogOut";
 
 export default function Profile({
     username,
@@ -89,6 +90,7 @@ export default function Profile({
             <ProfileUser
                 { ...user }
             />
+            <LogOut />
         </div>
     );
 }

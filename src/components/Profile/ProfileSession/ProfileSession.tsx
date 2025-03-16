@@ -21,6 +21,7 @@ export default function ProfileSession({
     } = useMutation({
         mutationKey: mutationKey,
         mutationFn: async (sessionId: string) => {
+            console.log(sessionId);
 
             return sessionId;
         },

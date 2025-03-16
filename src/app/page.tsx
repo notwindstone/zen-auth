@@ -209,7 +209,7 @@ export default function Page() {
                 <p>
                     Currently available pages:
                 </p>
-                <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/dashboard"}>
+                <Link className="text-zinc-400 transition hover:text-zinc-200 before:content-['■'] before:pr-2 before:text-latte-rosewater" href={"/dashboard"}>
                     dashboard
                 </Link>
                 <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/profile"}>
