@@ -5,8 +5,8 @@ import { config } from "dotenv";
 config({ path: ".env.local" });
 
 const redis = new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL!,
-    token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+    url: process.env.UPSTASH_REDIS_REST_URL! ?? "",
+    token: process.env.UPSTASH_REDIS_REST_TOKEN! ?? "",
 });
 
 // Max tokens: set to 10, allowing a burst of up to 10 requests
