@@ -8,17 +8,16 @@ import { NO_RETRY_ERRORS } from "@/configs/constants";
 import { FormEvent } from "react";
 import { Shield } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 
 export default function RegisterForm({
     token,
+    usernamePlaceholder,
+    emailPlaceholder,
 }: {
     token: string;
+    usernamePlaceholder: string;
+    emailPlaceholder: string;
 }) {
-    const searchParams = useSearchParams();
-    const usernamePlaceholder = searchParams.get("username");
-    const emailPlaceholder = searchParams.get("email");
-
     const router = useRouter();
     const {
         isPending,

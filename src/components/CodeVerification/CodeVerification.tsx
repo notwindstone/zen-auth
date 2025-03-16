@@ -1,6 +1,5 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import { Shield } from "lucide-react";
 import { FormEvent, useRef, useState } from "react";
 import Link from "next/link";
@@ -11,12 +10,16 @@ import { setSessionTokenCookie } from "@/lib/actions/cookies";
 import { getMonthForwardDate } from "@/utils/misc/getMonthForwardDate";
 import { CODE_DIGITS_COUNT } from "@/configs/constants";
 
-export default function CodeVerification() {
+export default function CodeVerification({
+    username,
+    email,
+    emailLetterId,
+}: {
+    username: string | null;
+    email: string | null;
+    emailLetterId: string | null;
+}) {
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const username = searchParams.get("username");
-    const email = searchParams.get("email");
-    const emailLetterId = searchParams.get("id");
 
     const [otp, setOtp] = useState<Array<string | number>>(Array(CODE_DIGITS_COUNT).fill(""));
     const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
