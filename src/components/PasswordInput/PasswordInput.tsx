@@ -19,13 +19,17 @@ export default function PasswordInput() {
                 />
                 <button
                     className="shrink-0 bg-zinc-800 rounded-md h-8 w-8 flex justify-center items-center"
-                    onClick={() => setIsVisible((state) => !state)}
+                    onClick={(event) => {
+                        event.preventDefault();
+
+                        setIsVisible((state) => !state);
+                    }}
                 >
                     {
                         isVisible ? (
-                            <EyeClosed />
+                            <EyeClosed size={20} />
                         ) : (
-                            <Eye />
+                            <Eye size={20} />
                         )
                     }
                 </button>
