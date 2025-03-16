@@ -9,6 +9,7 @@ import { getLastEmailInfo } from "@/lib/actions/email";
 import { setSessionTokenCookie } from "@/lib/actions/cookies";
 import { getMonthForwardDate } from "@/utils/misc/getMonthForwardDate";
 import { CODE_DIGITS_COUNT } from "@/configs/constants";
+import PasswordInput from "@/components/PasswordInput/PasswordInput";
 
 export default function CodeVerification({
     username,
@@ -211,18 +212,7 @@ export default function CodeVerification({
                                 }
                             </div>
                         </div>
-                        <div className="flex flex-col gap-2">
-                            <p className={`font-semibold text-zinc-800`}>
-                                Пароль
-                            </p>
-                            <input
-                                className={`shadow-sm focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md px-2 py-1 transition-all text-black`}
-                                type={"password"}
-                                name={"password"}
-                                placeholder=""
-                                required
-                            />
-                        </div>
+                        <PasswordInput />
                         <button
                             className={`hover:bg-zinc-700 bg-zinc-800 transition mt-2 rounded-md p-2 text-white h-[40px]`}
                             type="submit"
