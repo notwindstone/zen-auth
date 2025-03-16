@@ -159,7 +159,7 @@ export default function CodeVerification() {
     }
 
     return (
-        <div className="h-fit w-fit bg-zinc-100 drop-shadow-xl rounded-md">
+        <div className="h-fit w-[512px] bg-zinc-100 drop-shadow-xl rounded-md">
             <div className="py-6 px-12 rounded-md drop-shadow-sm bg-white">
                 <div className="flex flex-col items-center gap-4">
                     <Shield

@@ -1,3 +1,5 @@
+"use server";
+
 import { Redis } from 'ioredis';
 import { config } from "dotenv";
 
