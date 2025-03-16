@@ -19,68 +19,31 @@ export default function CodeVerification() {
     const emailLetterId = searchParams.get("id");
 
     const [otp, setOtp] = useState(Array(CODE_DIGITS_COUNT).fill(""));
-    const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
+    const inputRefs = useRef([]);
 
-    const handleKeyDown = (event: KeyboardEvent) => {
-        if (
-            !/^[0-9]{1}$/.test(event.key)
-            && event.key !== "Backspace"
-            && event.key !== "Delete"
-            && event.key !== "Tab"
-            && !event.metaKey
-        ) {
-            event.preventDefault();
-        }
-
-        const index = inputRefs.current.indexOf(event?.target);
-
-        if (event.key === "Delete" || event.key === "Backspace") {
-            if (index >= 0) {
-                setOtp((prevOtp) => [
-                    ...prevOtp.slice(0, index),
-                    "",
-                    ...prevOtp.slice(index + 1),
-                ]);
-
-                inputRefs.current[index - 1]?.focus();
-            }
-        }
-    };
-
-    const handleInput = (event: KeyboardEvent) => {
-        const { currentTarget } = event;
-        const index = inputRefs.current.indexOf(currentTarget);
-
-        if (currentTarget?.value) {
-            setOtp((prevOtp) => [
-                ...prevOtp.slice(0, index),
-                currentTarget?.value,
-                ...prevOtp.slice(index + 1),
-            ]);
-
-            if (index < otp.length - 1) {
-                inputRefs.current[index + 1]?.focus();
-            }
-        }
-    };
-
-    const handleFocus = (event) => {
-        event.target.select();
-    };
-
-    const handlePaste = (event) => {
-        event.preventDefault();
-
-        const text = event.clipboardData.getData("text");
-
-        if (!new RegExp(`^[0-9]{${otp.length}}$`).test(text)) {
+    function handleChange(index: number, value: string) {
+        if (![0,1,2,3,4,5,6,7,8,9].includes(Number(value))) {
             return;
         }
 
-        const digits = text.split("");
+        setOtp((prevOtp: string[]) => {
+            const newOtp = [...prevOtp];
 
-        setOtp(digits);
-    };
+            newOtp[index] = value.replace(/[^0-9]/g, "");
+
+            return newOtp;
+        });
+
+        if (value && index < inputRefs.current.length - 1) {
+            inputRefs.current[index + 1]?.focus();
+        }
+    }
+
+    function handleBackspace(index: number, event: KeyboardEvent) {
+        if (event.key === "Backspace" && !event.target.value && index > 0) {
+            inputRefs.current[index - 1]?.focus();
+        }
+    }
 
     async function checkEmailStatus() {
         alert(JSON.stringify(await getLastEmailInfo({ id: emailLetterId as string })));
@@ -208,10 +171,8 @@ export default function CodeVerification() {
                                                 placeholder=""
                                                 maxLength={1}
                                                 value={digit}
-                                                onChange={handleInput}
-                                                onKeyDown={handleKeyDown}
-                                                onFocus={handleFocus}
-                                                onPaste={handlePaste}
+                                                onKeyDown={(e) => handleBackspace(index, e)}
+                                                onChange={(e) => handleChange(index, e.target.value)}
                                                 required
                                             />
                                         );
