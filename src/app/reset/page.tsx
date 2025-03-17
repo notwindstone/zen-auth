@@ -6,6 +6,14 @@ export default async function Page({
     const searchParamsStore = await searchParams;
     const token = searchParamsStore?.token ?? null;
 
+    if (!token) {
+        return (
+            <>
+                something went wrong...
+            </>
+        );
+    }
+
     return (
         <>
         </>
