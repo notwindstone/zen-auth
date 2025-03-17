@@ -10,6 +10,10 @@ export default function SendResetCode() {
         const formData = new FormData(event.currentTarget);
         const email = formData.get("email");
 
+        if (!email) {
+            alert("Please enter a valid email");
+        }
+
         const response = await fetch('/api/reset', {
             method: "POST",
             body: JSON.stringify({

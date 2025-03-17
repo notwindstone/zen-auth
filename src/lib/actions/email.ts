@@ -35,7 +35,7 @@ export async function sendResetCodeEmail({
         from: 'Zen-Auth <onboarding@windstone.space>',
         to: email,
         subject: 'Сброс пароля',
-        html: `<p>Используйте эту ссылку, чтобы сбросить пароль для вашей учетной записи. Ваша ссылка: https://localhost:3000/reset?token=${resetToken}.</p>`,
+        html: `<p>Используйте эту ссылку, чтобы сбросить пароль для вашей учетной записи. Ваша ссылка: https://localhost:3000/reset?token=${resetToken}&email=${email}.</p>`,
     });
 }
 

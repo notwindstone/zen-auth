@@ -3,6 +3,7 @@
 import { KeyRound } from "lucide-react";
 import { FormEvent } from "react";
 import PasswordInput from "@/components/PasswordInput/PasswordInput";
+import { getLastEmailInfo } from "@/lib/actions/email";
 
 export default function ResetPassword({
     token,
@@ -12,11 +13,35 @@ export default function ResetPassword({
     email: string;
 }) {
     async function handlePasswordReset(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
 
+        const formData = new FormData(event.currentTarget);
+        const password = formData.get("password");
+
+        if (!password) {
+            alert("Please enter a password");
+        }
+
+        const response = await fetch('/api/reset', {
+            method: "PUT",
+            body: JSON.stringify({
+                email: email,
+                newPassword: password,
+                resetToken: token,
+            }),
+        });
+
+        if (!response.ok) {
+            alert('Response is not ok');
+
+            return;
+        }
+
+        alert("Truth.");
     }
 
     async function checkEmailStatus() {
-
+        alert(JSON.stringify(await getLastEmailInfo({ id: emailLetterId as string })));
     }
 
     async function handleResend() {
@@ -58,34 +83,6 @@ export default function ResetPassword({
                             </button>
                         </form>
                     </div>
-                </div>
-                <div className="py-4 flex flex-col gap-2">
-                    <p className="text-center text-gray-500 font-medium">
-                        Не пришла ссылка?{' '}
-                        <button
-                            className="text-black font-medium transition hover:text-zinc-700"
-                            onClick={checkEmailStatus}
-                        >
-                            Проверьте статус письма
-                        </button>
-                    </p>
-                    <div
-                        className="w-full px-12 flex flex-nowrap items-center gap-4"
-                    >
-                        <div className="w-full h-[1px] bg-gray-200"/>
-                        <p className="text-gray-500">
-                            или
-                        </p>
-                        <div className="w-full h-[1px] bg-gray-200"/>
-                    </div>
-                    <p className="text-center text-gray-500 font-medium">
-                        <button
-                            className="text-black font-medium transition hover:text-zinc-700"
-                            onClick={handleResend}
-                        >
-                            Отправьте код ещё раз
-                        </button>
-                    </p>
                 </div>
             </div>
         </>
