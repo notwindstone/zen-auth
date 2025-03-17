@@ -14,7 +14,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     const rateLimitResult = await RateLimit({
         token: ipAddress,
     });
-
+    console.log(rateLimitResult);
     if (types.isNativeError(rateLimitResult)) {
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     const users = await getUser({
         login,
     });
-
+    console.log(users);
     if (types.isNativeError(users)) {
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
@@ -92,7 +92,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         browser: `${browser.name} ${browser.version}`,
         ipAddress: ipAddress,
     });
-
+    console.log(sessionResponse);
     if (types.isNativeError(sessionResponse)) {
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
