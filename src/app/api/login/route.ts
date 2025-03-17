@@ -7,7 +7,7 @@ import { generateSessionToken } from "@/utils/secure/generateSessionToken";
 import { getIpAddress } from "@/utils/secure/getIpAddress";
 import { types } from "node:util";
 import { RateLimit } from "@/lib/ratelimit/ratelimit";
-import {EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT, USERNAME_LENGTH_LIMIT} from "@/configs/constants";
+import { EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT } from "@/configs/constants";
 
 export async function POST(request: NextRequest): Promise<Response> {
     const ipAddress = getIpAddress(request);

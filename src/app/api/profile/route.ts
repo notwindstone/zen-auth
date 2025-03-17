@@ -4,7 +4,7 @@ import { API_STATUS_CODES } from "@/configs/api";
 import { getIpAddress } from "@/utils/secure/getIpAddress";
 import { types } from "node:util";
 import { RateLimit } from "@/lib/ratelimit/ratelimit";
-import {EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT, USERNAME_LENGTH_LIMIT} from "@/configs/constants";
+import { USERNAME_LENGTH_LIMIT } from "@/configs/constants";
 
 export async function GET(request: NextRequest): Promise<Response> {
     const ipAddress = getIpAddress(request);

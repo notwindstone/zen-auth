@@ -90,7 +90,7 @@ export default function LoginForm({
         });
     }
 
-    async function handleResetCode(event) {
+    async function handleResetCode(event: React.MouseEvent<HTMLButtonElement & HTMLFormElement>) {
         event.preventDefault();
 
         const formData = new FormData(event.currentTarget);

@@ -6,6 +6,8 @@ export default function ResetPassword({
     token: string;
 }) {
     return (
-
+        <>
+            {token}
+        </>
     );
 }

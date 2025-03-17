@@ -1,4 +1,4 @@
-import {useRef, useState} from "react";
+import { useRef, useState } from "react";
 import { Eye, EyeClosed } from "lucide-react";
 
 export default function PasswordInput() {

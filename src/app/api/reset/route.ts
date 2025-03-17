@@ -8,7 +8,7 @@ import { types } from "node:util";
 import { sendResetCodeEmail } from "@/lib/actions/email";
 import { generateSecurePassword } from "@/utils/secure/generateSecurePassword";
 import { RateLimit } from "@/lib/ratelimit/ratelimit";
-import {EMAIL_LENGTH_LIMIT, USERNAME_LENGTH_LIMIT} from "@/configs/constants";
+import { EMAIL_LENGTH_LIMIT } from "@/configs/constants";
 
 export async function POST(request: NextRequest): Promise<Response> {
     const ipAddress = getIpAddress(request);
