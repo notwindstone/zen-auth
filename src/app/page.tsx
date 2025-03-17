@@ -233,6 +233,12 @@ export default function Page() {
                 <Link className="text-zinc-400 transition hover:text-zinc-200 before:content-['■'] before:pr-2 before:text-latte-rosewater" href={"/verification"}>
                     verification
                 </Link>
+                <Link className="text-zinc-400 transition hover:text-zinc-200 before:content-['■'] before:pr-2 before:text-latte-rosewater" href={"/reset"}>
+                    reset
+                </Link>
+                <Link className="text-zinc-400 transition hover:text-zinc-200 before:content-['■'] before:pr-2 before:text-latte-rosewater" href={"/reset/send"}>
+                    reset/send
+                </Link>
             </div>
             <div className="flex flex-col">
                 <p>

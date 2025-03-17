@@ -11,26 +11,6 @@ import { RateLimit, VerificationRateLimit } from "@/lib/ratelimit/ratelimit";
 import { CODE_DIGITS_COUNT, EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT, USERNAME_LENGTH_LIMIT } from "@/configs/constants";
 
 export async function POST(request: NextRequest): Promise<Response> {
-    // Yeah, these 18 lines of code are duplicated
-    // But you can't really do anything with that
-    // actually you can but i'm lazy as fuck to do that
-    const ipAddress = getIpAddress(request);
-    const rateLimitResult = await VerificationRateLimit({
-        token: ipAddress,
-    });
-
-    if (types.isNativeError(rateLimitResult)) {
-        return new Response(null, {
-            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
-        });
-    }
-
-    if (!rateLimitResult.success) {
-        return new Response(null, {
-            status: API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS,
-        });
-    }
-
     let data;
 
     try {
@@ -56,6 +36,21 @@ export async function POST(request: NextRequest): Promise<Response> {
         });
     }
 
+    const rateLimitResult = await VerificationRateLimit({
+        token: email,
+    });
+
+    if (types.isNativeError(rateLimitResult)) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
+        });
+    }
+
+    if (!rateLimitResult.success) {
+        return new Response(null, {
+            status: API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS,
+        });
+    }
 
     const userExistence = await checkUserExistence({
         username,

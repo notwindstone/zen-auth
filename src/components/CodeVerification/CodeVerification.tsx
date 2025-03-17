@@ -1,6 +1,6 @@
 "use client";
 
-import { Shield } from "lucide-react";
+import {Shield, Signature} from "lucide-react";
 import { FormEvent, useRef, useState } from "react";
 import Link from "next/link";
 import { API_ROUTES } from "@/configs/api";
@@ -166,7 +166,7 @@ export default function CodeVerification({
         <div className="h-fit w-full max-w-[464px] bg-zinc-100 drop-shadow-xl rounded-md">
             <div className="py-6 px-12 rounded-md drop-shadow-sm bg-white">
                 <div className="flex flex-col items-center gap-4">
-                    <Shield
+                    <Signature
                         color="black"
                         size={32}
                     />

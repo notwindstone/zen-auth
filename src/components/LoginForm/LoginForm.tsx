@@ -90,26 +90,6 @@ export default function LoginForm({
         });
     }
 
-    async function handleResetCode(event: React.MouseEvent<HTMLButtonElement & HTMLFormElement>) {
-        event.preventDefault();
-
-        const formData = new FormData(event.currentTarget);
-        const login = formData.get("login");
-
-        const response = await fetch('/api/reset', {
-            method: "POST",
-            body: JSON.stringify({
-                email: login,
-            }),
-        });
-
-        if (!response.ok) {
-            alert('Response is not ok');
-
-            return;
-        }
-    }
-
     if (isPending) {
         return (
             <div>
@@ -194,12 +174,12 @@ export default function LoginForm({
                     </div>
                     <p className="text-center text-gray-500 font-medium">
                         Забыли пароль?{' '}
-                        <button
+                        <Link
                             className="text-black font-medium transition hover:text-zinc-700"
-                            onClick={handleResetCode}
+                            href="/reset/send"
                         >
                             Сбросьте его
-                        </button>
+                        </Link>
                     </p>
                 </div>
             </div>

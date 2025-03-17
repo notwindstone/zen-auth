@@ -13,12 +13,12 @@ const redis = new Redis({
 });
 
 export async function rateLimit({
-    ip,
+    token,
     limit,
     duration,
     rtlKey,
 }: {
-    ip: string;
+    token: string;
     limit: number;
     duration: number;
     rtlKey: string;
@@ -27,7 +27,7 @@ export async function rateLimit({
     remaining: number;
     success: boolean;
 }> {
-    const key = `rate_limit_${rtlKey}:${ip}`;
+    const key = `rate_limit_${rtlKey}:${token}`;
     const currentCount = await redis.get(key);
     const count = parseInt(currentCount as string, 10) || 0;
 

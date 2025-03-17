@@ -16,7 +16,7 @@ export async function RateLimit({
     switch (process.env.REDIS_TYPE!.toLowerCase()) {
         case "local":
             return await localRateLimit({
-                ip: token,
+                token: token,
                 limit: 10,
                 duration: 4,
                 rtlKey: "general",
@@ -36,7 +36,7 @@ export async function VerificationRateLimit({
     switch (process.env.REDIS_TYPE!.toLowerCase()) {
         case "local":
             return await localRateLimit({
-                ip: token,
+                token: token,
                 limit: 1,
                 duration: 120,
                 rtlKey: "verification",
@@ -56,7 +56,7 @@ export async function ResetRateLimit({
     switch (process.env.REDIS_TYPE!.toLowerCase()) {
         case "local":
             return await localRateLimit({
-                ip: token,
+                token: token,
                 limit: 1,
                 duration: 120,
                 rtlKey: "reset",

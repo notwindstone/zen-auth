@@ -11,23 +11,6 @@ import { RateLimit, ResetRateLimit } from "@/lib/ratelimit/ratelimit";
 import { EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT } from "@/configs/constants";
 
 export async function POST(request: NextRequest): Promise<Response> {
-    const ipAddress = getIpAddress(request);
-    const rateLimitResult = await ResetRateLimit({
-        token: ipAddress,
-    });
-
-    if (types.isNativeError(rateLimitResult)) {
-        return new Response(null, {
-            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
-        });
-    }
-
-    if (!rateLimitResult.success) {
-        return new Response(null, {
-            status: API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS,
-        });
-    }
-
     let data;
 
     try {
@@ -49,6 +32,22 @@ export async function POST(request: NextRequest): Promise<Response> {
     if (email.length > EMAIL_LENGTH_LIMIT) {
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.BAD_REQUEST,
+        });
+    }
+
+    const rateLimitResult = await ResetRateLimit({
+        token: email,
+    });
+
+    if (types.isNativeError(rateLimitResult)) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
+        });
+    }
+
+    if (!rateLimitResult.success) {
+        return new Response(null, {
+            status: API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS,
         });
     }
 

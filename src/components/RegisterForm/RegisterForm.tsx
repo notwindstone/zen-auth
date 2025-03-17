@@ -6,7 +6,7 @@ import { API_ROUTES, API_STATUS_CODES } from "@/configs/api";
 import { TableSessionType, TableUserType } from "@/db/schema";
 import { NO_RETRY_ERRORS } from "@/configs/constants";
 import { FormEvent } from "react";
-import { Shield } from "lucide-react";
+import {Shield, SquareAsterisk} from "lucide-react";
 import Link from "next/link";
 
 export default function RegisterForm({
@@ -103,7 +103,7 @@ export default function RegisterForm({
             <div className="h-fit w-full max-w-[464px] bg-zinc-100 drop-shadow-xl rounded-md">
                 <div className="py-6 px-12 rounded-md drop-shadow-sm bg-white">
                     <div className="flex flex-col items-center gap-4">
-                        <Shield
+                        <SquareAsterisk
                             color="black"
                             size={32}
                         />
