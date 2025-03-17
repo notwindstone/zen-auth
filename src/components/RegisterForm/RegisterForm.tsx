@@ -6,7 +6,7 @@ import { API_ROUTES, API_STATUS_CODES } from "@/configs/api";
 import { TableSessionType, TableUserType } from "@/db/schema";
 import { NO_RETRY_ERRORS } from "@/configs/constants";
 import { FormEvent } from "react";
-import {Shield, SquareAsterisk} from "lucide-react";
+import { SquareAsterisk } from "lucide-react";
 import Link from "next/link";
 
 export default function RegisterForm({

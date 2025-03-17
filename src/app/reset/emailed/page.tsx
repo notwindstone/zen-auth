@@ -21,7 +21,7 @@ export default async function Page({
             <div>
                 ссылка с токеном сброса была отправлена на почту. перейдите по ней.
             </div>
-            <ResetCodeSent />
+            <ResetCodeSent emailLetterId={emailLetterId} />
         </>
     );
 }
