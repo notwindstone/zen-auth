@@ -173,9 +173,14 @@ export default function CodeVerification({
                     <p className="text-center text-xl font-bold text-black">
                         Верификация
                     </p>
-                    <p className="text-center text-gray-500 font-medium">
-                        Код верификации был выслан на вашу почту.
-                    </p>
+                    <div>
+                        <p className="text-center text-gray-500 font-medium">
+                            Код верификации был выслан на вашу почту:
+                        </p>
+                        <p className="text-center text-gray-500 font-semibold">
+                            {email ?? "отсутствует почта"}
+                        </p>
+                    </div>
                     <div className="w-full h-[1px] bg-gray-200"/>
                     <form
                         className="w-full flex flex-col gap-4"
@@ -212,7 +217,7 @@ export default function CodeVerification({
                                 }
                             </div>
                         </div>
-                        <PasswordInput />
+                        <PasswordInput/>
                         <button
                             className={`hover:bg-zinc-700 bg-zinc-800 transition mt-2 rounded-md p-2 text-white h-[40px]`}
                             type="submit"
