@@ -1,3 +1,5 @@
+import ResetPassword from "@/components/ResetPassword/ResetPassword";
+
 export default async function Page({
     searchParams,
 }: {
@@ -5,8 +7,9 @@ export default async function Page({
 }) {
     const searchParamsStore = await searchParams;
     const token = searchParamsStore?.token ?? null;
+    const email = searchParamsStore?.email ?? null;
 
-    if (!token) {
+    if (!token || !email) {
         return (
             <>
                 something went wrong...
@@ -16,6 +19,7 @@ export default async function Page({
 
     return (
         <>
+            <ResetPassword token={token} email={email} />
         </>
     );
 }

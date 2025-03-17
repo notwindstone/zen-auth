@@ -1,6 +1,6 @@
 "use client";
 
-import {Shield, Signature} from "lucide-react";
+import { Signature } from "lucide-react";
 import { FormEvent, useRef, useState } from "react";
 import Link from "next/link";
 import { API_ROUTES } from "@/configs/api";
