@@ -7,7 +7,7 @@ import { types } from "node:util";
 import { checkUserExistence, createUser } from "@/lib/actions/user";
 import { generateSecurePassword } from "@/utils/secure/generateSecurePassword";
 import { getIpAddress } from "@/utils/secure/getIpAddress";
-import { RateLimit } from "@/lib/ratelimit/ratelimit";
+import { RateLimit, VerificationRateLimit } from "@/lib/ratelimit/ratelimit";
 import { CODE_DIGITS_COUNT, EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT, USERNAME_LENGTH_LIMIT } from "@/configs/constants";
 
 export async function POST(request: NextRequest): Promise<Response> {
@@ -15,7 +15,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     // But you can't really do anything with that
     // actually you can but i'm lazy as fuck to do that
     const ipAddress = getIpAddress(request);
-    const rateLimitResult = await RateLimit({
+    const rateLimitResult = await VerificationRateLimit({
         token: ipAddress,
     });
 

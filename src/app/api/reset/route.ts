@@ -7,12 +7,12 @@ import { checkUserExistence, updateUser } from "@/lib/actions/user";
 import { types } from "node:util";
 import { sendResetCodeEmail } from "@/lib/actions/email";
 import { generateSecurePassword } from "@/utils/secure/generateSecurePassword";
-import { RateLimit } from "@/lib/ratelimit/ratelimit";
-import { EMAIL_LENGTH_LIMIT } from "@/configs/constants";
+import { RateLimit, ResetRateLimit } from "@/lib/ratelimit/ratelimit";
+import { EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT } from "@/configs/constants";
 
 export async function POST(request: NextRequest): Promise<Response> {
     const ipAddress = getIpAddress(request);
-    const rateLimitResult = await RateLimit({
+    const rateLimitResult = await ResetRateLimit({
         token: ipAddress,
     });
 
@@ -130,6 +130,12 @@ export async function PUT(request: NextRequest): Promise<Response> {
     const resetToken = data?.resetToken;
 
     if (!email || !newPassword || !resetToken) {
+        return new Response(null, {
+            status: API_STATUS_CODES.ERROR.BAD_REQUEST,
+        });
+    }
+
+    if (email.length > EMAIL_LENGTH_LIMIT || newPassword.length > PASSWORD_LENGTH_LIMIT) {
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.BAD_REQUEST,
         });

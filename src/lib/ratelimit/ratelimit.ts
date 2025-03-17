@@ -1,5 +1,5 @@
 import { config } from "dotenv";
-import { generalRateLimit as localGeneralRateLimit } from "@/lib/ratelimit/ioredis";
+import { rateLimit as localRateLimit } from "@/lib/ratelimit/ioredis";
 import {
     generalRateLimit as upstashGeneralRateLimit,
     verificationRateLimit as upstashVerificationRateLimit,
@@ -15,10 +15,11 @@ export async function RateLimit({
 }) {
     switch (process.env.REDIS_TYPE!.toLowerCase()) {
         case "local":
-            return await localGeneralRateLimit({
+            return await localRateLimit({
                 ip: token,
                 limit: 10,
                 duration: 4,
+                rtlKey: "general",
             });
         case "upstash":
             return await upstashGeneralRateLimit.limit(token);
@@ -34,10 +35,11 @@ export async function VerificationRateLimit({
 }) {
     switch (process.env.REDIS_TYPE!.toLowerCase()) {
         case "local":
-            return await localGeneralRateLimit({
+            return await localRateLimit({
                 ip: token,
-                limit: 10,
-                duration: 4,
+                limit: 1,
+                duration: 120,
+                rtlKey: "verification",
             });
         case "upstash":
             return await upstashVerificationRateLimit.limit(token);
@@ -53,10 +55,11 @@ export async function ResetRateLimit({
 }) {
     switch (process.env.REDIS_TYPE!.toLowerCase()) {
         case "local":
-            return await localGeneralRateLimit({
+            return await localRateLimit({
                 ip: token,
-                limit: 10,
-                duration: 4,
+                limit: 1,
+                duration: 120,
+                rtlKey: "reset",
             });
         case "upstash":
             return await upstashResetTokenRateLimit.limit(token);
