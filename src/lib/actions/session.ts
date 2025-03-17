@@ -36,8 +36,8 @@ export async function createSession({
     
     try {
         await db.insert(sessionTable).values(session);
-    } catch {
-        return new Error("Internal server error.");
+    } catch (error) {
+        return new Error(`Internal server error. ${error}`);
     }
 
     return session;
