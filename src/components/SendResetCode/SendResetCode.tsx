@@ -2,8 +2,11 @@
 
 import { FormEvent } from "react";
 import { RectangleEllipsis } from "lucide-react";
+import { useRouter } from "nextjs-toploader/app";
 
 export default function SendResetCode() {
+    const router = useRouter();
+
     async function handleResetCode(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
@@ -27,15 +30,9 @@ export default function SendResetCode() {
             return;
         }
 
-        alert('society');
-    }
+        const responseData = await response.json();
 
-    async function checkEmailStatus() {
-
-    }
-
-    async function handleResend() {
-
+        router.push(`/reset/emailed?emailLetterId=${responseData?.id}`);
     }
 
     return (
@@ -80,34 +77,6 @@ export default function SendResetCode() {
                             </button>
                         </form>
                     </div>
-                </div>
-                <div className="py-4 flex flex-col gap-2">
-                    <p className="text-center text-gray-500 font-medium">
-                        Не пришла ссылка?{' '}
-                        <button
-                            className="text-black font-medium transition hover:text-zinc-700"
-                            onClick={checkEmailStatus}
-                        >
-                            Проверьте статус письма
-                        </button>
-                    </p>
-                    <div
-                        className="w-full px-12 flex flex-nowrap items-center gap-4"
-                    >
-                        <div className="w-full h-[1px] bg-gray-200"/>
-                        <p className="text-gray-500">
-                            или
-                        </p>
-                        <div className="w-full h-[1px] bg-gray-200"/>
-                    </div>
-                    <p className="text-center text-gray-500 font-medium">
-                        <button
-                            className="text-black font-medium transition hover:text-zinc-700"
-                            onClick={handleResend}
-                        >
-                            Отправьте код ещё раз
-                        </button>
-                    </p>
                 </div>
             </div>
         </>

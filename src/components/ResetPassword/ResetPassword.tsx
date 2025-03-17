@@ -3,7 +3,6 @@
 import { KeyRound } from "lucide-react";
 import { FormEvent } from "react";
 import PasswordInput from "@/components/PasswordInput/PasswordInput";
-import { getLastEmailInfo } from "@/lib/actions/email";
 
 export default function ResetPassword({
     token,
@@ -38,14 +37,6 @@ export default function ResetPassword({
         }
 
         alert("Truth.");
-    }
-
-    async function checkEmailStatus() {
-        alert(JSON.stringify(await getLastEmailInfo({ id: emailLetterId as string })));
-    }
-
-    async function handleResend() {
-
     }
 
     return (
