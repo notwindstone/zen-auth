@@ -143,7 +143,7 @@ export default function CodeVerification({
                 password: password,
             }),
         });
-
+        console.log(loginResponse);
         if (!loginResponse.ok) {
             // TODO
             alert('registration was successful, but login failed');
