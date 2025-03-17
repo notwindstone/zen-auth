@@ -5,12 +5,16 @@ import { config } from "dotenv";
 
 config({ path: ".env.local" });
 
-const redis = new Redis({
-    port: Number(process.env.LOCAL_REDIS_PORT! ?? '0'),
-    host: process.env.LOCAL_REDIS_URL! ?? "",
-    username: process.env.LOCAL_REDIS_USERNAME! ?? "",
-    password: process.env.LOCAL_REDIS_PASSWORD! ?? "",
-});
+let redis: Redis | undefined;
+
+if (process.env.REDIS_TYPE!.toLowerCase() === "local") {
+    redis = new Redis({
+        port: Number(process.env.LOCAL_REDIS_PORT! ?? '0'),
+        host: process.env.LOCAL_REDIS_URL! ?? "",
+        username: process.env.LOCAL_REDIS_USERNAME! ?? "",
+        password: process.env.LOCAL_REDIS_PASSWORD! ?? "",
+    });
+}
 
 export async function rateLimit({
     token,
@@ -28,7 +32,7 @@ export async function rateLimit({
     success: boolean;
 }> {
     const key = `rate_limit_${rtlKey}:${token}`;
-    const currentCount = await redis.get(key);
+    const currentCount = await redis?.get(key);
     const count = parseInt(currentCount as string, 10) || 0;
 
     if (count >= limit) {
@@ -39,8 +43,8 @@ export async function rateLimit({
         };
     }
 
-    redis.incr(key);
-    redis.expire(key, duration);
+    redis?.incr(key);
+    redis?.expire(key, duration);
 
     return {
         limit,
