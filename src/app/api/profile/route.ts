@@ -4,6 +4,7 @@ import { API_STATUS_CODES } from "@/configs/api";
 import { getIpAddress } from "@/utils/secure/getIpAddress";
 import { types } from "node:util";
 import { RateLimit } from "@/lib/ratelimit/ratelimit";
+import {EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT, USERNAME_LENGTH_LIMIT} from "@/configs/constants";
 
 export async function GET(request: NextRequest): Promise<Response> {
     const ipAddress = getIpAddress(request);
@@ -27,6 +28,12 @@ export async function GET(request: NextRequest): Promise<Response> {
     const searchUsername = searchParams.get('username');
 
     if (searchUsername === null) {
+        return new Response(null, {
+            status: API_STATUS_CODES.ERROR.BAD_REQUEST,
+        });
+    }
+
+    if (searchUsername.length > USERNAME_LENGTH_LIMIT) {
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.BAD_REQUEST,
         });

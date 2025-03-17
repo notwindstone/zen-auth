@@ -8,6 +8,7 @@ import { checkUserExistence, createUser } from "@/lib/actions/user";
 import { generateSecurePassword } from "@/utils/secure/generateSecurePassword";
 import { getIpAddress } from "@/utils/secure/getIpAddress";
 import { RateLimit } from "@/lib/ratelimit/ratelimit";
+import {CODE_DIGITS_COUNT, EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT, USERNAME_LENGTH_LIMIT} from "@/configs/constants";
 
 export async function POST(request: NextRequest): Promise<Response> {
     // Yeah, these 18 lines of code are duplicated
@@ -47,6 +48,13 @@ export async function POST(request: NextRequest): Promise<Response> {
             status: API_STATUS_CODES.ERROR.BAD_REQUEST,
         });
     }
+
+    if (email.length > EMAIL_LENGTH_LIMIT || username.length > USERNAME_LENGTH_LIMIT) {
+        return new Response(null, {
+            status: API_STATUS_CODES.ERROR.BAD_REQUEST,
+        });
+    }
+
 
     const userExistence = await checkUserExistence({
         username,
@@ -130,6 +138,18 @@ export async function PUT(request: NextRequest): Promise<Response> {
     const code = data?.code;
 
     if (!email || !code || !username || !displayName || !password) {
+        return new Response(null, {
+            status: API_STATUS_CODES.ERROR.BAD_REQUEST,
+        });
+    }
+
+    if (
+        email.length > EMAIL_LENGTH_LIMIT
+        || username.length > USERNAME_LENGTH_LIMIT
+        || displayName.length > USERNAME_LENGTH_LIMIT
+        || password.length > PASSWORD_LENGTH_LIMIT
+        || code.length !== CODE_DIGITS_COUNT
+    ) {
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.BAD_REQUEST,
         });

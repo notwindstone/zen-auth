@@ -8,6 +8,7 @@ import { types } from "node:util";
 import { sendResetCodeEmail } from "@/lib/actions/email";
 import { generateSecurePassword } from "@/utils/secure/generateSecurePassword";
 import { RateLimit } from "@/lib/ratelimit/ratelimit";
+import {EMAIL_LENGTH_LIMIT, USERNAME_LENGTH_LIMIT} from "@/configs/constants";
 
 export async function POST(request: NextRequest): Promise<Response> {
     const ipAddress = getIpAddress(request);
@@ -40,6 +41,12 @@ export async function POST(request: NextRequest): Promise<Response> {
     const email = data?.email;
 
     if (!email) {
+        return new Response(null, {
+            status: API_STATUS_CODES.ERROR.BAD_REQUEST,
+        });
+    }
+
+    if (email.length > EMAIL_LENGTH_LIMIT) {
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.BAD_REQUEST,
         });

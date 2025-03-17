@@ -11,3 +11,6 @@ export const PUBLIC_AVATAR_URL = "public_user_avatar";
 export const RESET_TOKEN_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 export const PLACEHOLDER_STRING = "no errors";
 export const CODE_DIGITS_COUNT = 6;
+export const PASSWORD_LENGTH_LIMIT = 128;
+export const USERNAME_LENGTH_LIMIT = 128;
+export const EMAIL_LENGTH_LIMIT = 254;

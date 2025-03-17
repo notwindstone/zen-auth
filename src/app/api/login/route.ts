@@ -7,6 +7,7 @@ import { generateSessionToken } from "@/utils/secure/generateSessionToken";
 import { getIpAddress } from "@/utils/secure/getIpAddress";
 import { types } from "node:util";
 import { RateLimit } from "@/lib/ratelimit/ratelimit";
+import {EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT, USERNAME_LENGTH_LIMIT} from "@/configs/constants";
 
 export async function POST(request: NextRequest): Promise<Response> {
     const ipAddress = getIpAddress(request);
@@ -41,6 +42,12 @@ export async function POST(request: NextRequest): Promise<Response> {
     const password = data?.password;
 
     if (!login || !password) {
+        return new Response(null, {
+            status: API_STATUS_CODES.ERROR.BAD_REQUEST,
+        });
+    }
+
+    if (login.length > EMAIL_LENGTH_LIMIT || password.length > PASSWORD_LENGTH_LIMIT) {
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.BAD_REQUEST,
         });
