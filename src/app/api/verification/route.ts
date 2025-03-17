@@ -13,6 +13,7 @@ import { CODE_DIGITS_COUNT, EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT, USERNAME_
 export async function POST(request: NextRequest): Promise<Response> {
     // Yeah, these 18 lines of code are duplicated
     // But you can't really do anything with that
+    // actually you can but i'm lazy as fuck to do that
     const ipAddress = getIpAddress(request);
     const rateLimitResult = await RateLimit({
         token: ipAddress,

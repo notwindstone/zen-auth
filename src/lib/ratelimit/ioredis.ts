@@ -25,7 +25,42 @@ export async function generalRateLimit({
     remaining: number;
     success: boolean;
 }> {
-    const key = `rate_limit:${ip}`;
+    const key = `rate_limit_general:${ip}`;
+    const currentCount = await redis.get(key);
+    const count = parseInt(currentCount as string, 10) || 0;
+
+    if (count >= limit) {
+        return {
+            limit,
+            remaining: limit - count,
+            success: false,
+        };
+    }
+
+    redis.incr(key);
+    redis.expire(key, duration);
+
+    return {
+        limit,
+        remaining: limit - (count + 1),
+        success: true,
+    };
+}
+
+export async function verificatioinRateLimit({
+    ip,
+    limit,
+    duration,
+}: {
+    ip: string;
+    limit: number;
+    duration: number;
+}): Promise<{
+    limit: number;
+    remaining: number;
+    success: boolean;
+}> {
+    const key = `rate_limit_verification:${ip}`;
     const currentCount = await redis.get(key);
     const count = parseInt(currentCount as string, 10) || 0;
 
