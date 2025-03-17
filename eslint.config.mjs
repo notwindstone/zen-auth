@@ -1,4 +1,4 @@
-import { dirname } from "path";
+import {dirname} from "path";
 import { fileURLToPath } from "url";
 import { FlatCompat } from "@eslint/eslintrc";
 
@@ -10,7 +10,19 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+  ...compat.extends(
+      "next/core-web-vitals",
+      "next/typescript",
+  ),
+  {
+    rules: {
+      semi: "error",
+      indent: ["error", 4, { "SwitchCase": 1 }],
+      curly: "error",
+      "object-curly-spacing": ["error", "always"],
+      "comma-dangle": ["error", "always-multiline"],
+    },
+  },
 ];
 
 export default eslintConfig;

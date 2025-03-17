@@ -1,34 +1,16 @@
-export const REGISTRATION_INPUTS = [
-    {
-        label: "Имя пользователя",
-        type: "text",
-        name: "username",
-    },
-    {
-        label: "Почта",
-        type: "email",
-        name: "email",
-    },
-    {
-        label: "Пароль",
-        type: "password",
-        name: "password",
-    },
-];
-export const LOGIN_INPUTS = [
-    {
-        label: "Почта",
-        type: "email",
-        name: "email",
-        error: "Почта (неправильная почта или пароль)",
-    },
-    {
-        label: "Пароль",
-        type: "password",
-        name: "password",
-        error: "Пароль (неправильная почта или пароль)",
-    },
-];
-export const LOGIN_ERRORS = {
-    INCORRECT_PASSWORD: "Неверный пароль",
-};
+import { API_STATUS_CODES } from "@/configs/api";
+
+export const COOKIES_KEY = "zen_auth_session";
+export const NO_RETRY_ERRORS = new Set([
+    API_STATUS_CODES.ERROR.UNAUTHORIZED,
+    API_STATUS_CODES.ERROR.FORBIDDEN,
+    API_STATUS_CODES.ERROR.NOT_FOUND,
+    API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS,
+]);
+export const PUBLIC_AVATAR_URL = "public_user_avatar";
+export const RESET_TOKEN_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+export const PLACEHOLDER_STRING = "no errors";
+export const CODE_DIGITS_COUNT = 6;
+export const PASSWORD_LENGTH_LIMIT = 128;
+export const USERNAME_LENGTH_LIMIT = 128;
+export const EMAIL_LENGTH_LIMIT = 254;
