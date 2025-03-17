@@ -70,9 +70,12 @@ export default function Page() {
             <p>
                 This page is temporarily client-sided.
             </p>
+            <Link href="/register" className="text-lg hover:text-gray-300 transition">
+                ~~~ {">"} here {"<"} ~~~
+            </Link>
             <div className="flex flex-col gap-2">
                 <p>
-                    Currently available buttons {
+                    Dev buttons {
                         <span className="text-zinc-400">(бля почему на английском фразы менее кринжово звучат, даже если смысл один)</span>
                     }:
                 </p>
@@ -95,6 +98,7 @@ export default function Page() {
                     Remove all sessions except current
                 </button>
                 <button
+                    disabled
                     onClick={async () => {
                         const response = await fetch('/api/reset', {
                             method: "PUT",
@@ -113,11 +117,12 @@ export default function Page() {
 
                         alert("Truth.");
                     }}
-                    className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
+                    className="w-fit bg-amber-950 text-white rounded px-2 py-1 transition "
                 >
                     Reset password
                 </button>
                 <button
+                    disabled
                     onClick={async () => {
                         const response = await fetch('/api/reset', {
                             method: "POST",
@@ -134,35 +139,39 @@ export default function Page() {
 
                         alert("Truth.");
                     }}
-                    className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
+                    className="w-fit bg-amber-950 text-white rounded px-2 py-1 transition "
                 >
                     Send reset token
                 </button>
                 <button
+                    disabled
                     onClick={async () => {
                         await verifyEmail();
                     }}
-                    className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
+                    className="w-fit bg-amber-950 text-white rounded px-2 py-1 transition "
                 >
                     Verify email
                 </button>
                 <button
+                    disabled
                     onClick={async () => {
                         await checkEmailLetter();
                     }}
-                    className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
+                    className="w-fit bg-amber-950 text-white rounded px-2 py-1 transition "
                 >
                     Check email letter
                 </button>
                 <button
+                    disabled
                     onClick={async () => {
                         await sendVerificationCode();
                     }}
-                    className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
+                    className="w-fit bg-amber-950 text-white rounded px-2 py-1 transition"
                 >
                     Send verification code
                 </button>
                 <button
+                    disabled
                     onClick={async () => {
                         await fetch('/api/session/current', {
                             method: "DELETE",
@@ -170,11 +179,12 @@ export default function Page() {
 
                         deleteSessionTokenCookie().then(() => alert('Now you are not authorized.'));
                     }}
-                    className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
+                    className="w-fit bg-amber-950 text-white rounded px-2 py-1 transition"
                 >
                     Log out
                 </button>
                 <button
+                    disabled
                     onClick={async () => {
                         const response = await fetch('/api/login', {
                             method: "POST",
@@ -200,7 +210,7 @@ export default function Page() {
                             alert('Now you are an authorized user.');
                         });
                     }}
-                    className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
+                    className="w-fit bg-amber-950 text-white rounded px-2 py-1 transition"
                 >
                     Log in using notwindstone&lsquo;s credentials
                 </button>
@@ -212,16 +222,16 @@ export default function Page() {
                 <Link className="text-zinc-400 transition hover:text-zinc-200 before:content-['■'] before:pr-2 before:text-latte-rosewater" href={"/dashboard"}>
                     dashboard
                 </Link>
-                <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/profile"}>
+                <Link className="before:content-['▢'] before:pr-2 before:text-latte-rosewater text-zinc-400 transition hover:text-zinc-200" href={"/profile"}>
                     profile
                 </Link>
-                <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/profile/notwindstone"}>
+                <Link className="before:content-['▢'] before:pr-2 before:text-latte-rosewater text-zinc-400 transition hover:text-zinc-200" href={"/profile/notwindstone"}>
                     profile/notwindstone
                 </Link>
-                <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/profile/not_existing_user"}>
+                <Link className="before:content-['▢'] before:pr-2 before:text-latte-rosewater text-zinc-400 transition hover:text-zinc-200" href={"/profile/not_existing_user"}>
                     profile/not_existing_user
                 </Link>
-                <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/sessions"}>
+                <Link className="before:content-['▢'] before:pr-2 before:text-latte-rosewater text-zinc-400 transition hover:text-zinc-200" href={"/sessions"}>
                     sessions
                 </Link>
                 <Link className="text-zinc-400 transition hover:text-zinc-200 before:content-['■'] before:pr-2 before:text-latte-rosewater" href={"/login"}>
@@ -238,6 +248,9 @@ export default function Page() {
                 </Link>
                 <Link className="text-zinc-400 transition hover:text-zinc-200 before:content-['■'] before:pr-2 before:text-latte-rosewater" href={"/reset/send"}>
                     reset/send
+                </Link>
+                <Link className="text-zinc-400 transition hover:text-zinc-200 before:content-['■'] before:pr-2 before:text-latte-rosewater" href={"/reset/send"}>
+                    reset/emailed
                 </Link>
             </div>
             <div className="flex flex-col">
@@ -258,6 +271,9 @@ export default function Page() {
                 </Link>
                 <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/api/session/all"}>
                     /api/session/all - GET, DELETE
+                </Link>
+                <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/api/session/all"}>
+                    /api/session/specific - DELETE
                 </Link>
                 <Link className="text-zinc-400 transition hover:text-zinc-200" href={"/api/login"}>
                     /api/login - POST
