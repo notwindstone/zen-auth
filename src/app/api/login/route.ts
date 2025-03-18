@@ -87,9 +87,9 @@ export async function POST(request: NextRequest): Promise<Response> {
     const sessionResponse = await createSession({
         token: sessionToken,
         userId: user.id,
-        architecture: cpu.architecture ?? "unknown",
-        os: `${os.name} ${os.version}`,
-        browser: `${browser.name} ${browser.version}`,
+        architecture: cpu?.architecture ?? "unknown",
+        os: `${os?.name} ${os?.version}`,
+        browser: `${browser?.name} ${browser?.version}`,
         ipAddress: ipAddress,
     });
     console.log(sessionResponse);
