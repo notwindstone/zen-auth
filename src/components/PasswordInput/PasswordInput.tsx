@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { Eye, EyeClosed } from "lucide-react";
-import {PASSWORD_LENGTH_LIMIT} from "@/configs/constants";
+import { PASSWORD_LENGTH_LIMIT } from "@/configs/constants";
 
 export default function PasswordInput() {
     const [isVisible, setIsVisible] = useState(false);
