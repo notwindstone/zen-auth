@@ -9,6 +9,7 @@ import { FormEvent, useState } from "react";
 import { CircleAlert, SquareAsterisk } from "lucide-react";
 import Link from "next/link";
 import validateEmail from "@/utils/secure/validateEmail";
+import {FormErrorType} from "@/types/FormError.type";
 
 export default function RegisterForm({
     token,
@@ -19,28 +20,25 @@ export default function RegisterForm({
     usernamePlaceholder: string;
     emailPlaceholder: string;
 }) {
-    const [formError, setFormError] = useState<{
+    const [formError, setFormError] = useState<FormErrorType>({
         client: {
-            hasInputData: {
-                username: boolean;
-                email: boolean;
-            };
-            hasInitiallyValidData: {
-                email: boolean;
-            };
+            hasInputDataError: {
+                username: false,
+                email: false,
+            },
+            hasInitiallyInvalidData: {
+                email: false,
+            },
         },
         server: {
-            hasFormError: boolean;
-            hasInternalServerError: boolean;
-            hasBeenRateLimited: boolean;
-        }
-    }>({
-        hasInputData: {
-            username: true,
-            email: true,
-        },
-        hasValidData: {
-            email: true,
+            hasInternalServerError: false,
+            hasFormError: false,
+            hasBeenRateLimited: false,
+            hasDataConflict: {
+                username: false,
+                email: false,
+            },
+            hasUnknownError: false,
         },
     });
     const router = useRouter();
