@@ -212,7 +212,7 @@ export default function CodeVerification({
                                                 autoFocus={index === 0}
                                                 key={index}
                                                 className={`h-16 w-full text-center shadow-sm focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md transition-all text-black [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
-                                                type={"text"}
+                                                type={"number"}
                                                 name={`code_${index}`}
                                                 placeholder=""
                                                 maxLength={1}
