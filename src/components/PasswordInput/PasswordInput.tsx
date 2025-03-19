@@ -25,9 +25,11 @@ export default function PasswordInput() {
                         event.preventDefault();
 
                         const data = event.clipboardData.getData('text/plain');
+                        const currentInput = event.currentTarget.value;
 
-                        if (data.length > PASSWORD_LENGTH_LIMIT) {
-                            event.currentTarget.value = "Длина пароля превышает 128 символов.";
+                        if (data.length > PASSWORD_LENGTH_LIMIT || currentInput.length > PASSWORD_LENGTH_LIMIT) {
+                            event.currentTarget.value = "";
+                            event.currentTarget.placeholder = "Длина пароля превышает 128 символов.";
 
                             return;
                         }
@@ -35,7 +37,7 @@ export default function PasswordInput() {
                         const chars = [ ...data ];
                         const filtered = chars.filter((char) => char !== " ");
 
-                        event.currentTarget.value = filtered.join('');
+                        event.currentTarget.value = currentInput + filtered.join('');
                     }}
                     onKeyDown={(event) => {
                         if (event.key === " ") {
