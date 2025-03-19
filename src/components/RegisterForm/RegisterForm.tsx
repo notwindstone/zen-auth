@@ -5,11 +5,12 @@ import { useQuery } from "@tanstack/react-query";
 import { API_ROUTES, API_STATUS_CODES } from "@/configs/api";
 import { TableSessionType, TableUserType } from "@/db/schema";
 import { NO_RETRY_ERRORS } from "@/configs/constants";
-import { FormEvent, useState } from "react";
+import { FormEvent } from "react";
 import { CircleAlert, SquareAsterisk } from "lucide-react";
 import Link from "next/link";
 import validateEmail from "@/utils/secure/validateEmail";
-import {FormErrorType} from "@/types/FormError.type";
+import { FormErrorType } from "@/types/FormError.type";
+import { useImmer } from "use-immer";
 
 export default function RegisterForm({
     token,
@@ -20,7 +21,7 @@ export default function RegisterForm({
     usernamePlaceholder: string;
     emailPlaceholder: string;
 }) {
-    const [formError, setFormError] = useState<FormErrorType>({
+    const [formError, setFormError] = useImmer<FormErrorType>({
         client: {
             hasInputDataError: {
                 username: false,
@@ -78,9 +79,8 @@ export default function RegisterForm({
         const email = formData.get("email");
 
         if (!username || !email) {
-            setHasInputData({
-                username: Boolean(username),
-                email: Boolean(email),
+            setFormError(draft => {
+
             });
 
             return;
