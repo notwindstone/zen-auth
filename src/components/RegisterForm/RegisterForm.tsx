@@ -19,14 +19,30 @@ export default function RegisterForm({
     usernamePlaceholder: string;
     emailPlaceholder: string;
 }) {
-    const [hasInputData, setHasInputData] = useState<{
-        username: boolean;
-        email: boolean;
+    const [formError, setFormError] = useState<{
+        client: {
+            hasInputData: {
+                username: boolean;
+                email: boolean;
+            };
+            hasInitiallyValidData: {
+                email: boolean;
+            };
+        },
+        server: {
+            hasFormError: boolean;
+            hasInternalServerError: boolean;
+            hasBeenRateLimited: boolean;
+        }
     }>({
-        username: true,
-        email: true,
+        hasInputData: {
+            username: true,
+            email: true,
+        },
+        hasValidData: {
+            email: true,
+        },
     });
-    const [isEmailValid, setIsEmailValid] = useState(true);
     const router = useRouter();
     const {
         isPending,
