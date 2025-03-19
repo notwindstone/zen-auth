@@ -175,9 +175,9 @@ export default function RegisterForm({
 
                     break;
                 case API_STATUS_CODES.ERROR.CONFLICT:
-                    const { statusText } = response;
+                    const conflictElement = response.headers.get('X-Zen-Auth-Conflict') ?? "";
 
-                    switch (statusText) {
+                    switch (conflictElement) {
                         case "username":
                             usernameError = {
                                 error: true,
@@ -189,6 +189,17 @@ export default function RegisterForm({
                             emailError = {
                                 error: true,
                                 text: "Такая почта уже используется. Попробуйте другую.",
+                            };
+
+                            break;
+                        default:
+                            usernameError = {
+                                error: true,
+                                text: "Такой пользователь уже существует. Попробуйте ввести другой никнейм или почту.",
+                            };
+                            emailError = {
+                                error: true,
+                                text: "Такой пользователь уже существует. Попробуйте ввести другой никнейм или почту.",
                             };
 
                             break;

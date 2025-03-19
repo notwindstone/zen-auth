@@ -86,9 +86,13 @@ export async function POST(request: NextRequest): Promise<Response> {
     if (userExistence !== null) {
         await DecrementVerificationRateLimit({ token: email });
 
+        const headers = new Headers({
+            "X-Zen-Auth-Conflict": userExistence,
+        });
+
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.CONFLICT,
-            statusText: userExistence,
+            headers: headers,
         });
     }
 
@@ -201,9 +205,13 @@ export async function PUT(request: NextRequest): Promise<Response> {
     }
 
     if (userExistence !== null) {
+        const headers = new Headers({
+            "X-Zen-Auth-Conflict": userExistence,
+        });
+
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.CONFLICT,
-            statusText: userExistence,
+            headers: headers,
         });
     }
 
