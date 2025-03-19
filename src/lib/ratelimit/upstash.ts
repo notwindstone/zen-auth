@@ -18,10 +18,10 @@ export const generalRateLimit = new Ratelimit({
 
 export const verificationRateLimit = new Ratelimit({
     redis: redis,
-    limiter: Ratelimit.fixedWindow(2, "120 s"),
+    limiter: Ratelimit.fixedWindow(1, "120 s"),
 });
 
 export const resetTokenRateLimit = new Ratelimit({
     redis: redis,
-    limiter: Ratelimit.fixedWindow(2, "120 s"),
+    limiter: Ratelimit.fixedWindow(1, "120 s"),
 });

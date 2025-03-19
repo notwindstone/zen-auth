@@ -52,3 +52,21 @@ export async function rateLimit({
         success: true,
     };
 }
+
+export async function decrementRateLimit({
+    token,
+    rtlKey,
+}: {
+    token: string;
+    rtlKey: string;
+}): Promise<{
+    success: boolean;
+}> {
+    const key = `rate_limit_${rtlKey}:${token}`;
+
+    redis?.decr(key);
+
+    return {
+        success: true,
+    };
+}
