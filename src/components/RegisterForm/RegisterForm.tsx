@@ -5,8 +5,8 @@ import { useQuery } from "@tanstack/react-query";
 import { API_ROUTES, API_STATUS_CODES } from "@/configs/api";
 import { TableSessionType, TableUserType } from "@/db/schema";
 import { NO_RETRY_ERRORS } from "@/configs/constants";
-import { FormEvent } from "react";
-import { SquareAsterisk } from "lucide-react";
+import { FormEvent, useState } from "react";
+import { CircleAlert, SquareAsterisk } from "lucide-react";
 import Link from "next/link";
 import validateEmail from "@/utils/secure/validateEmail";
 
@@ -19,6 +19,14 @@ export default function RegisterForm({
     usernamePlaceholder: string;
     emailPlaceholder: string;
 }) {
+    const [hasInputData, setHasInputData] = useState<{
+        username: boolean;
+        email: boolean;
+    }>({
+        username: true,
+        email: true,
+    });
+    const [isEmailValid, setIsEmailValid] = useState(true);
     const router = useRouter();
     const {
         isPending,
@@ -56,8 +64,10 @@ export default function RegisterForm({
         const email = formData.get("email");
 
         if (!username || !email) {
-            // TODO
-            alert('you are stupid');
+            setHasInputData({
+                username: Boolean(username),
+                email: Boolean(email),
+            });
 
             return;
         }
@@ -65,8 +75,7 @@ export default function RegisterForm({
         const isValidEmail = validateEmail({ email });
 
         if (!isValidEmail) {
-            // TODO
-            alert('you are stupid');
+            setIsEmailValid(false);
 
             return;
         }
@@ -143,13 +152,23 @@ export default function RegisterForm({
                                 </p>
                                 <input
                                     maxLength={128}
-                                    className={`h-8 shadow-sm focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md px-2 py-1 transition-all text-black`}
+                                    className={`${(hasInputData.username) ? "focus:outline-gray-300 hover:border-gray-300 border-gray-200" : "focus:outline-red-200 hover:border-red-200 border-red-200"} h-8 shadow-sm focus:-outline-offset-0 outline-transparent focus:outline-none border-[1px] rounded-md px-2 py-1 transition-all text-black`}
                                     type={"text"}
                                     name={"username"}
                                     placeholder=""
                                     defaultValue={usernamePlaceholder as string}
                                     required
                                 />
+                                {
+                                    (!hasInputData.username) && (
+                                        <div className="text-red-400 text-sm flex gap-2 items-center">
+                                            <CircleAlert size={20} />
+                                            <p>
+                                                Никнейм не был указан.
+                                            </p>
+                                        </div>
+                                    )
+                                }
                             </div>
                             <div className="flex flex-col gap-2">
                                 <p className={`font-semibold text-zinc-800`}>
@@ -157,13 +176,23 @@ export default function RegisterForm({
                                 </p>
                                 <input
                                     maxLength={254}
-                                    className={`h-8 shadow-sm focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md px-2 py-1 transition-all text-black`}
-                                    type={"text"}
+                                    className={`${(isEmailValid || hasInputData.email) ? "focus:outline-gray-300 hover:border-gray-300 border-gray-200" : "focus:outline-red-200 hover:border-red-200 border-red-200"} h-8 shadow-sm focus:-outline-offset-0 outline-transparent focus:outline-none border-[1px] rounded-md px-2 py-1 transition-all text-black`}
+                                    type={"email"}
                                     name={"email"}
                                     placeholder=""
                                     defaultValue={emailPlaceholder as string}
                                     required
                                 />
+                                {
+                                    (!isEmailValid || !hasInputData.email) && (
+                                        <div className="text-red-400 text-sm flex gap-2 items-center">
+                                            <CircleAlert size={20} />
+                                            <p>
+                                                Почта указана в неверном формате.
+                                            </p>
+                                        </div>
+                                    )
+                                }
                             </div>
                             <button
                                 className={`hover:bg-zinc-700 bg-zinc-800 transition mt-2 rounded-md p-2 text-white h-[40px]`}
