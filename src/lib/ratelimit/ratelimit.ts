@@ -96,7 +96,7 @@ export async function DecrementResetRateLimit({
         case "local":
             return await decrementRateLimit({
                 token: token,
-                rtlKey: "verification",
+                rtlKey: "reset",
             });
         case "upstash":
             return await upstashVerificationRateLimit.resetUsedTokens(token);

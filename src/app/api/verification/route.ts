@@ -7,7 +7,7 @@ import { types } from "node:util";
 import { checkUserExistence, createUser } from "@/lib/actions/user";
 import { generateSecurePassword } from "@/utils/secure/generateSecurePassword";
 import { getIpAddress } from "@/utils/secure/getIpAddress";
-import { RateLimit, VerificationRateLimit } from "@/lib/ratelimit/ratelimit";
+import {DecrementVerificationRateLimit, RateLimit, VerificationRateLimit} from "@/lib/ratelimit/ratelimit";
 import { CODE_DIGITS_COUNT, EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT, USERNAME_LENGTH_LIMIT } from "@/configs/constants";
 
 export async function POST(request: NextRequest): Promise<Response> {
@@ -58,12 +58,16 @@ export async function POST(request: NextRequest): Promise<Response> {
     });
 
     if (types.isNativeError(userExistence)) {
+        await DecrementVerificationRateLimit({ token: email });
+
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
         });
     }
 
     if (userExistence !== null) {
+        await DecrementVerificationRateLimit({ token: email });
+
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.CONFLICT,
             statusText: userExistence,
@@ -77,6 +81,8 @@ export async function POST(request: NextRequest): Promise<Response> {
     });
 
     if (types.isNativeError(databaseResponse)) {
+        await DecrementVerificationRateLimit({ token: email });
+
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
         });
@@ -89,6 +95,8 @@ export async function POST(request: NextRequest): Promise<Response> {
     });
 
     if (emailResponse.error) {
+        await DecrementVerificationRateLimit({ token: email });
+
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
         });
