@@ -1,4 +1,8 @@
 export type StylesErrorType = {
+    rtl: {
+        error: boolean;
+        text: string;
+    };
     username: {
         error: boolean;
         text: string;

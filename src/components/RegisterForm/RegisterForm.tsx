@@ -22,7 +22,11 @@ export default function RegisterForm({
     emailPlaceholder: string;
 }) {
     const [isLoading, setIsLoading] = useState(false);
-    const [styles, setStyles] = useImmer<Pick<StylesErrorType, "username" | "email">>({
+    const [styles, setStyles] = useImmer<Pick<StylesErrorType, "rtl" | "username" | "email">>({
+        rtl: {
+            error: false,
+            text: "",
+        },
         username: {
             error: false,
             text: "",
@@ -66,6 +70,10 @@ export default function RegisterForm({
 
         setIsLoading(true);
         setStyles(draft => {
+            draft.rtl = {
+                error: false,
+                text: "",
+            };
             draft.username = {
                 error: false,
                 text: "",
@@ -121,6 +129,10 @@ export default function RegisterForm({
         if (!response.ok) {
             const { status } = response;
 
+            let rtlError = {
+                error: false,
+                text: "",
+            };
             let usernameError = {
                 error: false,
                 text: "",
@@ -145,11 +157,7 @@ export default function RegisterForm({
                 case API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS:
                     const remaining = response.headers.get('Retry-After');
 
-                    usernameError = {
-                        error: true,
-                        text: `Было отправлено слишком большое количество запросов. Попробуйте ещё раз через ${remaining} секунд!`,
-                    };
-                    emailError = {
+                    rtlError = {
                         error: true,
                         text: `Было отправлено слишком большое количество запросов. Попробуйте ещё раз через ${remaining} секунд!`,
                     };
@@ -201,6 +209,7 @@ export default function RegisterForm({
             }
 
             setStyles(draft => {
+                draft.rtl = rtlError;
                 draft.username = usernameError;
                 draft.email = emailError;
             });
@@ -311,8 +320,19 @@ export default function RegisterForm({
                                 }
                             </div>
                             {
+                                (styles.rtl.error) && (
+                                    <div className="text-red-400 text-sm flex gap-2 items-center">
+                                        <CircleAlert className="shrink-0" size={20}/>
+                                        <p>
+                                            {styles.rtl.text}
+                                        </p>
+                                    </div>
+                                )
+                            }
+                            {
                                 isLoading ? (
-                                    <div className="h-[40px] w-full mt-2 transition animate-pulse bg-zinc-400 rounded-md" />
+                                    <div
+                                        className="h-[40px] w-full mt-2 transition animate-pulse bg-zinc-400 rounded-md"/>
                                 ) : (
                                     <button
                                         className={`hover:bg-zinc-700 bg-zinc-800 transition mt-2 rounded-md p-2 text-white h-[40px]`}

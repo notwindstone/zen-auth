@@ -58,9 +58,10 @@ export async function POST(request: NextRequest): Promise<Response> {
     if (!rateLimitResult.success) {
         const expirationTime = Number(rateLimitResult?.expirationTime);
         const currentTime = Date.now();
-        const seconds = new Date(expirationTime - currentTime);
+        const rtlTime = new Date(expirationTime - currentTime);
+        const remainingSeconds = rtlTime.getMinutes() * 60 + rtlTime.getSeconds();
         const headers = new Headers({
-            "Retry-After": seconds.getSeconds().toString(),
+            "Retry-After": remainingSeconds.toString(),
         });
 
         return new Response(null, {
