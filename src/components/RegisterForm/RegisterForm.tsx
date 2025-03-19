@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { API_ROUTES, API_STATUS_CODES } from "@/configs/api";
 import { TableSessionType, TableUserType } from "@/db/schema";
 import { NO_RETRY_ERRORS } from "@/configs/constants";
-import { FormEvent } from "react";
+import {FormEvent, useState} from "react";
 import { CircleAlert, SquareAsterisk } from "lucide-react";
 import Link from "next/link";
 import validateEmail from "@/utils/secure/validateEmail";
@@ -42,6 +42,7 @@ export default function RegisterForm({
             hasUnknownError: false,
         },
     });
+    const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
     const {
         isPending,
@@ -74,14 +75,20 @@ export default function RegisterForm({
     async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
 
+        setIsLoading(true);
+
         const formData = new FormData(event.currentTarget);
         const username = formData.get("username");
         const email = formData.get("email");
 
         if (!username || !email) {
             setFormError(draft => {
-
+                draft.client.hasInputDataError = {
+                    username: Boolean(username),
+                    email: Boolean(email),
+                };
             });
+            setIsLoading(false);
 
             return;
         }
@@ -89,7 +96,10 @@ export default function RegisterForm({
         const isValidEmail = validateEmail({ email });
 
         if (!isValidEmail) {
-            setIsEmailValid(false);
+            setFormError(draft => {
+                draft.client.hasInitiallyInvalidData.email = true;
+            });
+            setIsLoading(false);
 
             return;
         }
@@ -103,13 +113,27 @@ export default function RegisterForm({
         });
 
         if (!response.ok) {
-            // TODO
-            alert('bruh what are you doing');
+            const { status, statusText } = response;
+
+            switch (status) {
+                case API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR:
+                    break;
+                case API_STATUS_CODES.ERROR.BAD_REQUEST:
+                    break;
+                case API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS:
+                    break;
+                case API_STATUS_CODES.ERROR.CONFLICT:
+                    break;
+            }
+
+            setIsLoading(false);
 
             return;
         }
 
         const emailLetterId = (await response.json())?.id;
+
+        setIsLoading(false);
 
         router.push(`/verification?username=${username}&email=${email}&id=${emailLetterId}`);
     }
@@ -166,7 +190,7 @@ export default function RegisterForm({
                                 </p>
                                 <input
                                     maxLength={128}
-                                    className={`${(hasInputData.username) ? "focus:outline-gray-300 hover:border-gray-300 border-gray-200" : "focus:outline-red-200 hover:border-red-200 border-red-200"} h-8 shadow-sm focus:-outline-offset-0 outline-transparent focus:outline-none border-[1px] rounded-md px-2 py-1 transition-all text-black`}
+                                    className={`${(formError.client.hasInputDataError.username) ? "focus:outline-red-200 hover:border-red-200 border-red-200" : "focus:outline-gray-300 hover:border-gray-300 border-gray-200"} h-8 shadow-sm focus:-outline-offset-0 outline-transparent focus:outline-none border-[1px] rounded-md px-2 py-1 transition-all text-black`}
                                     type={"text"}
                                     name={"username"}
                                     placeholder=""
@@ -174,7 +198,7 @@ export default function RegisterForm({
                                     required
                                 />
                                 {
-                                    (!hasInputData.username) && (
+                                    (formError.client.hasInputDataError.username) && (
                                         <div className="text-red-400 text-sm flex gap-2 items-center">
                                             <CircleAlert size={20} />
                                             <p>
@@ -190,7 +214,7 @@ export default function RegisterForm({
                                 </p>
                                 <input
                                     maxLength={254}
-                                    className={`${(isEmailValid || hasInputData.email) ? "focus:outline-gray-300 hover:border-gray-300 border-gray-200" : "focus:outline-red-200 hover:border-red-200 border-red-200"} h-8 shadow-sm focus:-outline-offset-0 outline-transparent focus:outline-none border-[1px] rounded-md px-2 py-1 transition-all text-black`}
+                                    className={`${(formError.client.hasInputDataError.email || formError.client.hasInitiallyInvalidData.email) ? "focus:outline-red-200 hover:border-red-200 border-red-200" : "focus:outline-gray-300 hover:border-gray-300 border-gray-200"} h-8 shadow-sm focus:-outline-offset-0 outline-transparent focus:outline-none border-[1px] rounded-md px-2 py-1 transition-all text-black`}
                                     type={"email"}
                                     name={"email"}
                                     placeholder=""
@@ -198,7 +222,7 @@ export default function RegisterForm({
                                     required
                                 />
                                 {
-                                    (!isEmailValid || !hasInputData.email) && (
+                                    (formError.client.hasInputDataError.email || formError.client.hasInitiallyInvalidData.email) && (
                                         <div className="text-red-400 text-sm flex gap-2 items-center">
                                             <CircleAlert size={20} />
                                             <p>
@@ -208,12 +232,18 @@ export default function RegisterForm({
                                     )
                                 }
                             </div>
-                            <button
-                                className={`hover:bg-zinc-700 bg-zinc-800 transition mt-2 rounded-md p-2 text-white h-[40px]`}
-                                type="submit"
-                            >
-                                Продолжить
-                            </button>
+                            {
+                                isLoading ? (
+                                    <div className="h-[40px] w-full mt-2 transition animate-pulse bg-zinc-400 rounded-md" />
+                                ) : (
+                                    <button
+                                        className={`hover:bg-zinc-700 bg-zinc-800 transition mt-2 rounded-md p-2 text-white h-[40px]`}
+                                        type="submit"
+                                    >
+                                        Продолжить
+                                    </button>
+                                )
+                            }
                         </form>
                     </div>
                 </div>

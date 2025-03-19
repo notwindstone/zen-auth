@@ -109,12 +109,12 @@ export async function checkUserExistence({
     }
 
     for (const user of users) {
-        if (user.email === email) {
-            return "email";
-        }
-
         if (user.username === username) {
             return "username";
+        }
+
+        if (user.email === email) {
+            return "email";
         }
     }
 
