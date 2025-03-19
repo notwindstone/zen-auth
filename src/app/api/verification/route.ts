@@ -7,7 +7,7 @@ import { types } from "node:util";
 import { checkUserExistence, createUser } from "@/lib/actions/user";
 import { generateSecurePassword } from "@/utils/secure/generateSecurePassword";
 import { getIpAddress } from "@/utils/secure/getIpAddress";
-import {DecrementVerificationRateLimit, RateLimit, VerificationRateLimit} from "@/lib/ratelimit/ratelimit";
+import { DecrementVerificationRateLimit, RateLimit, VerificationRateLimit } from "@/lib/ratelimit/ratelimit";
 import { CODE_DIGITS_COUNT, EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT, USERNAME_LENGTH_LIMIT } from "@/configs/constants";
 
 export async function POST(request: NextRequest): Promise<Response> {
@@ -207,17 +207,6 @@ export async function PUT(request: NextRequest): Promise<Response> {
         });
     }
 
-    const verificationDatabaseResponse = await removeVerificationCode({
-        email,
-        code,
-    });
-
-    if (types.isNativeError(verificationDatabaseResponse)) {
-        return new Response(null, {
-            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
-        });
-    }
-
     const { hash } = securePasswordResponse;
 
     const userDatabaseResponse = await createUser({
@@ -230,6 +219,17 @@ export async function PUT(request: NextRequest): Promise<Response> {
     if (types.isNativeError(userDatabaseResponse)) {
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
+        });
+    }
+
+    const verificationDatabaseResponse = await removeVerificationCode({
+        email,
+        code,
+    });
+
+    if (types.isNativeError(verificationDatabaseResponse)) {
+        return new Response(null, {
+            status: API_STATUS_CODES.ERROR.IM_A_TEAPOT,
         });
     }
 

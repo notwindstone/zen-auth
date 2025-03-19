@@ -91,7 +91,7 @@ export async function checkUserExistence({
 }: {
     username: TableUserType['username'];
     email: TableUserType['email'];
-}): Promise<string | null | Error> {
+}): Promise<"username" | "email" | null | Error> {
     let users;
 
     try {
