@@ -7,7 +7,7 @@ import { checkUserExistence, updateUser } from "@/lib/actions/user";
 import { types } from "node:util";
 import { sendResetCodeEmail } from "@/lib/actions/email";
 import { generateSecurePassword } from "@/utils/secure/generateSecurePassword";
-import { RateLimit, ResetRateLimit } from "@/lib/ratelimit/ratelimit";
+import {DecrementResetRateLimit, RateLimit, ResetRateLimit} from "@/lib/ratelimit/ratelimit";
 import { EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT } from "@/configs/constants";
 
 export async function POST(request: NextRequest): Promise<Response> {
@@ -57,12 +57,16 @@ export async function POST(request: NextRequest): Promise<Response> {
     });
 
     if (types.isNativeError(userExistence)) {
+        await DecrementResetRateLimit({ token: email });
+
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
         });
     }
 
     if (userExistence === null) {
+        await DecrementResetRateLimit({ token: email });
+
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.NOT_FOUND,
         });
@@ -75,6 +79,8 @@ export async function POST(request: NextRequest): Promise<Response> {
     });
 
     if (types.isNativeError(databaseResponse)) {
+        await DecrementResetRateLimit({ token: email });
+
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
         });
@@ -86,6 +92,8 @@ export async function POST(request: NextRequest): Promise<Response> {
     });
 
     if (emailResponse.error) {
+        await DecrementResetRateLimit({ token: email });
+
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
         });
@@ -188,7 +196,7 @@ export async function PUT(request: NextRequest): Promise<Response> {
 
     if (types.isNativeError(resetTokenRemovalResponse)) {
         return new Response(null, {
-            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
+            status: API_STATUS_CODES.ERROR.IM_A_TEAPOT,
         });
     }
 
