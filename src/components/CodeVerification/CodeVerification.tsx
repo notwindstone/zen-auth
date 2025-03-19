@@ -10,6 +10,7 @@ import { setSessionTokenCookie } from "@/lib/actions/cookies";
 import { getMonthForwardDate } from "@/utils/misc/getMonthForwardDate";
 import { CODE_DIGITS_COUNT } from "@/configs/constants";
 import PasswordInput from "@/components/PasswordInput/PasswordInput";
+import validateEmail from "@/utils/secure/validateEmail";
 
 export default function CodeVerification({
     username,
@@ -112,6 +113,15 @@ export default function CodeVerification({
         const password = formData.get("password");
 
         if (!username || !email || !emailLetterId || !password) {
+            // TODO
+            alert('you are stupid');
+
+            return;
+        }
+
+        const isValidEmail = validateEmail({ email });
+
+        if (!isValidEmail) {
             // TODO
             alert('you are stupid');
 

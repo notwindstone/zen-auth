@@ -9,6 +9,7 @@ import { sendResetCodeEmail } from "@/lib/actions/email";
 import { generateSecurePassword } from "@/utils/secure/generateSecurePassword";
 import { DecrementResetRateLimit, RateLimit, ResetRateLimit } from "@/lib/ratelimit/ratelimit";
 import { EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT } from "@/configs/constants";
+import validateEmail from "@/utils/secure/validateEmail";
 
 export async function POST(request: NextRequest): Promise<Response> {
     let data;
@@ -30,6 +31,14 @@ export async function POST(request: NextRequest): Promise<Response> {
     }
 
     if (email.length > EMAIL_LENGTH_LIMIT) {
+        return new Response(null, {
+            status: API_STATUS_CODES.ERROR.BAD_REQUEST,
+        });
+    }
+
+    const isValidEmail = validateEmail({ email });
+
+    if (!isValidEmail) {
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.BAD_REQUEST,
         });
