@@ -97,8 +97,12 @@ export async function POST(request: NextRequest): Promise<Response> {
     if (emailResponse.error) {
         await DecrementVerificationRateLimit({ token: email });
 
+        const statusCode = ('statusCode' in emailResponse?.error)
+            ? Number(emailResponse.error.statusCode)
+            : API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR;
+
         return new Response(null, {
-            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
+            status: statusCode,
         });
     }
 

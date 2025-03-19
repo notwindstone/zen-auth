@@ -7,7 +7,7 @@ import { checkUserExistence, updateUser } from "@/lib/actions/user";
 import { types } from "node:util";
 import { sendResetCodeEmail } from "@/lib/actions/email";
 import { generateSecurePassword } from "@/utils/secure/generateSecurePassword";
-import {DecrementResetRateLimit, RateLimit, ResetRateLimit} from "@/lib/ratelimit/ratelimit";
+import { DecrementResetRateLimit, RateLimit, ResetRateLimit } from "@/lib/ratelimit/ratelimit";
 import { EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT } from "@/configs/constants";
 
 export async function POST(request: NextRequest): Promise<Response> {
@@ -94,8 +94,12 @@ export async function POST(request: NextRequest): Promise<Response> {
     if (emailResponse.error) {
         await DecrementResetRateLimit({ token: email });
 
+        const statusCode = ('statusCode' in emailResponse?.error)
+            ? Number(emailResponse.error.statusCode)
+            : API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR;
+
         return new Response(null, {
-            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
+            status: statusCode,
         });
     }
 
