@@ -1,9 +1,11 @@
 import { useRef, useState } from "react";
 import { Eye, EyeClosed } from "lucide-react";
+import {PASSWORD_LENGTH_LIMIT} from "@/configs/constants";
 
 export default function PasswordInput() {
     const [isVisible, setIsVisible] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
+    const enterRef = useRef(false);
 
     return (
         <div className="flex flex-col gap-2">
@@ -19,10 +21,45 @@ export default function PasswordInput() {
                     name={"password"}
                     placeholder=""
                     required
+                    onPaste={(event) => {
+                        event.preventDefault();
+
+                        const data = event.clipboardData.getData('text/plain');
+
+                        if (data.length > PASSWORD_LENGTH_LIMIT) {
+                            event.currentTarget.value = "Длина пароля превышает 128 символов.";
+
+                            return;
+                        }
+
+                        const chars = [ ...data ];
+                        const filtered = chars.filter((char) => char !== " ");
+
+                        event.currentTarget.value = filtered.join('');
+                    }}
+                    onKeyDown={(event) => {
+                        if (event.key === " ") {
+                            event.preventDefault();
+
+                            return;
+                        }
+
+                        if (event.key === "Enter") {
+                            enterRef.current = true;
+
+                            return;
+                        }
+
+                        enterRef.current = false;
+                    }}
                 />
                 <button
                     className="shrink-0 bg-zinc-800 rounded-md h-8 w-8 flex justify-center items-center"
                     onClick={(event) => {
+                        if (enterRef.current) {
+                            return;
+                        }
+
                         event.preventDefault();
 
                         inputRef.current?.focus();

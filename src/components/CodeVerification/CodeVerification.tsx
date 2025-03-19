@@ -23,6 +23,7 @@ export default function CodeVerification({
 }) {
     const router = useRouter();
 
+    const [isLoading, setIsLoading] = useState(false);
     const [otp, setOtp] = useState<Array<string | number>>(Array(CODE_DIGITS_COUNT).fill(""));
     const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
@@ -108,6 +109,8 @@ export default function CodeVerification({
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
+
+        setIsLoading(true);
 
         const formData = new FormData(event.currentTarget);
         const password = formData.get("password");
@@ -228,12 +231,19 @@ export default function CodeVerification({
                             </div>
                         </div>
                         <PasswordInput/>
-                        <button
-                            className={`hover:bg-zinc-700 bg-zinc-800 transition mt-2 rounded-md p-2 text-white h-[40px]`}
-                            type="submit"
-                        >
-                            Продолжить
-                        </button>
+                        {
+                            isLoading ? (
+                                <div
+                                    className="h-[40px] w-full mt-2 transition animate-pulse bg-zinc-400 rounded-md"/>
+                            ) : (
+                                <button
+                                    className={`hover:bg-zinc-700 bg-zinc-800 transition mt-2 rounded-md p-2 text-white h-[40px]`}
+                                    type="submit"
+                                >
+                                    Продолжить
+                                </button>
+                            )
+                        }
                     </form>
                 </div>
             </div>
