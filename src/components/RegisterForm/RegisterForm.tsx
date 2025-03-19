@@ -5,11 +5,11 @@ import { useQuery } from "@tanstack/react-query";
 import { API_ROUTES, API_STATUS_CODES } from "@/configs/api";
 import { TableSessionType, TableUserType } from "@/db/schema";
 import { NO_RETRY_ERRORS } from "@/configs/constants";
-import {FormEvent, useState} from "react";
+import { FormEvent, useState } from "react";
 import { CircleAlert, SquareAsterisk } from "lucide-react";
 import Link from "next/link";
 import validateEmail from "@/utils/secure/validateEmail";
-import { FormErrorType } from "@/types/FormError.type";
+import { StylesErrorType } from "@/types/StylesError.type";
 import { useImmer } from "use-immer";
 
 export default function RegisterForm({
@@ -21,28 +21,17 @@ export default function RegisterForm({
     usernamePlaceholder: string;
     emailPlaceholder: string;
 }) {
-    const [formError, setFormError] = useImmer<FormErrorType>({
-        client: {
-            hasInputDataError: {
-                username: false,
-                email: false,
-            },
-            hasInitiallyInvalidData: {
-                email: false,
-            },
+    const [isLoading, setIsLoading] = useState(false);
+    const [styles, setStyles] = useImmer<Pick<StylesErrorType, "username" | "email">>({
+        username: {
+            error: false,
+            text: "",
         },
-        server: {
-            hasInternalServerError: false,
-            hasFormError: false,
-            hasBeenRateLimited: false,
-            hasDataConflict: {
-                username: false,
-                email: false,
-            },
-            hasUnknownError: false,
+        email: {
+            error: false,
+            text: "",
         },
     });
-    const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
     const {
         isPending,
@@ -76,16 +65,30 @@ export default function RegisterForm({
         event.preventDefault();
 
         setIsLoading(true);
+        setStyles(draft => {
+            draft.username = {
+                error: false,
+                text: "",
+            };
+            draft.email = {
+                error: false,
+                text: "",
+            };
+        });
 
         const formData = new FormData(event.currentTarget);
         const username = formData.get("username");
         const email = formData.get("email");
 
         if (!username || !email) {
-            setFormError(draft => {
-                draft.client.hasInputDataError = {
-                    username: Boolean(username),
-                    email: Boolean(email),
+            setStyles(draft => {
+                draft.username = {
+                    error: Boolean(username),
+                    text: "Никнейм не был указан.",
+                };
+                draft.email = {
+                    error: Boolean(email),
+                    text: "Почта не была указана.",
                 };
             });
             setIsLoading(false);
@@ -96,8 +99,11 @@ export default function RegisterForm({
         const isValidEmail = validateEmail({ email });
 
         if (!isValidEmail) {
-            setFormError(draft => {
-                draft.client.hasInitiallyInvalidData.email = true;
+            setStyles(draft => {
+                draft.email = {
+                    error: true,
+                    text: "Почта введена в неверном формате.",
+                };
             });
             setIsLoading(false);
 
@@ -113,19 +119,91 @@ export default function RegisterForm({
         });
 
         if (!response.ok) {
-            const { status, statusText } = response;
+            const { status } = response;
+
+            let usernameError = {
+                error: false,
+                text: "",
+            };
+            let emailError = {
+                error: false,
+                text: "",
+            };
 
             switch (status) {
                 case API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR:
-                    break;
-                case API_STATUS_CODES.ERROR.BAD_REQUEST:
+                    usernameError = {
+                        error: true,
+                        text: "Что-то пошло не так...",
+                    };
+                    emailError = {
+                        error: true,
+                        text: "Что-то пошло не так...",
+                    };
+
                     break;
                 case API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS:
+                    const remaining = response.headers.get('Retry-After');
+
+                    usernameError = {
+                        error: true,
+                        text: `Было отправлено слишком большое количество запросов. Попробуйте ещё раз через ${remaining} секунд!`,
+                    };
+                    emailError = {
+                        error: true,
+                        text: `Было отправлено слишком большое количество запросов. Попробуйте ещё раз через ${remaining} секунд!`,
+                    };
+
+                    break;
+                case API_STATUS_CODES.ERROR.BAD_REQUEST:
+                    usernameError = {
+                        error: true,
+                        text: "Ошибка в формате никнейма.",
+                    };
+                    emailError = {
+                        error: true,
+                        text: "Ошибка в формате почты.",
+                    };
+
                     break;
                 case API_STATUS_CODES.ERROR.CONFLICT:
+                    const { statusText } = response;
+
+                    switch (statusText) {
+                        case "username":
+                            usernameError = {
+                                error: true,
+                                text: "Никнейм занят. Попробуйте другой.",
+                            };
+
+                            break;
+                        case "email":
+                            emailError = {
+                                error: true,
+                                text: "Такая почта уже используется. Попробуйте другую.",
+                            };
+
+                            break;
+                    }
+
+                    break;
+                default:
+                    usernameError = {
+                        error: true,
+                        text: "Что-то пошло не так...",
+                    };
+                    emailError = {
+                        error: true,
+                        text: "Что-то пошло не так...",
+                    };
+
                     break;
             }
 
+            setStyles(draft => {
+                draft.username = usernameError;
+                draft.email = emailError;
+            });
             setIsLoading(false);
 
             return;
@@ -190,7 +268,7 @@ export default function RegisterForm({
                                 </p>
                                 <input
                                     maxLength={128}
-                                    className={`${(formError.client.hasInputDataError.username) ? "focus:outline-red-200 hover:border-red-200 border-red-200" : "focus:outline-gray-300 hover:border-gray-300 border-gray-200"} h-8 shadow-sm focus:-outline-offset-0 outline-transparent focus:outline-none border-[1px] rounded-md px-2 py-1 transition-all text-black`}
+                                    className={`${(styles.username.error) ? "focus:outline-red-200 hover:border-red-200 border-red-200" : "focus:outline-gray-300 hover:border-gray-300 border-gray-200"} h-8 shadow-sm focus:-outline-offset-0 outline-transparent focus:outline-none border-[1px] rounded-md px-2 py-1 transition-all text-black`}
                                     type={"text"}
                                     name={"username"}
                                     placeholder=""
@@ -198,11 +276,11 @@ export default function RegisterForm({
                                     required
                                 />
                                 {
-                                    (formError.client.hasInputDataError.username) && (
+                                    (styles.username.error) && (
                                         <div className="text-red-400 text-sm flex gap-2 items-center">
-                                            <CircleAlert size={20} />
+                                            <CircleAlert className="shrink-0" size={20} />
                                             <p>
-                                                Никнейм не был указан.
+                                                {styles.username.text}
                                             </p>
                                         </div>
                                     )
@@ -214,7 +292,7 @@ export default function RegisterForm({
                                 </p>
                                 <input
                                     maxLength={254}
-                                    className={`${(formError.client.hasInputDataError.email || formError.client.hasInitiallyInvalidData.email) ? "focus:outline-red-200 hover:border-red-200 border-red-200" : "focus:outline-gray-300 hover:border-gray-300 border-gray-200"} h-8 shadow-sm focus:-outline-offset-0 outline-transparent focus:outline-none border-[1px] rounded-md px-2 py-1 transition-all text-black`}
+                                    className={`${(styles.email.error) ? "focus:outline-red-200 hover:border-red-200 border-red-200" : "focus:outline-gray-300 hover:border-gray-300 border-gray-200"} h-8 shadow-sm focus:-outline-offset-0 outline-transparent focus:outline-none border-[1px] rounded-md px-2 py-1 transition-all text-black`}
                                     type={"email"}
                                     name={"email"}
                                     placeholder=""
@@ -222,11 +300,11 @@ export default function RegisterForm({
                                     required
                                 />
                                 {
-                                    (formError.client.hasInputDataError.email || formError.client.hasInitiallyInvalidData.email) && (
+                                    (styles.email.error) && (
                                         <div className="text-red-400 text-sm flex gap-2 items-center">
-                                            <CircleAlert size={20} />
+                                            <CircleAlert className="shrink-0"  size={20} />
                                             <p>
-                                                Почта указана в неверном формате.
+                                                {styles.email.text}
                                             </p>
                                         </div>
                                     )
