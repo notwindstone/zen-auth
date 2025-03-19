@@ -8,6 +8,7 @@ import { NO_RETRY_ERRORS } from "@/configs/constants";
 import { FormEvent } from "react";
 import { SquareAsterisk } from "lucide-react";
 import Link from "next/link";
+import validateEmail from "@/utils/secure/validateEmail";
 
 export default function RegisterForm({
     token,
@@ -55,6 +56,15 @@ export default function RegisterForm({
         const email = formData.get("email");
 
         if (!username || !email) {
+            // TODO
+            alert('you are stupid');
+
+            return;
+        }
+
+        const isValidEmail = validateEmail({ email });
+
+        if (!isValidEmail) {
             // TODO
             alert('you are stupid');
 
