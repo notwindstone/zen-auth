@@ -56,8 +56,16 @@ export async function POST(request: NextRequest): Promise<Response> {
     }
 
     if (!rateLimitResult.success) {
+        const expirationTime = Number(rateLimitResult?.expirationTime);
+        const currentTime = Date.now();
+        const seconds = new Date(expirationTime - currentTime);
+        const headers = new Headers({
+            "Retry-After": seconds.getSeconds().toString(),
+        });
+
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS,
+            headers: headers,
         });
     }
 

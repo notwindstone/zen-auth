@@ -23,7 +23,13 @@ export async function RateLimit({
                 rtlKey: "general",
             });
         case "upstash":
-            return await upstashGeneralRateLimit.limit(token);
+            const expirationTime = await upstashGeneralRateLimit.getRemaining(token);
+            const rateLimitResponse = await upstashGeneralRateLimit.limit(token);
+
+            return {
+                ...rateLimitResponse,
+                expirationTime: expirationTime.reset,
+            };
         default:
             return new Error();
     }
@@ -43,7 +49,13 @@ export async function VerificationRateLimit({
                 rtlKey: "verification",
             });
         case "upstash":
-            return await upstashVerificationRateLimit.limit(token);
+            const expirationTime = await upstashVerificationRateLimit.getRemaining(token);
+            const rateLimitResponse = await upstashVerificationRateLimit.limit(token);
+
+            return {
+                ...rateLimitResponse,
+                expirationTime: expirationTime.reset,
+            };
         default:
             return new Error();
     }
@@ -63,7 +75,13 @@ export async function ResetRateLimit({
                 rtlKey: "reset",
             });
         case "upstash":
-            return await upstashResetTokenRateLimit.limit(token);
+            const expirationTime = await upstashResetTokenRateLimit.getRemaining(token);
+            const rateLimitResponse = await upstashResetTokenRateLimit.limit(token);
+
+            return {
+                ...rateLimitResponse,
+                expirationTime: expirationTime.reset,
+            };
         default:
             return new Error();
     }

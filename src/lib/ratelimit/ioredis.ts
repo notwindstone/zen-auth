@@ -30,16 +30,19 @@ export async function rateLimit({
     limit: number;
     remaining: number;
     success: boolean;
+    expirationTime: number | undefined;
 }> {
     const key = `rate_limit_${rtlKey}:${token}`;
     const currentCount = await redis?.get(key);
     const count = parseInt(currentCount as string, 10) || 0;
+    const expirationTime = await redis?.expiretime(key);
 
     if (count >= limit) {
         return {
             limit,
             remaining: limit - count,
             success: false,
+            expirationTime: expirationTime,
         };
     }
 
@@ -50,6 +53,7 @@ export async function rateLimit({
         limit,
         remaining: limit - (count + 1),
         success: true,
+        expirationTime: expirationTime,
     };
 }
 
