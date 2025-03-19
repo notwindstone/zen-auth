@@ -37,7 +37,7 @@ export async function VerificationRateLimit({
         case "local":
             return await localRateLimit({
                 token: token,
-                limit: 1,
+                limit: 2,
                 duration: 120,
                 rtlKey: "verification",
             });
@@ -57,7 +57,7 @@ export async function ResetRateLimit({
         case "local":
             return await localRateLimit({
                 token: token,
-                limit: 1,
+                limit: 2,
                 duration: 120,
                 rtlKey: "reset",
             });
