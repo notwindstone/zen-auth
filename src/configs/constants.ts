@@ -43,3 +43,4 @@ export const SECONDS_RUSSIAN_AFTER: [
     string,
     string,
 ] = ["секунду", "секунды", "секунд"];
+export const DIGITS_ARRAY = [0,1,2,3,4,5,6,7,8,9];
