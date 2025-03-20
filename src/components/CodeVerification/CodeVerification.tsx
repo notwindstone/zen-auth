@@ -50,7 +50,7 @@ export default function CodeVerification({
             return;
         }
 
-        if (event.key === "Backspace" && !event?.target?.value && index > 0) {
+        if (event.key === "Backspace" && !event.target.value && index > 0) {
             inputRefs.current[index - 1]?.focus();
         }
     }
@@ -215,9 +215,11 @@ export default function CodeVerification({
                                                 autoFocus={index === 0}
                                                 key={index}
                                                 className={`h-16 w-full text-center shadow-sm focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md transition-all text-black [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
-                                                type={"number"}
+                                                type={"text"}
                                                 name={`code_${index}`}
                                                 placeholder=""
+                                                pattern="\d*"
+                                                inputMode="numeric"
                                                 maxLength={1}
                                                 value={digit}
                                                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => handleBackspace(index, e)}
