@@ -11,6 +11,7 @@ import { getMonthForwardDate } from "@/utils/misc/getMonthForwardDate";
 import { CODE_DIGITS_COUNT } from "@/configs/constants";
 import PasswordInput from "@/components/PasswordInput/PasswordInput";
 import validateEmail from "@/utils/secure/validateEmail";
+import translateEmailStatus from "@/utils/misc/translateEmailStatus";
 
 export default function CodeVerification({
     username,
@@ -102,7 +103,7 @@ export default function CodeVerification({
 
         setEmailLetterData({
             show: true,
-            status: emailStatus ?? "Неизвестно",
+            status: translateEmailStatus({ status: emailStatus }),
         });
 
         setIsLoading((state) => {
