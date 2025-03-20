@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import ProfileSession from "@/components/Profile/ProfileSession/ProfileSession";
+import ProfileSession from "@/components/account/Profile/ProfileSession/ProfileSession";
 import { TableSessionType } from "@/db/schema";
 import { API_ROUTES } from "@/configs/api";
 

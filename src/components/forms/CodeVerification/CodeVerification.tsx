@@ -13,7 +13,7 @@ import PasswordInput from "@/components/forms/Inputs/PasswordInput/PasswordInput
 import validateEmail from "@/utils/secure/validateEmail";
 import translateEmailStatus from "@/utils/misc/translateEmailStatus";
 import { useImmer } from "use-immer";
-import { StylesErrorType } from "@/types/StylesError.type";
+import { StylesErrorType } from "@/types/UI/StylesError.type";
 
 const noError = {
     error: false,

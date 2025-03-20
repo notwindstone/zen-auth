@@ -1,4 +1,4 @@
-import Profile from "@/components/Profile/Profile";
+import Profile from "@/components/account/Profile/Profile";
 
 export default async function Page({
     params,

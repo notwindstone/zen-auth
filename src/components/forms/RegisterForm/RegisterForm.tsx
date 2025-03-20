@@ -7,7 +7,7 @@ import { FormEvent, useState } from "react";
 import { CircleAlert, SquareAsterisk } from "lucide-react";
 import Link from "next/link";
 import validateEmail from "@/utils/secure/validateEmail";
-import { StylesErrorType } from "@/types/StylesError.type";
+import { StylesErrorType } from "@/types/UI/StylesError.type";
 import { useImmer } from "use-immer";
 import GeneralForm from "@/components/forms/GeneralForm/GeneralForm";
 import getStylesErrorData from "@/utils/queries/getStylesErrorData";
