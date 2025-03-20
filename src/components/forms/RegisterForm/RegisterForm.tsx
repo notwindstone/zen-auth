@@ -42,7 +42,7 @@ export default function RegisterForm({
         }
 
         setIsLoading(true);
-        setStyles(draft => {
+        setStyles((draft) => {
             draft.rtl = STYLES_ERROR_INITIAL_DATA;
             draft.username = STYLES_ERROR_INITIAL_DATA;
             draft.email = STYLES_ERROR_INITIAL_DATA;
@@ -53,7 +53,7 @@ export default function RegisterForm({
         const email = formData.get("email");
 
         if (!username || !email) {
-            setStyles(draft => {
+            setStyles((draft) => {
                 draft.username = {
                     error: !Boolean(username),
                     text: "Никнейм не был указан.",
@@ -71,7 +71,7 @@ export default function RegisterForm({
         const isValidEmail = validateEmail({ email });
 
         if (!isValidEmail) {
-            setStyles(draft => {
+            setStyles((draft) => {
                 draft.email = {
                     error: true,
                     text: "Почта введена в неверном формате.",
@@ -102,7 +102,7 @@ export default function RegisterForm({
                 headers: response.headers,
             });
 
-            setStyles(draft => {
+            setStyles((draft) => {
                 draft.rtl = rtlError;
                 draft.username = usernameError;
                 draft.email = emailError;
