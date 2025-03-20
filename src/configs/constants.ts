@@ -33,3 +33,8 @@ export const SECONDS_RUSSIAN: [
     string,
     string,
 ] = ["секунда", "секунды", "секунд"];
+export const SECONDS_RUSSIAN_AFTER: [
+    string,
+    string,
+    string,
+] = ["секунду", "секунды", "секунд"];

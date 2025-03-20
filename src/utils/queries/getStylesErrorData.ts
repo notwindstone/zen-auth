@@ -1,4 +1,9 @@
-import {SECONDS_RUSSIAN, SPACE_STRING, STYLES_ERROR_INITIAL_DATA, STYLES_ERROR_TYPES} from "@/configs/constants";
+import {
+    SECONDS_RUSSIAN_AFTER,
+    SPACE_STRING,
+    STYLES_ERROR_INITIAL_DATA,
+    STYLES_ERROR_TYPES,
+} from "@/configs/constants";
 import { API_STATUS_CODES } from "@/configs/api";
 import { makeWordEnding } from "@/utils/misc/makeWordEnding";
 
@@ -37,7 +42,7 @@ export default function getStylesErrorData({
                     + SPACE_STRING
                     + makeWordEnding({
                         count: Number(remaining),
-                        wordTypes: SECONDS_RUSSIAN,
+                        wordTypes: SECONDS_RUSSIAN_AFTER,
                     })
                     + "!",
             };
