@@ -14,3 +14,7 @@ export const CODE_DIGITS_COUNT = 6;
 export const PASSWORD_LENGTH_LIMIT = 128;
 export const USERNAME_LENGTH_LIMIT = 128;
 export const EMAIL_LENGTH_LIMIT = 254;
+export const STYLES_ERROR_INITIAL_DATA = {
+    error: false,
+    text: "",
+};

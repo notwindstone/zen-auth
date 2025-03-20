@@ -4,13 +4,15 @@ import { useRouter } from "nextjs-toploader/app";
 import { useQuery } from "@tanstack/react-query";
 import { API_ROUTES, API_STATUS_CODES } from "@/configs/api";
 import { TableSessionType, TableUserType } from "@/db/schema";
-import { NO_RETRY_ERRORS } from "@/configs/constants";
+import {NO_RETRY_ERRORS, STYLES_ERROR_INITIAL_DATA} from "@/configs/constants";
 import { FormEvent, useState } from "react";
 import { CircleAlert, SquareAsterisk } from "lucide-react";
 import Link from "next/link";
 import validateEmail from "@/utils/secure/validateEmail";
 import { StylesErrorType } from "@/types/StylesError.type";
 import { useImmer } from "use-immer";
+import handleFailure from "@/utils/queries/handleFailure";
+import querySessionCurrent from "@/utils/queries/querySessionCurrent";
 
 export default function RegisterForm({
     token,
@@ -22,19 +24,15 @@ export default function RegisterForm({
     emailPlaceholder: string;
 }) {
     const [isLoading, setIsLoading] = useState(false);
-    const [styles, setStyles] = useImmer<Pick<StylesErrorType, "rtl" | "username" | "email">>({
-        rtl: {
-            error: false,
-            text: "",
-        },
-        username: {
-            error: false,
-            text: "",
-        },
-        email: {
-            error: false,
-            text: "",
-        },
+    const [styles, setStyles] = useImmer<
+        Pick<
+            StylesErrorType,
+            "rtl" | "username" | "email"
+        >
+    >({
+        rtl: STYLES_ERROR_INITIAL_DATA,
+        username: STYLES_ERROR_INITIAL_DATA,
+        email: STYLES_ERROR_INITIAL_DATA,
     });
     const router = useRouter();
     const {
@@ -44,25 +42,8 @@ export default function RegisterForm({
         failureReason,
     } = useQuery({
         queryKey: [API_ROUTES.session.current, token],
-        queryFn: async (): Promise<{
-            session: TableSessionType;
-            user: TableUserType;
-        }> => {
-            const response = await fetch(API_ROUTES.session.current);
-
-            if (!response.ok) {
-                return Promise.reject(
-                    new Error(
-                        response.status.toString(),
-                    ),
-                );
-            }
-
-            return await response.json();
-        },
-        retry: (failureCount, error) => {
-            return !(NO_RETRY_ERRORS.has(Number(error.message)) || failureCount > 3);
-        },
+        queryFn: querySessionCurrent,
+        retry: handleFailure,
     });
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
@@ -74,18 +55,9 @@ export default function RegisterForm({
 
         setIsLoading(true);
         setStyles(draft => {
-            draft.rtl = {
-                error: false,
-                text: "",
-            };
-            draft.username = {
-                error: false,
-                text: "",
-            };
-            draft.email = {
-                error: false,
-                text: "",
-            };
+            draft.rtl = STYLES_ERROR_INITIAL_DATA;
+            draft.username = STYLES_ERROR_INITIAL_DATA;
+            draft.email = STYLES_ERROR_INITIAL_DATA;
         });
 
         const formData = new FormData(event.currentTarget);
