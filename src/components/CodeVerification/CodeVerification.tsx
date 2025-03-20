@@ -1,6 +1,6 @@
 "use client";
 
-import { Signature } from "lucide-react";
+import {CircleAlert, Signature} from "lucide-react";
 import { FormEvent, useRef, useState } from "react";
 import Link from "next/link";
 import { API_ROUTES } from "@/configs/api";
@@ -12,6 +12,8 @@ import { CODE_DIGITS_COUNT } from "@/configs/constants";
 import PasswordInput from "@/components/PasswordInput/PasswordInput";
 import validateEmail from "@/utils/secure/validateEmail";
 import translateEmailStatus from "@/utils/misc/translateEmailStatus";
+import {useImmer} from "use-immer";
+import {StylesErrorType} from "@/types/StylesError.type";
 
 export default function CodeVerification({
     username,
@@ -23,6 +25,28 @@ export default function CodeVerification({
     emailLetterId: string | null;
 }) {
     const router = useRouter();
+    const [styles, setStyles] = useImmer<StylesErrorType>({
+        rtl: {
+            error: false,
+            text: "",
+        },
+        username: {
+            error: false,
+            text: "",
+        },
+        email: {
+            error: false,
+            text: "",
+        },
+        code: {
+            error: false,
+            text: "",
+        },
+        password: {
+            error: false,
+            text: "",
+        },
+    });
     const [emailLetterData, setEmailLetterData] = useState({
         show: false,
         status: "",
@@ -121,8 +145,16 @@ export default function CodeVerification({
         });
 
         if (!username || !email) {
-            // TODO
-            alert('you are stupid');
+            setStyles(draft => {
+                draft.username = {
+                    error: Boolean(username),
+                    text: "Никнейм не был указан.",
+                };
+                draft.email = {
+                    error: Boolean(email),
+                    text: "Почта не была указана.",
+                };
+            });
 
             setIsLoading({
                 submit: false,
@@ -179,6 +211,18 @@ export default function CodeVerification({
                 submit: true,
             };
         });
+        setStyles(draft => {
+            const noError = {
+                error: false,
+                text: "",
+            };
+
+            draft.username = noError;
+            draft.email = noError;
+            draft.rtl = noError;
+            draft.code = noError;
+            draft.password = noError;
+        });
 
         const formData = new FormData(event.currentTarget);
         const password = formData.get("password");
@@ -199,11 +243,30 @@ export default function CodeVerification({
             return;
         }
 
+        const verificationCode = otp.join('');
+
+        if (verificationCode.length !== 6) {
+            setStyles(draft => {
+                draft.code = {
+                    error: Boolean(username),
+                    text: "Код не был указан или указан неверно.",
+                };
+            });
+            setIsLoading((state) =>{
+                return {
+                    ...state,
+                    submit: false,
+                };
+            });
+
+            return;
+        }
+
         const verificationResponse = await fetch(API_ROUTES.verification, {
             method: "PUT",
             body: JSON.stringify({
                 email: email,
-                code: otp.join(''),
+                code: verificationCode,
                 username: username,
                 displayName: username,
                 password: password,
@@ -282,7 +345,7 @@ export default function CodeVerification({
                                                 }}
                                                 autoFocus={index === 0}
                                                 key={index}
-                                                className={`h-16 w-full text-center shadow-sm focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md transition-all text-black [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+                                                className={`${(styles.code.error) ? "focus:outline-red-200 hover:border-red-200 border-red-200" : "focus:outline-gray-300 hover:border-gray-300 border-gray-200"} h-16 w-full text-center shadow-sm focus:-outline-offset-0 outline-transparent focus:outline-none border-[1px] rounded-md transition-all text-black [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
                                                 type={"text"}
                                                 name={`code_${index}`}
                                                 placeholder=""
@@ -293,12 +356,22 @@ export default function CodeVerification({
                                                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => handleBackspace(index, e)}
                                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(index, e.target.value)}
                                                 onPaste={(e: React.ClipboardEvent<HTMLInputElement>) => handlePaste(e)}
-                                                required
+                                                                required={false}
                                             />
                                         );
                                     })
                                 }
                             </div>
+                            {
+                                (styles.code.error) && (
+                                    <div className="text-red-400 text-sm flex gap-2 items-center">
+                                        <CircleAlert className="shrink-0" size={20} />
+                                        <p>
+                                            {styles.code.text}
+                                        </p>
+                                    </div>
+                                )
+                            }
                         </div>
                         <PasswordInput/>
                         {

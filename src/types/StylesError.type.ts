@@ -17,5 +17,6 @@ export type StylesErrorType = {
     };
     code: {
         error: boolean;
+        text: string;
     };
 };
