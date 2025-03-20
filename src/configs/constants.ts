@@ -23,6 +23,8 @@ export const STYLES_ERROR_TYPES = {
     NICKNAME_IN_USE: "Никнейм занят. Попробуйте другой.",
     EMAIL_IN_USE: "Такая почта уже используется. Попробуйте другую.",
     USER_EXISTS: "Такой пользователь уже существует. Попробуйте ввести другой никнейм или почту.",
+    NO_NICKNAME: "Никнейм не был указан.",
+    NO_EMAIL: "Почта не была указана.",
 };
 export const STYLES_ERROR_INITIAL_DATA = {
     error: false,

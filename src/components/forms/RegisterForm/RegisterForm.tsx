@@ -2,7 +2,7 @@
 
 import { useRouter } from "nextjs-toploader/app";
 import { API_ROUTES } from "@/configs/api";
-import { STYLES_ERROR_INITIAL_DATA } from "@/configs/constants";
+import { STYLES_ERROR_INITIAL_DATA, STYLES_ERROR_TYPES } from "@/configs/constants";
 import { FormEvent, useState } from "react";
 import { CircleAlert, SquareAsterisk } from "lucide-react";
 import Link from "next/link";
@@ -11,6 +11,7 @@ import { StylesErrorType } from "@/types/UI/StylesError.type";
 import { useImmer } from "use-immer";
 import GeneralForm from "@/components/forms/GeneralForm/GeneralForm";
 import getStylesErrorData from "@/utils/queries/getStylesErrorData";
+import { PAGE_ROUTES } from "@/configs/pages";
 
 export default function RegisterForm({
     token,
@@ -56,11 +57,11 @@ export default function RegisterForm({
             setStyles((draft) => {
                 draft.username = {
                     error: !Boolean(username),
-                    text: "Никнейм не был указан.",
+                    text: STYLES_ERROR_TYPES.NO_NICKNAME,
                 };
                 draft.email = {
                     error: !Boolean(email),
-                    text: "Почта не была указана.",
+                    text: STYLES_ERROR_TYPES.NO_EMAIL,
                 };
             });
             setIsLoading(false);
@@ -92,7 +93,6 @@ export default function RegisterForm({
 
         if (!response.ok) {
             const { status } = response;
-
             const {
                 rtlError,
                 usernameError,
@@ -113,10 +113,10 @@ export default function RegisterForm({
         }
 
         const emailLetterId = (await response.json())?.id;
+        const routeParams = `?username=${username}&email=${email}&id=${emailLetterId}`;
 
         setIsLoading(false);
-
-        router.push(`/verification?username=${username}&email=${email}&id=${emailLetterId}`);
+        router.push(PAGE_ROUTES.VERIFICATION + routeParams);
     }
 
     return (
