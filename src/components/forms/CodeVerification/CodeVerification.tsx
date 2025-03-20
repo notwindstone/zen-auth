@@ -366,7 +366,7 @@ export default function CodeVerification({
                                                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => handleBackspace(index, e)}
                                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(index, e.target.value)}
                                                 onPaste={(e: React.ClipboardEvent<HTMLInputElement>) => handlePaste(e)}
-                                                                required={false}
+                                                required={false}
                                             />
                                         );
                                     })

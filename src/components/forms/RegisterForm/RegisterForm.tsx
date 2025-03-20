@@ -4,7 +4,7 @@ import { useRouter } from "nextjs-toploader/app";
 import { useQuery } from "@tanstack/react-query";
 import { API_ROUTES, API_STATUS_CODES } from "@/configs/api";
 import { TableSessionType, TableUserType } from "@/db/schema";
-import {NO_RETRY_ERRORS, STYLES_ERROR_INITIAL_DATA} from "@/configs/constants";
+import { NO_RETRY_ERRORS, STYLES_ERROR_INITIAL_DATA } from "@/configs/constants";
 import { FormEvent, useState } from "react";
 import { CircleAlert, SquareAsterisk } from "lucide-react";
 import Link from "next/link";
