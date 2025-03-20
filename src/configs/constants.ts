@@ -26,7 +26,8 @@ export const STYLES_ERROR_TYPES = {
     USER_EXISTS: "Такой пользователь уже существует. Попробуйте ввести другой никнейм или почту.",
     NO_NICKNAME: "Никнейм не был указан.",
     NO_EMAIL: "Почта не была указана.",
-
+    NO_LOGIN: "Никнейм и/или почта не были указаны.",
+    NO_CODE: "Код не был указан или указан неверно.",
 };
 export const STYLES_ERROR_INITIAL_DATA = {
     error: false,

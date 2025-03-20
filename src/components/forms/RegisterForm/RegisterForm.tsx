@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "nextjs-toploader/app";
-import {API_REQUEST_METHODS, API_ROUTES} from "@/configs/api";
+import { API_REQUEST_METHODS, API_ROUTES } from "@/configs/api";
 import { STYLES_ERROR_INITIAL_DATA, STYLES_ERROR_TYPES } from "@/configs/constants";
 import { FormEvent, useState } from "react";
 import { CircleAlert, SquareAsterisk } from "lucide-react";

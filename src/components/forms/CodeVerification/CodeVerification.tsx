@@ -3,64 +3,50 @@
 import { CircleAlert, Signature } from "lucide-react";
 import { FormEvent, useRef, useState } from "react";
 import Link from "next/link";
-import { API_ROUTES } from "@/configs/api";
+import { API_REQUEST_METHODS, API_ROUTES } from "@/configs/api";
 import { useRouter } from "nextjs-toploader/app";
 import { getLastEmailInfo } from "@/lib/actions/email";
 import { setSessionTokenCookie } from "@/lib/actions/cookies";
 import { getMonthForwardDate } from "@/utils/misc/getMonthForwardDate";
-import { CODE_DIGITS_COUNT } from "@/configs/constants";
+import { CODE_DIGITS_COUNT, STYLES_ERROR_INITIAL_DATA, STYLES_ERROR_TYPES } from "@/configs/constants";
 import PasswordInput from "@/components/forms/Inputs/PasswordInput/PasswordInput";
 import validateEmail from "@/utils/secure/validateEmail";
 import translateEmailStatus from "@/utils/misc/translateEmailStatus";
 import { useImmer } from "use-immer";
 import { StylesErrorType } from "@/types/UI/StylesError.type";
-
-const noError = {
-    error: false,
-    text: "",
-};
+import { PAGE_ROUTES } from "@/configs/pages";
+import GeneralForm from "@/components/forms/GeneralForm/GeneralForm";
 
 export default function CodeVerification({
     username,
     email,
     emailLetterId,
+    token,
 }: {
     username: string | null;
     email: string | null;
     emailLetterId: string | null;
+    token: string;
 }) {
     const router = useRouter();
-    const [styles, setStyles] = useImmer<StylesErrorType>({
-        rtl: {
-            error: false,
-            text: "",
-        },
-        username: {
-            error: false,
-            text: "",
-        },
-        email: {
-            error: false,
-            text: "",
-        },
-        code: {
-            error: false,
-            text: "",
-        },
-        password: {
-            error: false,
-            text: "",
-        },
+    const [isLoading, setIsLoading] = useState({
+        submit: false,
+        email: false,
     });
     const [emailLetterData, setEmailLetterData] = useState({
         show: false,
         status: "",
     });
-    const [isLoading, setIsLoading] = useState({
-        submit: false,
-        email: false,
+    const [styles, setStyles] = useImmer<StylesErrorType>({
+        rtl: STYLES_ERROR_INITIAL_DATA,
+        username: STYLES_ERROR_INITIAL_DATA,
+        email: STYLES_ERROR_INITIAL_DATA,
+        code: STYLES_ERROR_INITIAL_DATA,
+        password: STYLES_ERROR_INITIAL_DATA,
     });
-    const [otp, setOtp] = useState<Array<string | number>>(Array(CODE_DIGITS_COUNT).fill(""));
+    const [otp, setOtp] = useState<Array<string | number>>(
+        Array(CODE_DIGITS_COUNT).fill(""),
+    );
     const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
     function handleChange(index: number, value: string) {
@@ -152,23 +138,23 @@ export default function CodeVerification({
             submit: true,
             email: true,
         });
-        setStyles(draft => {
-            draft.username = noError;
-            draft.email = noError;
-            draft.rtl = noError;
-            draft.code = noError;
-            draft.password = noError;
+        setStyles((draft) => {
+            draft.username = STYLES_ERROR_INITIAL_DATA;
+            draft.email = STYLES_ERROR_INITIAL_DATA;
+            draft.rtl = STYLES_ERROR_INITIAL_DATA;
+            draft.code = STYLES_ERROR_INITIAL_DATA;
+            draft.password = STYLES_ERROR_INITIAL_DATA;
         });
 
         if (!username || !email) {
             setStyles((draft) => {
                 draft.username = {
                     error: !Boolean(username),
-                    text: "Никнейм и/или почта не были указаны.",
+                    text: STYLES_ERROR_TYPES.NO_LOGIN,
                 };
                 draft.email = {
                     error: !Boolean(email),
-                    text: "Никнейм и/или почта не были указаны.",
+                    text: STYLES_ERROR_TYPES.NO_LOGIN,
                 };
             });
             setIsLoading({
@@ -180,7 +166,7 @@ export default function CodeVerification({
         }
 
         const response = await fetch(API_ROUTES.VERIFICATION, {
-            method: "POST",
+            method: API_REQUEST_METHODS.POST,
             body: JSON.stringify({
                 username: username,
                 email: email,
@@ -226,12 +212,12 @@ export default function CodeVerification({
                 submit: true,
             };
         });
-        setStyles(draft => {
-            draft.username = noError;
-            draft.email = noError;
-            draft.rtl = noError;
-            draft.code = noError;
-            draft.password = noError;
+        setStyles((draft) => {
+            draft.username = STYLES_ERROR_INITIAL_DATA;
+            draft.email = STYLES_ERROR_INITIAL_DATA;
+            draft.rtl = STYLES_ERROR_INITIAL_DATA;
+            draft.code = STYLES_ERROR_INITIAL_DATA;
+            draft.password = STYLES_ERROR_INITIAL_DATA;
         });
 
         const formData = new FormData(event.currentTarget);
@@ -256,10 +242,10 @@ export default function CodeVerification({
         const verificationCode = otp.join('');
 
         if (verificationCode.length !== 6) {
-            setStyles(draft => {
+            setStyles((draft) => {
                 draft.code = {
                     error: Boolean(username),
-                    text: "Код не был указан или указан неверно.",
+                    text: STYLES_ERROR_TYPES.NO_CODE,
                 };
             });
             setIsLoading((state) =>{
@@ -273,7 +259,7 @@ export default function CodeVerification({
         }
 
         const verificationResponse = await fetch(API_ROUTES.VERIFICATION, {
-            method: "PUT",
+            method: API_REQUEST_METHODS.PUT,
             body: JSON.stringify({
                 email: email,
                 code: verificationCode,
@@ -291,7 +277,7 @@ export default function CodeVerification({
         }
 
         const loginResponse = await fetch(API_ROUTES.LOGIN, {
-            method: "POST",
+            method: API_REQUEST_METHODS.POST,
             body: JSON.stringify({
                 login: username,
                 password: password,
@@ -312,178 +298,180 @@ export default function CodeVerification({
             token: sessionToken,
             expiresAt: getMonthForwardDate(),
         }).then(() => {
-            router.push('/profile');
+            router.push(PAGE_ROUTES.PROFILE.ROOT);
         });
     }
 
     return (
-        <div className="h-fit w-full max-w-[464px] bg-zinc-100 drop-shadow-xl rounded-md">
-            <div className="py-6 px-12 rounded-md drop-shadow-sm bg-white">
-                <div className="flex flex-col items-center gap-4">
-                    <Signature
-                        color="black"
-                        size={32}
-                    />
-                    <p className="text-center text-xl font-bold text-black">
-                        Верификация
-                    </p>
-                    <div>
-                        <p className="text-center text-gray-500 font-medium">
-                            Код верификации был выслан на вашу почту:
+        <GeneralForm token={token}>
+            <div className="h-fit w-full max-w-[464px] bg-zinc-100 drop-shadow-xl rounded-md">
+                <div className="py-6 px-12 rounded-md drop-shadow-sm bg-white">
+                    <div className="flex flex-col items-center gap-4">
+                        <Signature
+                            color="black"
+                            size={32}
+                        />
+                        <p className="text-center text-xl font-bold text-black">
+                            Верификация
                         </p>
-                        <p className="text-center text-gray-500 font-semibold">
-                            {email ?? "отсутствует почта"}
-                        </p>
-                    </div>
-                    <div className="w-full h-[1px] bg-gray-200"/>
-                    <form
-                        className="w-full flex flex-col gap-4"
-                        onSubmit={(event: FormEvent<HTMLFormElement>) => handleSubmit(event)}
-                        method="POST"
-                    >
-                        <div className="flex flex-col gap-2">
-                            <p className={`font-semibold text-zinc-800`}>
-                                Код
+                        <div>
+                            <p className="text-center text-gray-500 font-medium">
+                                Код верификации был выслан на вашу почту:
                             </p>
-                            <div className="flex w-full gap-2">
+                            <p className="text-center text-gray-500 font-semibold">
+                                {email ?? "отсутствует почта"}
+                            </p>
+                        </div>
+                        <div className="w-full h-[1px] bg-gray-200"/>
+                        <form
+                            className="w-full flex flex-col gap-4"
+                            onSubmit={(event: FormEvent<HTMLFormElement>) => handleSubmit(event)}
+                            method="POST"
+                        >
+                            <div className="flex flex-col gap-2">
+                                <p className={`font-semibold text-zinc-800`}>
+                                    Код
+                                </p>
+                                <div className="flex w-full gap-2">
+                                    {
+                                        otp.map((digit, index) => {
+                                            return (
+                                                <input
+                                                    ref={(el) => {
+                                                        inputRefs.current[index] = el;
+                                                    }}
+                                                    autoFocus={index === 0}
+                                                    key={index}
+                                                    className={`${(styles.code.error) ? "focus:outline-red-200 hover:border-red-200 border-red-200" : "focus:outline-gray-300 hover:border-gray-300 border-gray-200"} h-16 w-full text-center shadow-sm focus:-outline-offset-0 outline-transparent focus:outline-none border-[1px] rounded-md transition-all text-black [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+                                                    type={"text"}
+                                                    name={`code_${index}`}
+                                                    placeholder=""
+                                                    pattern="\d*"
+                                                    inputMode="numeric"
+                                                    maxLength={1}
+                                                    value={digit}
+                                                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => handleBackspace(index, e)}
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(index, e.target.value)}
+                                                    onPaste={(e: React.ClipboardEvent<HTMLInputElement>) => handlePaste(e)}
+                                                    required
+                                                />
+                                            );
+                                        })
+                                    }
+                                </div>
                                 {
-                                    otp.map((digit, index) => {
-                                        return (
-                                            <input
-                                                ref={(el) => {
-                                                    inputRefs.current[index] = el;
-                                                }}
-                                                autoFocus={index === 0}
-                                                key={index}
-                                                className={`${(styles.code.error) ? "focus:outline-red-200 hover:border-red-200 border-red-200" : "focus:outline-gray-300 hover:border-gray-300 border-gray-200"} h-16 w-full text-center shadow-sm focus:-outline-offset-0 outline-transparent focus:outline-none border-[1px] rounded-md transition-all text-black [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
-                                                type={"text"}
-                                                name={`code_${index}`}
-                                                placeholder=""
-                                                pattern="\d*"
-                                                inputMode="numeric"
-                                                maxLength={1}
-                                                value={digit}
-                                                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => handleBackspace(index, e)}
-                                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(index, e.target.value)}
-                                                onPaste={(e: React.ClipboardEvent<HTMLInputElement>) => handlePaste(e)}
-                                                required
-                                            />
-                                        );
-                                    })
+                                    (styles.code.error) && (
+                                        <div className="text-red-400 text-sm flex gap-2 items-center">
+                                            <CircleAlert className="shrink-0" size={20}/>
+                                            <p>
+                                                {styles.code.text}
+                                            </p>
+                                        </div>
+                                    )
                                 }
                             </div>
+                            <PasswordInput/>
                             {
-                                (styles.code.error) && (
+                                (styles.rtl.error) && (
                                     <div className="text-red-400 text-sm flex gap-2 items-center">
-                                        <CircleAlert className="shrink-0" size={20} />
+                                        <CircleAlert className="shrink-0" size={20}/>
                                         <p>
-                                            {styles.code.text}
+                                            {styles.rtl.text}
                                         </p>
                                     </div>
                                 )
                             }
-                        </div>
-                        <PasswordInput/>
-                        {
-                            (styles.rtl.error) && (
-                                <div className="text-red-400 text-sm flex gap-2 items-center">
-                                    <CircleAlert className="shrink-0" size={20}/>
-                                    <p>
-                                        {styles.rtl.text}
-                                    </p>
-                                </div>
-                            )
-                        }
-                        {
-                            isLoading.submit ? (
-                                <div
-                                    className="h-[40px] w-full mt-2 transition animate-pulse bg-zinc-400 rounded-md"/>
-                            ) : (
-                                <button
-                                    className={`hover:bg-zinc-700 bg-zinc-800 transition mt-2 rounded-md p-2 text-white h-[40px]`}
-                                    type="submit"
-                                >
-                                    Продолжить
-                                </button>
-                            )
-                        }
-                    </form>
-                </div>
-            </div>
-            <div className="py-4 flex flex-col gap-2">
-                <p className="text-center text-gray-500 font-medium">
-                    Не пришёл код?{' '}
-                    <button
-                        className="text-black font-medium transition hover:text-zinc-700"
-                        onClick={checkEmailStatus}
-                    >
-                        Проверьте статус письма
-                    </button>
-                </p>
-                {
-                    emailLetterData.show && (
-                        <div className="w-full px-12 py-2">
                             {
-                                isLoading.email ? (
+                                isLoading.submit ? (
                                     <div
-                                        className="rounded-md w-full h-16 border-[1px] border-gray-200 bg-gray-200 animate-pulse"
-                                    />
+                                        className="h-[40px] w-full mt-2 transition animate-pulse bg-zinc-400 rounded-md"/>
                                 ) : (
-                                    <div
-                                        className="rounded-md w-full h-16 bg-white border-[1px] border-gray-200 flex items-center justify-center text-center text-lg font-semibold text-black"
+                                    <button
+                                        className={`hover:bg-zinc-700 bg-zinc-800 transition mt-2 rounded-md p-2 text-white h-[40px]`}
+                                        type="submit"
                                     >
-                                        {emailLetterData.status}
-                                    </div>
+                                        Продолжить
+                                    </button>
                                 )
                             }
-                        </div>
-                    )
-                }
-                <div
-                    className="w-full px-12 flex flex-nowrap items-center gap-4"
-                >
-                    <div className="w-full h-[1px] bg-gray-200"/>
-                    <p className="text-gray-500">
-                    или
-                    </p>
-                    <div className="w-full h-[1px] bg-gray-200"/>
+                        </form>
+                    </div>
                 </div>
-                <p className="text-center text-gray-500 font-medium">
-                    <button
-                        className="text-black font-medium transition hover:text-zinc-700"
-                        onClick={handleResend}
-                    >
-                        Отправьте код ещё раз
-                    </button>
-                </p>
-                {
-                    (styles.username.error || styles.email.error) && (
-                        <div className="text-red-400 text-center mx-auto text-sm flex gap-2 items-center">
-                            <CircleAlert className="shrink-0" size={20} />
-                            <p>
-                                {styles.username.text ?? styles.email.text}
-                            </p>
-                        </div>
-                    )
-                }
-                <div
-                    className="w-full px-12 flex flex-nowrap items-center gap-4"
-                >
-                    <div className="w-full h-[1px] bg-gray-200"/>
-                    <p className="text-gray-500">
-                        или
+                <div className="py-4 flex flex-col gap-2">
+                    <p className="text-center text-gray-500 font-medium">
+                        Не пришёл код?{' '}
+                        <button
+                            className="text-black font-medium transition hover:text-zinc-700"
+                            onClick={checkEmailStatus}
+                        >
+                            Проверьте статус письма
+                        </button>
                     </p>
-                    <div className="w-full h-[1px] bg-gray-200"/>
-                </div>
-                <p className="text-center text-gray-500 font-medium">
-                    <Link
-                        className="text-black font-medium transition hover:text-zinc-700"
-                        href={`/register?username=${username ?? ""}&email=${email ?? ""}`}
+                    {
+                        emailLetterData.show && (
+                            <div className="w-full px-12 py-2">
+                                {
+                                    isLoading.email ? (
+                                        <div
+                                            className="rounded-md w-full h-16 border-[1px] border-gray-200 bg-gray-200 animate-pulse"
+                                        />
+                                    ) : (
+                                        <div
+                                            className="rounded-md w-full h-16 bg-white border-[1px] border-gray-200 flex items-center justify-center text-center text-lg font-semibold text-black"
+                                        >
+                                            {emailLetterData.status}
+                                        </div>
+                                    )
+                                }
+                            </div>
+                        )
+                    }
+                    <div
+                        className="w-full px-12 flex flex-nowrap items-center gap-4"
                     >
-                        Измените данные
-                    </Link>
-                </p>
+                        <div className="w-full h-[1px] bg-gray-200"/>
+                        <p className="text-gray-500">
+                            или
+                        </p>
+                        <div className="w-full h-[1px] bg-gray-200"/>
+                    </div>
+                    <p className="text-center text-gray-500 font-medium">
+                        <button
+                            className="text-black font-medium transition hover:text-zinc-700"
+                            onClick={handleResend}
+                        >
+                            Отправьте код ещё раз
+                        </button>
+                    </p>
+                    {
+                        (styles.username.error || styles.email.error) && (
+                            <div className="text-red-400 text-center mx-auto text-sm flex gap-2 items-center">
+                                <CircleAlert className="shrink-0" size={20}/>
+                                <p>
+                                    {styles.username.text ?? styles.email.text}
+                                </p>
+                            </div>
+                        )
+                    }
+                    <div
+                        className="w-full px-12 flex flex-nowrap items-center gap-4"
+                    >
+                        <div className="w-full h-[1px] bg-gray-200"/>
+                        <p className="text-gray-500">
+                            или
+                        </p>
+                        <div className="w-full h-[1px] bg-gray-200"/>
+                    </div>
+                    <p className="text-center text-gray-500 font-medium">
+                        <Link
+                            className="text-black font-medium transition hover:text-zinc-700"
+                            href={`/register?username=${username ?? ""}&email=${email ?? ""}`}
+                        >
+                            Измените данные
+                        </Link>
+                    </p>
+                </div>
             </div>
-        </div>
+        </GeneralForm>
     );
 }
