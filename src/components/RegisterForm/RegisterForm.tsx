@@ -95,11 +95,11 @@ export default function RegisterForm({
         if (!username || !email) {
             setStyles(draft => {
                 draft.username = {
-                    error: Boolean(username),
+                    error: !Boolean(username),
                     text: "Никнейм не был указан.",
                 };
                 draft.email = {
-                    error: Boolean(email),
+                    error: !Boolean(email),
                     text: "Почта не была указана.",
                 };
             });

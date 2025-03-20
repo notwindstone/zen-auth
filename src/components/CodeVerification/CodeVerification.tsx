@@ -1,6 +1,6 @@
 "use client";
 
-import {CircleAlert, Signature} from "lucide-react";
+import { CircleAlert, Signature } from "lucide-react";
 import { FormEvent, useRef, useState } from "react";
 import Link from "next/link";
 import { API_ROUTES } from "@/configs/api";
@@ -12,8 +12,13 @@ import { CODE_DIGITS_COUNT } from "@/configs/constants";
 import PasswordInput from "@/components/PasswordInput/PasswordInput";
 import validateEmail from "@/utils/secure/validateEmail";
 import translateEmailStatus from "@/utils/misc/translateEmailStatus";
-import {useImmer} from "use-immer";
-import {StylesErrorType} from "@/types/StylesError.type";
+import { useImmer } from "use-immer";
+import { StylesErrorType } from "@/types/StylesError.type";
+
+const noError = {
+    error: false,
+    text: "",
+};
 
 export default function CodeVerification({
     username,
@@ -139,23 +144,33 @@ export default function CodeVerification({
     }
 
     async function handleResend() {
+        if (isLoading.submit) {
+            return;
+        }
+
         setIsLoading({
             submit: true,
             email: true,
         });
+        setStyles(draft => {
+            draft.username = noError;
+            draft.email = noError;
+            draft.rtl = noError;
+            draft.code = noError;
+            draft.password = noError;
+        });
 
         if (!username || !email) {
-            setStyles(draft => {
+            setStyles((draft) => {
                 draft.username = {
-                    error: Boolean(username),
-                    text: "Никнейм не был указан.",
+                    error: !Boolean(username),
+                    text: "Никнейм и/или почта не были указаны.",
                 };
                 draft.email = {
-                    error: Boolean(email),
-                    text: "Почта не была указана.",
+                    error: !Boolean(email),
+                    text: "Никнейм и/или почта не были указаны.",
                 };
             });
-
             setIsLoading({
                 submit: false,
                 email: false,
@@ -212,11 +227,6 @@ export default function CodeVerification({
             };
         });
         setStyles(draft => {
-            const noError = {
-                error: false,
-                text: "",
-            };
-
             draft.username = noError;
             draft.email = noError;
             draft.rtl = noError;
@@ -375,6 +385,16 @@ export default function CodeVerification({
                         </div>
                         <PasswordInput/>
                         {
+                            (styles.rtl.error) && (
+                                <div className="text-red-400 text-sm flex gap-2 items-center">
+                                    <CircleAlert className="shrink-0" size={20}/>
+                                    <p>
+                                        {styles.rtl.text}
+                                    </p>
+                                </div>
+                            )
+                        }
+                        {
                             isLoading.submit ? (
                                 <div
                                     className="h-[40px] w-full mt-2 transition animate-pulse bg-zinc-400 rounded-md"/>
@@ -436,6 +456,16 @@ export default function CodeVerification({
                         Отправьте код ещё раз
                     </button>
                 </p>
+                {
+                    (styles.username.error || styles.email.error) && (
+                        <div className="text-red-400 text-center mx-auto text-sm flex gap-2 items-center">
+                            <CircleAlert className="shrink-0" size={20} />
+                            <p>
+                                {styles.username.text ?? styles.email.text}
+                            </p>
+                        </div>
+                    )
+                }
                 <div
                     className="w-full px-12 flex flex-nowrap items-center gap-4"
                 >
