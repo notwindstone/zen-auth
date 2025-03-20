@@ -325,7 +325,7 @@ export default function CodeVerification({
                         <div className="w-full h-[1px] bg-gray-200"/>
                         <form
                             className="w-full flex flex-col gap-4"
-                            onSubmit={(event: FormEvent<HTMLFormElement>) => handleSubmit(event)}
+                            onSubmit={handleSubmit}
                             method="POST"
                         >
                             <div className="flex flex-col gap-2">

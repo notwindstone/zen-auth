@@ -17,6 +17,7 @@ export default function GeneralForm({
         error,
         failureCount,
         failureReason,
+        data,
     } = useQuery({
         queryKey: [API_ROUTES.SESSION.CURRENT, token],
         queryFn: querySessionCurrent,
@@ -40,14 +41,6 @@ export default function GeneralForm({
         );
     }
 
-    if (error?.message === API_STATUS_CODES.ERROR.UNAUTHORIZED.toString()) {
-        return (
-            <>
-                {children}
-            </>
-        );
-    }
-
     if (error) {
         return (
             <div>
@@ -58,6 +51,13 @@ export default function GeneralForm({
         );
     }
 
+    if (data === API_STATUS_CODES.ERROR.UNAUTHORIZED) {
+        return (
+            <>
+                {children}
+            </>
+        );
+    }
 
     return (
         <div>
