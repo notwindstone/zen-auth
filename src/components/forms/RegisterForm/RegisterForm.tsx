@@ -1,18 +1,16 @@
 "use client";
 
 import { useRouter } from "nextjs-toploader/app";
-import { useQuery } from "@tanstack/react-query";
-import { API_ROUTES, API_STATUS_CODES } from "@/configs/api";
-import { TableSessionType, TableUserType } from "@/db/schema";
-import { NO_RETRY_ERRORS, STYLES_ERROR_INITIAL_DATA } from "@/configs/constants";
+import { API_ROUTES } from "@/configs/api";
+import { STYLES_ERROR_INITIAL_DATA } from "@/configs/constants";
 import { FormEvent, useState } from "react";
 import { CircleAlert, SquareAsterisk } from "lucide-react";
 import Link from "next/link";
 import validateEmail from "@/utils/secure/validateEmail";
 import { StylesErrorType } from "@/types/StylesError.type";
 import { useImmer } from "use-immer";
-import handleFailure from "@/utils/queries/handleFailure";
-import querySessionCurrent from "@/utils/queries/querySessionCurrent";
+import GeneralForm from "@/components/forms/GeneralForm/GeneralForm";
+import getStylesErrorData from "@/utils/queries/getStylesErrorData";
 
 export default function RegisterForm({
     token,
@@ -23,6 +21,7 @@ export default function RegisterForm({
     usernamePlaceholder: string;
     emailPlaceholder: string;
 }) {
+    const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [styles, setStyles] = useImmer<
         Pick<
@@ -33,17 +32,6 @@ export default function RegisterForm({
         rtl: STYLES_ERROR_INITIAL_DATA,
         username: STYLES_ERROR_INITIAL_DATA,
         email: STYLES_ERROR_INITIAL_DATA,
-    });
-    const router = useRouter();
-    const {
-        isPending,
-        error,
-        failureCount,
-        failureReason,
-    } = useQuery({
-        queryKey: [API_ROUTES.session.current, token],
-        queryFn: querySessionCurrent,
-        retry: handleFailure,
     });
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
@@ -105,95 +93,14 @@ export default function RegisterForm({
         if (!response.ok) {
             const { status } = response;
 
-            let rtlError = {
-                error: false,
-                text: "",
-            };
-            let usernameError = {
-                error: false,
-                text: "",
-            };
-            let emailError = {
-                error: false,
-                text: "",
-            };
-
-            switch (status) {
-                case API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR:
-                    usernameError = {
-                        error: true,
-                        text: "Что-то пошло не так...",
-                    };
-                    emailError = {
-                        error: true,
-                        text: "Что-то пошло не так...",
-                    };
-
-                    break;
-                case API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS:
-                    const remaining = response.headers.get('Retry-After');
-
-                    rtlError = {
-                        error: true,
-                        text: `Было отправлено слишком большое количество запросов. Попробуйте ещё раз через ${remaining} секунд!`,
-                    };
-
-                    break;
-                case API_STATUS_CODES.ERROR.BAD_REQUEST:
-                    usernameError = {
-                        error: true,
-                        text: "Ошибка в формате никнейма.",
-                    };
-                    emailError = {
-                        error: true,
-                        text: "Ошибка в формате почты.",
-                    };
-
-                    break;
-                case API_STATUS_CODES.ERROR.CONFLICT:
-                    const conflictElement = response.headers.get('X-Zen-Auth-Conflict') ?? "";
-
-                    switch (conflictElement) {
-                        case "username":
-                            usernameError = {
-                                error: true,
-                                text: "Никнейм занят. Попробуйте другой.",
-                            };
-
-                            break;
-                        case "email":
-                            emailError = {
-                                error: true,
-                                text: "Такая почта уже используется. Попробуйте другую.",
-                            };
-
-                            break;
-                        default:
-                            usernameError = {
-                                error: true,
-                                text: "Такой пользователь уже существует. Попробуйте ввести другой никнейм или почту.",
-                            };
-                            emailError = {
-                                error: true,
-                                text: "Такой пользователь уже существует. Попробуйте ввести другой никнейм или почту.",
-                            };
-
-                            break;
-                    }
-
-                    break;
-                default:
-                    usernameError = {
-                        error: true,
-                        text: "Что-то пошло не так...",
-                    };
-                    emailError = {
-                        error: true,
-                        text: "Что-то пошло не так...",
-                    };
-
-                    break;
-            }
+            const {
+                rtlError,
+                usernameError,
+                emailError,
+            } = getStylesErrorData({
+                status: status,
+                headers: response.headers,
+            });
 
             setStyles(draft => {
                 draft.rtl = rtlError;
@@ -212,25 +119,8 @@ export default function RegisterForm({
         router.push(`/verification?username=${username}&email=${email}&id=${emailLetterId}`);
     }
 
-    if (isPending) {
-        return (
-            <div>
-                <p>
-                    Loading...
-                </p>
-                {
-                    failureCount > 0 && (
-                        <p>
-                            {failureCount} retries. Current error: {failureReason?.message}
-                        </p>
-                    )
-                }
-            </div>
-        );
-    }
-
-    if (error?.message === API_STATUS_CODES.ERROR.UNAUTHORIZED.toString()) {
-        return (
+    return (
+        <GeneralForm token={token}>
             <div className="h-fit w-full max-w-[464px] bg-zinc-100 drop-shadow-xl rounded-md">
                 <div className="py-6 px-12 rounded-md drop-shadow-sm bg-white">
                     <div className="flex flex-col items-center gap-4">
@@ -247,11 +137,11 @@ export default function RegisterForm({
                         <div
                             className="w-full flex flex-nowrap items-center gap-4"
                         >
-                            <div className="w-full h-[1px] bg-gray-200" />
+                            <div className="w-full h-[1px] bg-gray-200"/>
                             <p className="text-zinc-700">
                                 или
                             </p>
-                            <div className="w-full h-[1px] bg-gray-200" />
+                            <div className="w-full h-[1px] bg-gray-200"/>
                         </div>
                         <form
                             className="w-full flex flex-col gap-4"
@@ -274,7 +164,7 @@ export default function RegisterForm({
                                 {
                                     (styles.username.error) && (
                                         <div className="text-red-400 text-sm flex gap-2 items-center">
-                                            <CircleAlert className="shrink-0" size={20} />
+                                            <CircleAlert className="shrink-0" size={20}/>
                                             <p>
                                                 {styles.username.text}
                                             </p>
@@ -298,7 +188,7 @@ export default function RegisterForm({
                                 {
                                     (styles.email.error) && (
                                         <div className="text-red-400 text-sm flex gap-2 items-center">
-                                            <CircleAlert className="shrink-0"  size={20} />
+                                            <CircleAlert className="shrink-0" size={20}/>
                                             <p>
                                                 {styles.email.text}
                                             </p>
@@ -344,25 +234,6 @@ export default function RegisterForm({
                     </p>
                 </div>
             </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div>
-                <p>
-                    An error has occurred: {error.message}
-                </p>
-            </div>
-        );
-    }
-
-
-    return (
-        <div>
-            <p>
-                You are logged in.
-            </p>
-        </div>
+        </GeneralForm>
     );
 }

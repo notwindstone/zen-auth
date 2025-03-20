@@ -7,6 +7,7 @@ export const NO_RETRY_ERRORS = new Set([
     API_STATUS_CODES.ERROR.NOT_FOUND,
     API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS,
 ]);
+export const SPACE_STRING = " ";
 export const PUBLIC_AVATAR_URL = "public_user_avatar";
 export const RESET_TOKEN_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 export const PLACEHOLDER_STRING = "no errors";
@@ -14,7 +15,21 @@ export const CODE_DIGITS_COUNT = 6;
 export const PASSWORD_LENGTH_LIMIT = 128;
 export const USERNAME_LENGTH_LIMIT = 128;
 export const EMAIL_LENGTH_LIMIT = 254;
+export const STYLES_ERROR_TYPES = {
+    EMPTY: "",
+    SOMETHING_WENT_WRONG: "Что-то пошло не так...",
+    RETRY_AFTER: "Было отправлено слишком большое количество запросов. Попробуйте ещё раз через",
+    FORMAT: "Ошибка в формате никнейма.",
+    NICKNAME_IN_USE: "Никнейм занят. Попробуйте другой.",
+    EMAIL_IN_USE: "Такая почта уже используется. Попробуйте другую.",
+    USER_EXISTS: "Такой пользователь уже существует. Попробуйте ввести другой никнейм или почту.",
+};
 export const STYLES_ERROR_INITIAL_DATA = {
     error: false,
-    text: "",
+    text: STYLES_ERROR_TYPES.EMPTY,
 };
+export const SECONDS_RUSSIAN: [
+    string,
+    string,
+    string,
+] = ["секунда", "секунды", "секунд"];

@@ -6,10 +6,10 @@ import querySessionCurrent from "@/utils/queries/querySessionCurrent";
 import handleFailure from "@/utils/queries/handleFailure";
 
 export default function GeneralForm({
-    FormNode,
+    children,
     token,
 }: {
-    FormNode: React.ReactNode;
+    children: React.ReactNode;
     token: string;
 }) {
     const {
@@ -42,7 +42,9 @@ export default function GeneralForm({
 
     if (error?.message === API_STATUS_CODES.ERROR.UNAUTHORIZED.toString()) {
         return (
-            { FormNode }
+            <>
+                {children}
+            </>
         );
     }
 
