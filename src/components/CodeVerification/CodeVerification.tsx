@@ -22,7 +22,7 @@ export default function CodeVerification({
     emailLetterId: string | null;
 }) {
     const router = useRouter();
-
+    const [isEmailShowing, setIsEmailShowing] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [otp, setOtp] = useState<Array<string | number>>(Array(CODE_DIGITS_COUNT).fill(""));
     const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
@@ -259,6 +259,11 @@ export default function CodeVerification({
                         Проверьте статус письма
                     </button>
                 </p>
+                <div
+                    className=""
+                >
+
+                </div>
                 <div
                     className="w-full px-12 flex flex-nowrap items-center gap-4"
                 >

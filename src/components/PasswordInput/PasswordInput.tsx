@@ -5,7 +5,6 @@ import { PASSWORD_LENGTH_LIMIT } from "@/configs/constants";
 export default function PasswordInput() {
     const [isVisible, setIsVisible] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
-    const enterRef = useRef(false);
 
     return (
         <div className="flex flex-col gap-2">
@@ -45,28 +44,15 @@ export default function PasswordInput() {
 
                             return;
                         }
-
-                        if (event.key === "Enter") {
-                            enterRef.current = true;
-
-                            return;
-                        }
-
-                        enterRef.current = false;
                     }}
                 />
                 <button
                     className="shrink-0 bg-zinc-800 rounded-md h-8 w-8 flex justify-center items-center"
-                    onClick={(event) => {
-                        if (enterRef.current) {
-                            return;
-                        }
-
-                        event.preventDefault();
-
+                    onClick={() => {
                         inputRef.current?.focus();
                         setIsVisible((state) => !state);
                     }}
+                    type="button"
                 >
                     {
                         isVisible ? (
