@@ -114,9 +114,19 @@ export default function CodeVerification({
     }
 
     async function handleResend() {
+        setIsLoading({
+            submit: true,
+            email: true,
+        });
+
         if (!username || !email) {
             // TODO
             alert('you are stupid');
+
+            setIsLoading({
+                submit: false,
+                email: false,
+            });
 
             return;
         }
@@ -133,12 +143,26 @@ export default function CodeVerification({
             // TODO
             alert('bruh what are you doing');
 
+            setIsLoading({
+                submit: false,
+                email: false,
+            });
+
             return;
         }
 
         const emailLetterId = (await response.json())?.id;
 
         router.push(`/verification?username=${username}&email=${email}&id=${emailLetterId}`);
+
+        setIsLoading({
+            submit: false,
+            email: false,
+        });
+        setEmailLetterData({
+            show: false,
+            status: "",
+        });
     }
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
