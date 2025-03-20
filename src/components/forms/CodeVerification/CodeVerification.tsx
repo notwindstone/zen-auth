@@ -8,7 +8,7 @@ import { useRouter } from "nextjs-toploader/app";
 import { getLastEmailInfo } from "@/lib/actions/email";
 import { setSessionTokenCookie } from "@/lib/actions/cookies";
 import { getMonthForwardDate } from "@/utils/misc/getMonthForwardDate";
-import { STYLES_ERROR_INITIAL_DATA, STYLES_ERROR_TYPES } from "@/configs/constants";
+import { CODE_DIGITS_COUNT, STYLES_ERROR_INITIAL_DATA, STYLES_ERROR_TYPES } from "@/configs/constants";
 import PasswordInput from "@/components/forms/Inputs/PasswordInput/PasswordInput";
 import validateEmail from "@/utils/secure/validateEmail";
 import translateEmailStatus from "@/utils/misc/translateEmailStatus";
@@ -17,6 +17,7 @@ import { StylesErrorType } from "@/types/UI/StylesError.type";
 import { PAGE_ROUTES } from "@/configs/pages";
 import GeneralForm from "@/components/forms/GeneralForm/GeneralForm";
 import OTPInput from "@/components/forms/Inputs/OTPInput/OTPInput";
+import { OTPContext } from "@/utils/contexts/Contexts";
 
 export default function CodeVerification({
     username,
@@ -29,6 +30,9 @@ export default function CodeVerification({
     emailLetterId: string | null;
     token: string;
 }) {
+    const [otp, setOtp] = useState<Array<string | number>>(
+        Array(CODE_DIGITS_COUNT).fill(""),
+    );
     const router = useRouter();
     const [isLoading, setIsLoading] = useState({
         submit: false,
@@ -277,7 +281,14 @@ export default function CodeVerification({
                             onSubmit={handleSubmit}
                             method="POST"
                         >
-                            <OTPInput isError={styles.code.error} errorText={styles.code.text} />
+                            <OTPContext.Provider value={{
+                                OTPValue: otp,
+                                setOTPValue: setOtp,
+                                isError: styles.code.error,
+                                errorText: styles.code.text,
+                            }}>
+                                <OTPInput />
+                            </OTPContext.Provider>
                             <PasswordInput/>
                             {
                                 (styles.rtl.error) && (

@@ -1,17 +1,15 @@
 import { CircleAlert } from "lucide-react";
-import { CODE_DIGITS_COUNT, DIGITS_ARRAY } from "@/configs/constants";
-import { useRef, useState } from "react";
+import { DIGITS_ARRAY } from "@/configs/constants";
+import { useContext, useRef } from "react";
+import { OTPContext } from "@/utils/contexts/Contexts";
 
-export default function OTPInput({
-    isError,
-    errorText,
-}: {
-    isError: boolean;
-    errorText: string;
-}) {
-    const [otp, setOtp] = useState<Array<string | number>>(
-        Array(CODE_DIGITS_COUNT).fill(""),
-    );
+export default function OTPInput() {
+    const {
+        OTPValue: otp,
+        setOTPValue: setOtp,
+        isError,
+        errorText,
+    } = useContext(OTPContext);
     const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
     function handleChange(index: number, value: string) {
