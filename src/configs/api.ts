@@ -26,3 +26,9 @@ export const API_STATUS_CODES = {
         INTERNAL_SERVER_ERROR: 500,
     },
 };
+export const API_REQUEST_METHODS = {
+    GET: "GET",
+    POST: "POST",
+    PUT: "PUT",
+    DELETE: "DELETE",
+};

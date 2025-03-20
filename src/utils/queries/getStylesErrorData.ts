@@ -51,11 +51,11 @@ export default function getStylesErrorData({
         case API_STATUS_CODES.ERROR.BAD_REQUEST:
             usernameError = {
                 error: true,
-                text: STYLES_ERROR_TYPES.FORMAT,
+                text: STYLES_ERROR_TYPES.NICKNAME_FORMAT,
             };
             emailError = {
                 error: true,
-                text: STYLES_ERROR_TYPES.FORMAT,
+                text: STYLES_ERROR_TYPES.EMAIL_FORMAT,
             };
 
             break;
