@@ -24,12 +24,12 @@ export default function LoginForm({
         failureCount,
         failureReason,
     } = useQuery({
-        queryKey: [API_ROUTES.session.current, token],
+        queryKey: [API_ROUTES.SESSION.CURRENT, token],
         queryFn: async (): Promise<{
             session: TableSessionType;
             user: TableUserType;
         }> => {
-            const response = await fetch(API_ROUTES.session.current);
+            const response = await fetch(API_ROUTES.SESSION.CURRENT);
 
             if (!response.ok) {
                 return Promise.reject(
@@ -64,7 +64,7 @@ export default function LoginForm({
             return;
         }
 
-        const response = await fetch(API_ROUTES.login, {
+        const response = await fetch(API_ROUTES.LOGIN, {
             method: "POST",
             body: JSON.stringify({
                 login: login,

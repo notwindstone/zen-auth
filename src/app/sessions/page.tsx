@@ -6,7 +6,7 @@ import { TableSessionType } from "@/db/schema";
 import { API_ROUTES } from "@/configs/api";
 
 export default function Page() {
-    const queryKey = [API_ROUTES.session.all];
+    const queryKey = [API_ROUTES.SESSION.ALL];
     const {
         isPending,
         error,

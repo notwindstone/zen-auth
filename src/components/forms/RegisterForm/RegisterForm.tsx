@@ -82,7 +82,7 @@ export default function RegisterForm({
             return;
         }
 
-        const response = await fetch(API_ROUTES.verification, {
+        const response = await fetch(API_ROUTES.VERIFICATION, {
             method: "POST",
             body: JSON.stringify({
                 username: username,

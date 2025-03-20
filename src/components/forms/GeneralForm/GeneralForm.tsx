@@ -18,7 +18,7 @@ export default function GeneralForm({
         failureCount,
         failureReason,
     } = useQuery({
-        queryKey: [API_ROUTES.session.current, token],
+        queryKey: [API_ROUTES.SESSION.CURRENT, token],
         queryFn: querySessionCurrent,
         retry: handleFailure,
     });

@@ -179,7 +179,7 @@ export default function CodeVerification({
             return;
         }
 
-        const response = await fetch(API_ROUTES.verification, {
+        const response = await fetch(API_ROUTES.VERIFICATION, {
             method: "POST",
             body: JSON.stringify({
                 username: username,
@@ -272,7 +272,7 @@ export default function CodeVerification({
             return;
         }
 
-        const verificationResponse = await fetch(API_ROUTES.verification, {
+        const verificationResponse = await fetch(API_ROUTES.VERIFICATION, {
             method: "PUT",
             body: JSON.stringify({
                 email: email,
@@ -290,7 +290,7 @@ export default function CodeVerification({
             return;
         }
 
-        const loginResponse = await fetch(API_ROUTES.login, {
+        const loginResponse = await fetch(API_ROUTES.LOGIN, {
             method: "POST",
             body: JSON.stringify({
                 login: username,

@@ -15,7 +15,7 @@ export default function Profile({
     username?: string | undefined;
     token?: string | undefined;
 }) {
-    const queryKey = [API_ROUTES.session.current, API_ROUTES.profile, username, token];
+    const queryKey = [API_ROUTES.SESSION.CURRENT, API_ROUTES.PROFILE, username, token];
     const {
         isPending,
         error,
@@ -31,9 +31,9 @@ export default function Profile({
             let response;
 
             if (!username) {
-                response = await fetch(API_ROUTES.session.current);
+                response = await fetch(API_ROUTES.SESSION.CURRENT);
             } else {
-                response = await fetch(`${API_ROUTES.profile}?username=${username}`);
+                response = await fetch(`${API_ROUTES.PROFILE}?username=${username}`);
             }
 
             if (!response.ok) {
