@@ -2,7 +2,7 @@
 
 import { KeyRound } from "lucide-react";
 import { FormEvent } from "react";
-import PasswordInput from "@/components/PasswordInput/PasswordInput";
+import PasswordInput from "@/components/forms/Inputs/PasswordInput/PasswordInput";
 
 export default function ResetPassword({
     token,

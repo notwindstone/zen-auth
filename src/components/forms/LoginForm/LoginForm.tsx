@@ -10,7 +10,7 @@ import { useRouter } from "nextjs-toploader/app";
 import { useQuery } from "@tanstack/react-query";
 import { TableSessionType, TableUserType } from "@/db/schema";
 import { NO_RETRY_ERRORS } from "@/configs/constants";
-import PasswordInput from "@/components/PasswordInput/PasswordInput";
+import PasswordInput from "@/components/forms/Inputs/PasswordInput/PasswordInput";
 
 export default function LoginForm({
     token,

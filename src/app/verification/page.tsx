@@ -1,4 +1,4 @@
-import CodeVerification from "@/components/CodeVerification/CodeVerification";
+import CodeVerification from "@/components/forms/CodeVerification/CodeVerification";
 
 export default async function Page({
     searchParams,

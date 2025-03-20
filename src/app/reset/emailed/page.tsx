@@ -1,4 +1,4 @@
-import ResetCodeSent from "@/components/ResetCodeSent/ResetCodeSent";
+import ResetCodeSent from "@/components/forms/ResetCodeSent/ResetCodeSent";
 
 export default async function Page({
     searchParams,

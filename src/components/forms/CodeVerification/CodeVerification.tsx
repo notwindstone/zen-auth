@@ -9,7 +9,7 @@ import { getLastEmailInfo } from "@/lib/actions/email";
 import { setSessionTokenCookie } from "@/lib/actions/cookies";
 import { getMonthForwardDate } from "@/utils/misc/getMonthForwardDate";
 import { CODE_DIGITS_COUNT } from "@/configs/constants";
-import PasswordInput from "@/components/PasswordInput/PasswordInput";
+import PasswordInput from "@/components/forms/Inputs/PasswordInput/PasswordInput";
 import validateEmail from "@/utils/secure/validateEmail";
 import translateEmailStatus from "@/utils/misc/translateEmailStatus";
 import { useImmer } from "use-immer";

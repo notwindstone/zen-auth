@@ -1,4 +1,4 @@
-import RegisterForm from "@/components/RegisterForm/RegisterForm";
+import RegisterForm from "@/components/forms/RegisterForm/RegisterForm";
 import { cookies } from "next/headers";
 import { COOKIES_KEY } from "@/configs/constants";
 
