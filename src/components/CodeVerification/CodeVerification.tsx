@@ -22,8 +22,14 @@ export default function CodeVerification({
     emailLetterId: string | null;
 }) {
     const router = useRouter();
-    const [isEmailShowing, setIsEmailShowing] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    const [emailLetterData, setEmailLetterData] = useState({
+        show: false,
+        status: "",
+    });
+    const [isLoading, setIsLoading] = useState({
+        submit: false,
+        email: false,
+    });
     const [otp, setOtp] = useState<Array<string | number>>(Array(CODE_DIGITS_COUNT).fill(""));
     const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
@@ -76,7 +82,35 @@ export default function CodeVerification({
     }
 
     async function checkEmailStatus() {
-        alert(JSON.stringify(await getLastEmailInfo({ id: emailLetterId as string })));
+        if (isLoading.email) {
+            return;
+        }
+
+        setIsLoading((state) => {
+            return {
+                ...state,
+                email: true,
+            };
+        });
+
+        setEmailLetterData({
+            show: true,
+            status: "",
+        });
+
+        const emailStatus = await getLastEmailInfo({ id: emailLetterId as string });
+
+        setEmailLetterData({
+            show: true,
+            status: emailStatus ?? "Неизвестно",
+        });
+
+        setIsLoading((state) => {
+            return {
+                ...state,
+                email: false,
+            };
+        });
     }
 
     async function handleResend() {
@@ -110,7 +144,16 @@ export default function CodeVerification({
     async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
 
-        setIsLoading(true);
+        if (isLoading.submit) {
+            return;
+        }
+
+        setIsLoading((state) => {
+            return {
+                ...state,
+                submit: true,
+            };
+        });
 
         const formData = new FormData(event.currentTarget);
         const password = formData.get("password");
@@ -234,7 +277,7 @@ export default function CodeVerification({
                         </div>
                         <PasswordInput/>
                         {
-                            isLoading ? (
+                            isLoading.submit ? (
                                 <div
                                     className="h-[40px] w-full mt-2 transition animate-pulse bg-zinc-400 rounded-md"/>
                             ) : (
@@ -259,17 +302,31 @@ export default function CodeVerification({
                         Проверьте статус письма
                     </button>
                 </p>
-                <div
-                    className=""
-                >
-
-                </div>
+                {
+                    emailLetterData.show && (
+                        <div className="w-full px-12 py-2">
+                            {
+                                isLoading.email ? (
+                                    <div
+                                        className="rounded-md w-full h-16 border-[1px] border-gray-200 bg-gray-200 animate-pulse"
+                                    />
+                                ) : (
+                                    <div
+                                        className="rounded-md w-full h-16 bg-white border-[1px] border-gray-200 flex items-center justify-center text-center text-lg font-semibold text-black"
+                                    >
+                                        {emailLetterData.status}
+                                    </div>
+                                )
+                            }
+                        </div>
+                    )
+                }
                 <div
                     className="w-full px-12 flex flex-nowrap items-center gap-4"
                 >
                     <div className="w-full h-[1px] bg-gray-200"/>
                     <p className="text-gray-500">
-                        или
+                    или
                     </p>
                     <div className="w-full h-[1px] bg-gray-200"/>
                 </div>

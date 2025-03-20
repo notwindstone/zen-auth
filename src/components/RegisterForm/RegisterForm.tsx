@@ -68,6 +68,10 @@ export default function RegisterForm({
     async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
 
+        if (isLoading) {
+            return;
+        }
+
         setIsLoading(true);
         setStyles(draft => {
             draft.rtl = {
