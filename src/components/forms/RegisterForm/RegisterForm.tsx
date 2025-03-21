@@ -65,6 +65,18 @@ export default function RegisterForm({
         const username = formData.get("username");
         const email = formData.get("email");
 
+        if (!token) {
+            setStyles((draft) => {
+                draft.turnstile = {
+                    error: true,
+                    text: STYLES_ERROR_TYPES.TURNSTILE_ERROR,
+                };
+            });
+            setIsLoading(false);
+
+            return;
+        }
+
         if (!username || !email) {
             setStyles((draft) => {
                 draft.username = {

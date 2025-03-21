@@ -49,7 +49,20 @@ export default function SendResetCode() {
         }
 
         const formData = new FormData(event.currentTarget);
+        const token = formData.get("cf-turnstile-response");
         const email = formData.get("email");
+
+        if (!token) {
+            setStyles((draft) => {
+                draft.turnstile = {
+                    error: true,
+                    text: STYLES_ERROR_TYPES.TURNSTILE_ERROR,
+                };
+            });
+            setIsLoading(false);
+
+            return;
+        }
 
         if (!email) {
             setStyles((draft) => {
@@ -81,6 +94,7 @@ export default function SendResetCode() {
             method: API_REQUEST_METHODS.POST,
             body: JSON.stringify({
                 email: email,
+                token: token,
             }),
         });
 
@@ -209,7 +223,7 @@ export default function SendResetCode() {
                             }
                             {
                                 (styles.turnstile.error) && (
-                                    <AlertBlock>
+                                    <AlertBlock tailwindClasses="text-red-400 justify-center">
                                         {styles.turnstile.text}
                                     </AlertBlock>
                                 )

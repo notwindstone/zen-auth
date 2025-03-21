@@ -10,6 +10,8 @@ import { generateSecurePassword } from "@/utils/secure/generateSecurePassword";
 import { DecrementResetRateLimit, RateLimit, ResetRateLimit } from "@/lib/ratelimit/ratelimit";
 import { EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT } from "@/configs/constants";
 import validateEmail from "@/utils/secure/validateEmail";
+import { validateTurnstileToken } from "next-turnstile";
+import { v4 as uuid } from "uuid";
 
 export async function POST(request: NextRequest): Promise<Response> {
     let data;
@@ -23,6 +25,13 @@ export async function POST(request: NextRequest): Promise<Response> {
     }
 
     const email = data?.email;
+    const token = data?.token;
+
+    if (!token) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.NETWORK_AUTHENTICATION_REQUIRED,
+        });
+    }
 
     if (!email) {
         return new Response(null, {
@@ -57,6 +66,19 @@ export async function POST(request: NextRequest): Promise<Response> {
     if (!rateLimitResult.success) {
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS,
+        });
+    }
+
+    const turnstileResponse = await validateTurnstileToken({
+        token,
+        secretKey: process.env.TURNSTILE_SECRET_KEY!,
+        idempotencyKey: uuid(),
+        sandbox: process.env.NODE_ENV === "development",
+    });
+
+    if (!turnstileResponse.success) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.NETWORK_AUTHENTICATION_REQUIRED,
         });
     }
 
