@@ -17,17 +17,20 @@ export default function getStylesErrorData({
     let rtlError = STYLES_ERROR_INITIAL_DATA;
     let usernameError = STYLES_ERROR_INITIAL_DATA;
     let emailError = STYLES_ERROR_INITIAL_DATA;
+    let passwordError = STYLES_ERROR_INITIAL_DATA;
+    let codeError = STYLES_ERROR_INITIAL_DATA;
+
+    const somethingWentWrong = {
+        error: true,
+        text: STYLES_ERROR_TYPES.SOMETHING_WENT_WRONG,
+    };
 
     switch (status) {
         case API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR:
-            usernameError = {
-                error: true,
-                text: STYLES_ERROR_TYPES.SOMETHING_WENT_WRONG,
-            };
-            emailError = {
-                error: true,
-                text: STYLES_ERROR_TYPES.SOMETHING_WENT_WRONG,
-            };
+            usernameError = somethingWentWrong;
+            emailError = somethingWentWrong;
+            passwordError = somethingWentWrong;
+            codeError = somethingWentWrong;
 
             break;
         case API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS:
@@ -56,6 +59,14 @@ export default function getStylesErrorData({
             emailError = {
                 error: true,
                 text: STYLES_ERROR_TYPES.EMAIL_FORMAT,
+            };
+            passwordError = {
+                error: true,
+                text: STYLES_ERROR_TYPES.PASSWORD_FORMAT,
+            };
+            codeError = {
+                error: true,
+                text: STYLES_ERROR_TYPES.CODE_FORMAT,
             };
 
             break;
@@ -91,15 +102,18 @@ export default function getStylesErrorData({
             }
 
             break;
+        case API_STATUS_CODES.ERROR.UNAUTHORIZED:
+            codeError = {
+                error: true,
+                text: STYLES_ERROR_TYPES.CODE_FAIL,
+            };
+
+            break;
         default:
-            usernameError = {
-                error: true,
-                text: STYLES_ERROR_TYPES.SOMETHING_WENT_WRONG,
-            };
-            emailError = {
-                error: true,
-                text: STYLES_ERROR_TYPES.SOMETHING_WENT_WRONG,
-            };
+            usernameError = somethingWentWrong;
+            emailError = somethingWentWrong;
+            passwordError = somethingWentWrong;
+            codeError = somethingWentWrong;
 
             break;
     }
@@ -108,5 +122,7 @@ export default function getStylesErrorData({
         rtlError,
         usernameError,
         emailError,
+        passwordError,
+        codeError,
     };
 }

@@ -18,6 +18,7 @@ import { PAGE_ROUTES } from "@/configs/pages";
 import GeneralForm from "@/components/forms/GeneralForm/GeneralForm";
 import OTPInput from "@/components/forms/Inputs/OTPInput/OTPInput";
 import { OTPContext } from "@/utils/contexts/Contexts";
+import getStylesErrorData from "@/utils/queries/getStylesErrorData";
 
 export default function CodeVerification({
     username,
@@ -127,9 +128,21 @@ export default function CodeVerification({
         });
 
         if (!response.ok) {
-            // TODO
-            alert('bruh what are you doing');
+            const { status } = response;
+            const {
+                rtlError,
+                usernameError,
+                emailError,
+            } = getStylesErrorData({
+                status: status,
+                headers: response.headers,
+            });
 
+            setStyles((draft) => {
+                draft.rtl = rtlError;
+                draft.username = usernameError;
+                draft.email = emailError;
+            });
             setIsLoading({
                 submit: false,
                 email: false,
@@ -139,8 +152,9 @@ export default function CodeVerification({
         }
 
         const emailLetterId = (await response.json())?.id;
+        const routeParams = `?username=${username}&email=${email}&id=${emailLetterId}`;
 
-        router.push(`/verification?username=${username}&email=${email}&id=${emailLetterId}`);
+        router.push(PAGE_ROUTES.VERIFICATION + routeParams);
 
         setIsLoading({
             submit: false,
@@ -177,8 +191,24 @@ export default function CodeVerification({
         const password = formData.get("password");
 
         if (!username || !email || !emailLetterId || !password) {
-            // TODO
-            alert('you are stupid');
+            setStyles((draft) => {
+                draft.username = {
+                    error: !Boolean(username),
+                    text: STYLES_ERROR_TYPES.NO_NICKNAME,
+                };
+                draft.email = {
+                    error: !Boolean(email) || !Boolean(emailLetterId),
+                    text: STYLES_ERROR_TYPES.NO_EMAIL,
+                };
+                draft.password = {
+                    error: !Boolean(password),
+                    text: STYLES_ERROR_TYPES.NO_PASSWORD,
+                };
+            });
+            setIsLoading({
+                submit: false,
+                email: false,
+            });
 
             return;
         }
@@ -186,8 +216,7 @@ export default function CodeVerification({
         const isValidEmail = validateEmail({ email });
 
         if (!isValidEmail) {
-            // TODO
-            alert('you are stupid');
+
 
             return;
         }
@@ -289,7 +318,7 @@ export default function CodeVerification({
                             }}>
                                 <OTPInput />
                             </OTPContext.Provider>
-                            <PasswordInput/>
+                            <PasswordInput isError={styles.password.error} errorText={styles.password.text} />
                             {
                                 (styles.rtl.error) && (
                                     <div className="text-red-400 text-sm flex gap-2 items-center">

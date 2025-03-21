@@ -20,7 +20,9 @@ export const STYLES_ERROR_TYPES = {
     SOMETHING_WENT_WRONG: "Что-то пошло не так...",
     RETRY_AFTER: "Было отправлено слишком большое количество запросов. Попробуйте ещё раз через",
     NICKNAME_FORMAT: "Ошибка в формате никнейма.",
-    EMAIL_FORMAT: "Почта введена в неверном формате.",
+    EMAIL_FORMAT: "Ошибка в формате почты.",
+    PASSWORD_FORMAT: "Ошибка в формате пароля.",
+    CODE_FORMAT: "Ошибка в формате кода.",
     NICKNAME_IN_USE: "Никнейм занят. Попробуйте другой.",
     EMAIL_IN_USE: "Такая почта уже используется. Попробуйте другую.",
     USER_EXISTS: "Такой пользователь уже существует. Попробуйте ввести другой никнейм или почту.",
@@ -28,6 +30,8 @@ export const STYLES_ERROR_TYPES = {
     NO_EMAIL: "Почта не была указана.",
     NO_LOGIN: "Никнейм и/или почта не были указаны.",
     NO_CODE: "Код не был указан или указан неверно.",
+    NO_PASSWORD: "Пароль не был указан.",
+    CODE_FAIL: "Неверный код",
 };
 export const STYLES_ERROR_INITIAL_DATA = {
     error: false,
