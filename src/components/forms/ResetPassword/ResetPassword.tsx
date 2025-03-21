@@ -65,7 +65,7 @@ export default function ResetPassword({
                             onSubmit={(event: FormEvent<HTMLFormElement>) => handlePasswordReset(event)}
                             method="POST"
                         >
-                            <PasswordInput />
+                            <PasswordInput isError={false} errorText={""} />
                             <button
                                 className={`hover:bg-zinc-700 bg-zinc-800 transition mt-2 rounded-md p-2 text-white h-[40px]`}
                                 type="submit"
