@@ -110,6 +110,17 @@ export default function getStylesErrorData({
             };
 
             break;
+        case API_STATUS_CODES.ERROR.NOT_FOUND:
+            usernameError = {
+                error: true,
+                text: STYLES_ERROR_TYPES.CREDENTIALS_ERROR,
+            };
+            passwordError = {
+                error: true,
+                text: STYLES_ERROR_TYPES.CREDENTIALS_ERROR,
+            };
+
+            break;
         case API_STATUS_CODES.SERVER.NETWORK_AUTHENTICATION_REQUIRED:
             turnstileError = {
                 error: true,

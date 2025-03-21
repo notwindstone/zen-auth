@@ -14,7 +14,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     const rateLimitResult = await RateLimit({
         token: ipAddress,
     });
-    console.log(rateLimitResult);
+
     if (types.isNativeError(rateLimitResult)) {
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     const users = await getUser({
         login,
     });
-    console.log(users);
+
     if (types.isNativeError(users)) {
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
@@ -65,6 +65,12 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     const user = users?.[0];
 
+    if (!user) {
+        return new Response(null, {
+            status: API_STATUS_CODES.ERROR.NOT_FOUND,
+        });
+    }
+
     const isValid = await comparePasswords({
         hashedPassword: user.password,
         password: password,
@@ -72,7 +78,7 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     if (!isValid) {
         return new Response(null, {
-            status: API_STATUS_CODES.ERROR.UNAUTHORIZED,
+            status: API_STATUS_CODES.ERROR.NOT_FOUND,
         });
     }
 
@@ -92,7 +98,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         browser: `${browser?.name} ${browser?.version}`,
         ipAddress: ipAddress,
     });
-    console.log(sessionResponse);
+
     if (types.isNativeError(sessionResponse)) {
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,

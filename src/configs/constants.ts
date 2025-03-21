@@ -35,6 +35,7 @@ export const STYLES_ERROR_TYPES = {
     TURNSTILE_REQUIRED: "Пожалуйста, пройдите капчу.",
     TURNSTILE_EXPIRED: "Превышено время ожидания. Попробуйте ещё раз.",
     TURNSTILE_ERROR: "Верификация не удалась. Попробуйте ещё раз.",
+    CREDENTIALS_ERROR: "Неверная почта или пароль.",
 };
 export const STYLES_ERROR_INITIAL_DATA = {
     error: false,

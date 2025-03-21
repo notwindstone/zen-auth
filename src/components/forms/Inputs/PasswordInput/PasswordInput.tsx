@@ -22,7 +22,7 @@ export default function PasswordInput({
                 <input
                     maxLength={128}
                     ref={inputRef}
-                    className={`h-8 w-full shadow-sm focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md px-2 py-1 transition-all text-black`}
+                    className={`${(isError) ? "focus:outline-red-200 hover:border-red-200 border-red-200" : "focus:outline-gray-300 hover:border-gray-300 border-gray-200"} h-8 w-full shadow-sm focus:-outline-offset-0 outline-transparent focus:outline-none border-[1px] rounded-md px-2 py-1 transition-all text-black`}
                     type={isVisible ? "text" : "password"}
                     name={"password"}
                     placeholder=""

@@ -4,13 +4,17 @@ import Link from "next/link";
 import { Shield } from "lucide-react";
 import { setSessionTokenCookie } from "@/lib/actions/cookies";
 import { getMonthForwardDate } from "@/utils/misc/getMonthForwardDate";
-import { FormEvent } from "react";
-import { API_ROUTES, API_STATUS_CODES } from "@/configs/api";
+import { FormEvent, useState } from "react";
+import { API_REQUEST_METHODS, API_ROUTES } from "@/configs/api";
 import { useRouter } from "nextjs-toploader/app";
-import { useQuery } from "@tanstack/react-query";
-import { TableSessionType, TableUserType } from "@/db/schema";
-import { NO_RETRY_ERRORS } from "@/configs/constants";
 import PasswordInput from "@/components/forms/Inputs/PasswordInput/PasswordInput";
+import GeneralForm from "@/components/forms/GeneralForm/GeneralForm";
+import { PAGE_ROUTES } from "@/configs/pages";
+import getStylesErrorData from "@/utils/queries/getStylesErrorData";
+import { useImmer } from "use-immer";
+import { StylesErrorType } from "@/types/UI/StylesError.type";
+import { STYLES_ERROR_INITIAL_DATA, STYLES_ERROR_TYPES } from "@/configs/constants";
+import AlertBlock from "@/components/misc/AlertBlock/AlertBlock";
 
 export default function LoginForm({
     token,
@@ -18,36 +22,31 @@ export default function LoginForm({
     token: string;
 }) {
     const router = useRouter();
-    const {
-        isPending,
-        error,
-        failureCount,
-        failureReason,
-    } = useQuery({
-        queryKey: [API_ROUTES.SESSION.CURRENT, token],
-        queryFn: async (): Promise<{
-            session: TableSessionType;
-            user: TableUserType;
-        }> => {
-            const response = await fetch(API_ROUTES.SESSION.CURRENT);
-
-            if (!response.ok) {
-                return Promise.reject(
-                    new Error(
-                        response.status.toString(),
-                    ),
-                );
-            }
-
-            return await response.json();
-        },
-        retry: (failureCount, error) => {
-            return !(NO_RETRY_ERRORS.has(Number(error.message)) || failureCount > 3);
-        },
+    const [isLoading, setIsLoading] = useState(false);
+    const [styles, setStyles] = useImmer<
+        Pick<
+            StylesErrorType,
+            "rtl" | "username" | "password"
+        >
+    >({
+        rtl: STYLES_ERROR_INITIAL_DATA,
+        username: STYLES_ERROR_INITIAL_DATA,
+        password: STYLES_ERROR_INITIAL_DATA,
     });
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
+
+        if (isLoading) {
+            return;
+        }
+
+        setIsLoading(true);
+        setStyles((draft) => {
+            draft.rtl = STYLES_ERROR_INITIAL_DATA;
+            draft.username = STYLES_ERROR_INITIAL_DATA;
+            draft.password = STYLES_ERROR_INITIAL_DATA;
+        });
 
         const formData = new FormData(event.currentTarget);
         const login = formData.get("login");
@@ -58,14 +57,23 @@ export default function LoginForm({
         const password = formData.get("password");
 
         if (!login || !password) {
-            // TODO
-            alert('you are stupid');
+            setStyles((draft) => {
+                draft.username = {
+                    error: !Boolean(login),
+                    text: STYLES_ERROR_TYPES.NO_LOGIN,
+                };
+                draft.password = {
+                    error: !Boolean(password),
+                    text: STYLES_ERROR_TYPES.NO_PASSWORD,
+                };
+            });
+            setIsLoading(false);
 
             return;
         }
 
         const response = await fetch(API_ROUTES.LOGIN, {
-            method: "POST",
+            method: API_REQUEST_METHODS.POST,
             body: JSON.stringify({
                 login: login,
                 password: password,
@@ -73,8 +81,22 @@ export default function LoginForm({
         });
 
         if (!response.ok) {
-            // TODO
-            alert('bruh what are you doing');
+            const { status } = response;
+            const {
+                rtlError,
+                usernameError,
+                passwordError,
+            } = getStylesErrorData({
+                status: status,
+                headers: response.headers,
+            });
+
+            setStyles((draft) => {
+                draft.rtl = rtlError;
+                draft.username = usernameError;
+                draft.password = passwordError;
+            });
+            setIsLoading(false);
 
             return;
         }
@@ -86,29 +108,12 @@ export default function LoginForm({
             token: sessionToken,
             expiresAt: getMonthForwardDate(),
         }).then(() => {
-            router.push('/profile');
+            router.push(PAGE_ROUTES.PROFILE.ROOT);
         });
     }
 
-    if (isPending) {
-        return (
-            <div>
-                <p>
-                    Loading...
-                </p>
-                {
-                    failureCount > 0 && (
-                        <p>
-                            {failureCount} retries. Current error: {failureReason?.message}
-                        </p>
-                    )
-                }
-            </div>
-        );
-    }
-
-    if (error?.message === API_STATUS_CODES.ERROR.UNAUTHORIZED.toString()) {
-        return (
+    return (
+        <GeneralForm token={token}>
             <div className="h-fit w-full max-w-[464px] bg-zinc-100 drop-shadow-xl rounded-md">
                 <div className="py-6 px-12 rounded-md drop-shadow-sm bg-white">
                     <div className="flex flex-col items-center gap-4">
@@ -142,20 +147,44 @@ export default function LoginForm({
                                 </p>
                                 <input
                                     maxLength={254}
-                                    className={`h-8 shadow-sm focus:outline-gray-300 focus:-outline-offset-0 outline-transparent focus:outline-none hover:border-gray-300 border-gray-200 border-[1px] rounded-md px-2 py-1 transition-all text-black`}
+                                    className={`${(styles.username.error) ? "focus:outline-red-200 hover:border-red-200 border-red-200" : "focus:outline-gray-300 hover:border-gray-300 border-gray-200"} h-8 shadow-sm focus:-outline-offset-0 outline-transparent focus:outline-none border-[1px] rounded-md px-2 py-1 transition-all text-black`}
                                     type={"text"}
                                     name={"login"}
                                     placeholder=""
                                     required
                                 />
+                                {
+                                    (styles.username.error) && (
+                                        <AlertBlock>
+                                            {styles.username.text}
+                                        </AlertBlock>
+                                    )
+                                }
                             </div>
-                            <PasswordInput isError={false} errorText={""} />
-                            <button
-                                className={`hover:bg-zinc-700 bg-zinc-800 transition mt-2 rounded-md p-2 text-white h-[40px]`}
-                                type="submit"
-                            >
-                                Продолжить
-                            </button>
+                            <PasswordInput
+                                isError={styles.password.error}
+                                errorText={styles.password.text}
+                            />
+                            {
+                                (styles.rtl.error) && (
+                                    <AlertBlock>
+                                        {styles.rtl.text}
+                                    </AlertBlock>
+                                )
+                            }
+                            {
+                                isLoading ? (
+                                    <div
+                                        className="h-[40px] w-full mt-2 transition animate-pulse bg-zinc-400 rounded-md"/>
+                                ) : (
+                                    <button
+                                        className={`hover:bg-zinc-700 bg-zinc-800 transition mt-2 rounded-md p-2 text-white h-[40px]`}
+                                        type="submit"
+                                    >
+                                        Продолжить
+                                    </button>
+                                )
+                            }
                         </form>
                     </div>
                 </div>
@@ -183,25 +212,6 @@ export default function LoginForm({
                     </p>
                 </div>
             </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div>
-                <p>
-                    An error has occurred: {error.message}
-                </p>
-            </div>
-        );
-    }
-
-
-    return (
-        <div>
-            <p>
-                You are logged in.
-            </p>
-        </div>
+        </GeneralForm>
     );
 }
