@@ -237,7 +237,7 @@ export default function RegisterForm({
                                 )
                             }
                             <Turnstile
-                                className="flex justify-center"
+                                className="flex w-full justify-center"
                                 siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
                                 retry="auto"
                                 refreshExpired="auto"
@@ -245,17 +245,17 @@ export default function RegisterForm({
                                 onError={() => handleTurnstileVerification({
                                     status: "error",
                                     isError: true,
-                                    errorText: "Security check failed. Please try again.",
+                                    errorText: STYLES_ERROR_TYPES.TURNSTILE_ERROR,
                                 })}
                                 onExpire={() => handleTurnstileVerification({
                                     status: "expired",
                                     isError: true,
-                                    errorText: "Security check expired. Please verify again.",
+                                    errorText: STYLES_ERROR_TYPES.TURNSTILE_EXPIRED,
                                 })}
                                 onLoad={() => handleTurnstileVerification({
                                     status: "required",
-                                    isError: false,
-                                    errorText: STYLES_ERROR_TYPES.EMPTY,
+                                    isError: true,
+                                    errorText: STYLES_ERROR_TYPES.TURNSTILE_REQUIRED,
                                 })}
                                 onVerify={() => handleTurnstileVerification({
                                     status: "success",

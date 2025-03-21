@@ -32,6 +32,9 @@ export const STYLES_ERROR_TYPES = {
     NO_CODE: "Код не был указан или указан неверно.",
     NO_PASSWORD: "Пароль не был указан.",
     CODE_FAIL: "Неверный код",
+    TURNSTILE_REQUIRED: "Пожалуйста, пройдите капчу.",
+    TURNSTILE_EXPIRED: "Превышено время ожидания. Попробуйте ещё раз.",
+    TURNSTILE_ERROR: "Верификация не удалась. Попробуйте ещё раз.",
 };
 export const STYLES_ERROR_INITIAL_DATA = {
     error: false,
