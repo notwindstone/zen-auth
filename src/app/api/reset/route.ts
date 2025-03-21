@@ -77,7 +77,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     });
 
     if (!turnstileResponse.success) {
-        await DecrementVerificationRateLimit({ token: email });
+        await DecrementResetRateLimit({ token: email });
 
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.NETWORK_AUTHENTICATION_REQUIRED,
