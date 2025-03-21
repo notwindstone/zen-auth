@@ -12,9 +12,9 @@ import { useImmer } from "use-immer";
 import GeneralForm from "@/components/forms/GeneralForm/GeneralForm";
 import getStylesErrorData from "@/utils/queries/getStylesErrorData";
 import { PAGE_ROUTES } from "@/configs/pages";
-import { Turnstile } from "next-turnstile";
 import { TurnstileStatusType } from "@/types/Auth/TurnstileStatus.type";
 import AlertBlock from "@/components/misc/AlertBlock/AlertBlock";
+import ConfiguredTurnstile from "@/components/forms/ConfiguredTurnstile/ConfiguredTurnstile";
 
 export default function RegisterForm({
     token,
@@ -230,12 +230,7 @@ export default function RegisterForm({
                                     </AlertBlock>
                                 )
                             }
-                            <Turnstile
-                                className="flex w-full justify-center"
-                                siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
-                                retry="auto"
-                                refreshExpired="auto"
-                                sandbox={process.env.NODE_ENV === "development"}
+                            <ConfiguredTurnstile
                                 onError={() => handleTurnstileVerification({
                                     status: "error",
                                     isError: true,

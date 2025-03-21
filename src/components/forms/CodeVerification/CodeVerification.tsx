@@ -32,10 +32,11 @@ export default function CodeVerification({
     emailLetterId: string | null;
     token: string;
 }) {
+    const router = useRouter();
+    const [isResend, setIsResend] = useState(false);
     const [otp, setOtp] = useState<Array<string | number>>(
         Array(CODE_DIGITS_COUNT).fill(""),
     );
-    const router = useRouter();
     const [isLoading, setIsLoading] = useState({
         submit: false,
         email: false,
@@ -92,6 +93,12 @@ export default function CodeVerification({
 
     async function handleResend() {
         if (isLoading.submit) {
+            return;
+        }
+
+        if (!isResend) {
+            setIsResend(true);
+
             return;
         }
 
