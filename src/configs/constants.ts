@@ -36,6 +36,7 @@ export const STYLES_ERROR_TYPES = {
     TURNSTILE_EXPIRED: "Превышено время ожидания. Попробуйте ещё раз.",
     TURNSTILE_ERROR: "Верификация не удалась. Попробуйте ещё раз.",
     CREDENTIALS_ERROR: "Неверная почта или пароль.",
+    EMAIL_NOT_FOUND: "Пользователя с такой почтой не существует.",
 };
 export const STYLES_ERROR_INITIAL_DATA = {
     error: false,

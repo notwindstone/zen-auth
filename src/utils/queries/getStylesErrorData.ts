@@ -119,6 +119,10 @@ export default function getStylesErrorData({
                 error: true,
                 text: STYLES_ERROR_TYPES.CREDENTIALS_ERROR,
             };
+            emailError = {
+                error: true,
+                text: STYLES_ERROR_TYPES.EMAIL_NOT_FOUND,
+            };
 
             break;
         case API_STATUS_CODES.SERVER.NETWORK_AUTHENTICATION_REQUIRED:
