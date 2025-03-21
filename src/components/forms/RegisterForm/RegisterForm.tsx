@@ -255,7 +255,7 @@ export default function RegisterForm({
                             {
                                 (turnstileStatus === "required") && (
                                     <AlertBlock tailwindClasses="text-orange-400 justify-center">
-                                        {styles.turnstile.text}
+                                        {STYLES_ERROR_TYPES.TURNSTILE_REQUIRED}
                                     </AlertBlock>
                                 )
                             }

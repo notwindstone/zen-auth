@@ -9,7 +9,7 @@ export default function ConfiguredTurnstile({
     onError?: () => void;
     onExpire?: () => void;
     onLoad?: () => void;
-    onVerify?: () => void;
+    onVerify?: (token?: string) => void;
 }) {
     return (
         <Turnstile

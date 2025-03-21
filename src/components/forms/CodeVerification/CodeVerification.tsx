@@ -1,7 +1,7 @@
 "use client";
 
 import { Signature } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import Link from "next/link";
 import { API_REQUEST_METHODS, API_ROUTES } from "@/configs/api";
 import { useRouter } from "nextjs-toploader/app";
@@ -20,6 +20,8 @@ import OTPInput from "@/components/forms/Inputs/OTPInput/OTPInput";
 import { OTPContext } from "@/utils/contexts/Contexts";
 import getStylesErrorData from "@/utils/queries/getStylesErrorData";
 import AlertBlock from "@/components/misc/AlertBlock/AlertBlock";
+import ConfiguredTurnstile from "@/components/forms/ConfiguredTurnstile/ConfiguredTurnstile";
+import { TurnstileStatusType } from "@/types/Auth/TurnstileStatus.type";
 
 export default function CodeVerification({
     username,
@@ -33,6 +35,8 @@ export default function CodeVerification({
     token: string;
 }) {
     const router = useRouter();
+    const turnstileToken = useRef<string | null | undefined>(null);
+    const [turnstileStatus, setTurnstileStatus] = useState<TurnstileStatusType | null>(null);
     const [isResend, setIsResend] = useState(false);
     const [otp, setOtp] = useState<Array<string | number>>(
         Array(CODE_DIGITS_COUNT).fill(""),
@@ -115,6 +119,32 @@ export default function CodeVerification({
             draft.turnstile = STYLES_ERROR_INITIAL_DATA;
         });
 
+        if (turnstileStatus !== "success") {
+            setIsLoading({
+                submit: false,
+                email: false,
+            });
+
+            return;
+        }
+
+        const token = turnstileToken.current;
+
+        if (!token) {
+            setStyles((draft) => {
+                draft.turnstile = {
+                    error: true,
+                    text: STYLES_ERROR_TYPES.TURNSTILE_ERROR,
+                };
+            });
+            setIsLoading({
+                submit: false,
+                email: false,
+            });
+
+            return;
+        }
+
         if (!username || !email) {
             setStyles((draft) => {
                 draft.username = {
@@ -139,6 +169,7 @@ export default function CodeVerification({
             body: JSON.stringify({
                 username: username,
                 email: email,
+                token: token,
             }),
         });
 
@@ -301,6 +332,24 @@ export default function CodeVerification({
         });
     }
 
+    function handleTurnstileVerification({
+        status,
+        isError,
+        errorText,
+    }: {
+        status: TurnstileStatusType;
+        isError: boolean;
+        errorText: string;
+    }) {
+        setTurnstileStatus(status);
+        setStyles((draft) => {
+            draft.turnstile = {
+                error: isError,
+                text: errorText,
+            };
+        });
+    }
+
     return (
         <GeneralForm token={token}>
             <div className="h-fit w-full max-w-[464px] bg-zinc-100 drop-shadow-xl rounded-md">
@@ -406,8 +455,57 @@ export default function CodeVerification({
                         </button>
                     </p>
                     {
+                        isResend && (
+                            <div className="w-full px-12 py-2">
+                                <div
+                                    className="rounded-md w-full h-32 bg-white border-[1px] border-gray-200 flex flex-col items-center justify-center text-center text-lg font-semibold text-black gap-2"
+                                >
+                                    <ConfiguredTurnstile
+                                        onError={() => handleTurnstileVerification({
+                                            status: "error",
+                                            isError: true,
+                                            errorText: STYLES_ERROR_TYPES.TURNSTILE_ERROR,
+                                        })}
+                                        onExpire={() => handleTurnstileVerification({
+                                            status: "expired",
+                                            isError: true,
+                                            errorText: STYLES_ERROR_TYPES.TURNSTILE_EXPIRED,
+                                        })}
+                                        onLoad={() => handleTurnstileVerification({
+                                            status: "required",
+                                            isError: false,
+                                            errorText: STYLES_ERROR_TYPES.TURNSTILE_REQUIRED,
+                                        })}
+                                        onVerify={(token?: string) => {
+                                            handleTurnstileVerification({
+                                                status: "success",
+                                                isError: false,
+                                                errorText: STYLES_ERROR_TYPES.EMPTY,
+                                            });
+                                            turnstileToken.current = token;
+                                        }}
+                                    />
+                                    {
+                                        (turnstileStatus === "required") && (
+                                            <AlertBlock tailwindClasses="text-orange-400 justify-center">
+                                                {STYLES_ERROR_TYPES.TURNSTILE_REQUIRED}
+                                            </AlertBlock>
+                                        )
+                                    }
+                                </div>
+                            </div>
+                        )
+                    }
+                    {
+                        (styles.turnstile.error) && (
+                            <AlertBlock tailwindClasses="text-red-400 justify-center">
+                                {styles.turnstile.text}
+                            </AlertBlock>
+                        )
+                    }
+                    {
                         (styles.username.error || styles.email.error) && (
-                            <AlertBlock>
+                            <AlertBlock tailwindClasses="text-red-400 justify-center">
                                 {styles.username.text ?? styles.email.text}
                             </AlertBlock>
                         )
