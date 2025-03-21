@@ -24,6 +24,7 @@ export const API_STATUS_CODES = {
     },
     SERVER: {
         INTERNAL_SERVER_ERROR: 500,
+        NETWORK_AUTHENTICATION_REQUIRED: 511,
     },
 };
 export const API_REQUEST_METHODS = {

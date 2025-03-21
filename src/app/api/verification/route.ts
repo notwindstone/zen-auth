@@ -82,7 +82,7 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     if (!turnstileResponse.success) {
         return new Response(null, {
-            status: API_STATUS_CODES.ERROR.BAD_REQUEST,
+            status: API_STATUS_CODES.SERVER.NETWORK_AUTHENTICATION_REQUIRED,
         });
     }
 

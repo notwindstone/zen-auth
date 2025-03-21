@@ -109,6 +109,7 @@ export default function RegisterForm({
                 rtlError,
                 usernameError,
                 emailError,
+                turnstileError,
             } = getStylesErrorData({
                 status: status,
                 headers: response.headers,
@@ -118,6 +119,7 @@ export default function RegisterForm({
                 draft.rtl = rtlError;
                 draft.username = usernameError;
                 draft.email = emailError;
+                draft.turnstile = turnstileError;
             });
             setIsLoading(false);
 
@@ -254,7 +256,7 @@ export default function RegisterForm({
                                 })}
                                 onLoad={() => handleTurnstileVerification({
                                     status: "required",
-                                    isError: true,
+                                    isError: false,
                                     errorText: STYLES_ERROR_TYPES.TURNSTILE_REQUIRED,
                                 })}
                                 onVerify={() => handleTurnstileVerification({
@@ -264,8 +266,18 @@ export default function RegisterForm({
                                 })}
                             />
                             {
+                                (turnstileStatus === "required") && (
+                                    <div className="justify-center text-orange-400 text-sm flex gap-2 items-center">
+                                        <CircleAlert className="shrink-0" size={20}/>
+                                        <p>
+                                            {styles.turnstile.text}
+                                        </p>
+                                    </div>
+                                )
+                            }
+                            {
                                 (styles.turnstile.error) && (
-                                    <div className="text-red-400 text-sm flex gap-2 items-center">
+                                    <div className="justify-center text-red-400 text-sm flex gap-2 items-center">
                                         <CircleAlert className="shrink-0" size={20}/>
                                         <p>
                                             {styles.turnstile.text}

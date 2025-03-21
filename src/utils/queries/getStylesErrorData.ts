@@ -19,6 +19,7 @@ export default function getStylesErrorData({
     let emailError = STYLES_ERROR_INITIAL_DATA;
     let passwordError = STYLES_ERROR_INITIAL_DATA;
     let codeError = STYLES_ERROR_INITIAL_DATA;
+    let turnstileError = STYLES_ERROR_INITIAL_DATA;
 
     const somethingWentWrong = {
         error: true,
@@ -109,6 +110,13 @@ export default function getStylesErrorData({
             };
 
             break;
+        case API_STATUS_CODES.SERVER.NETWORK_AUTHENTICATION_REQUIRED:
+            turnstileError = {
+                error: true,
+                text: STYLES_ERROR_TYPES.TURNSTILE_ERROR,
+            };
+
+            break;
         default:
             usernameError = somethingWentWrong;
             emailError = somethingWentWrong;
@@ -124,5 +132,6 @@ export default function getStylesErrorData({
         emailError,
         passwordError,
         codeError,
+        turnstileError,
     };
 }
