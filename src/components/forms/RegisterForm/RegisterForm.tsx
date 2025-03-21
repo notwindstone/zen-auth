@@ -4,7 +4,7 @@ import { useRouter } from "nextjs-toploader/app";
 import { API_REQUEST_METHODS, API_ROUTES } from "@/configs/api";
 import { STYLES_ERROR_INITIAL_DATA, STYLES_ERROR_TYPES } from "@/configs/constants";
 import { FormEvent, useState } from "react";
-import { CircleAlert, SquareAsterisk } from "lucide-react";
+import { SquareAsterisk } from "lucide-react";
 import Link from "next/link";
 import validateEmail from "@/utils/secure/validateEmail";
 import { StylesErrorType } from "@/types/UI/StylesError.type";
@@ -14,6 +14,7 @@ import getStylesErrorData from "@/utils/queries/getStylesErrorData";
 import { PAGE_ROUTES } from "@/configs/pages";
 import { Turnstile } from "next-turnstile";
 import { TurnstileStatusType } from "@/types/Auth/TurnstileStatus.type";
+import AlertBlock from "@/components/misc/AlertBlock/AlertBlock";
 
 export default function RegisterForm({
     token,
@@ -195,12 +196,9 @@ export default function RegisterForm({
                                 />
                                 {
                                     (styles.username.error) && (
-                                        <div className="text-red-400 text-sm flex gap-2 items-center">
-                                            <CircleAlert className="shrink-0" size={20}/>
-                                            <p>
-                                                {styles.username.text}
-                                            </p>
-                                        </div>
+                                        <AlertBlock>
+                                            {styles.username.text}
+                                        </AlertBlock>
                                     )
                                 }
                             </div>
@@ -219,23 +217,17 @@ export default function RegisterForm({
                                 />
                                 {
                                     (styles.email.error) && (
-                                        <div className="text-red-400 text-sm flex gap-2 items-center">
-                                            <CircleAlert className="shrink-0" size={20}/>
-                                            <p>
-                                                {styles.email.text}
-                                            </p>
-                                        </div>
+                                        <AlertBlock>
+                                            {styles.email.text}
+                                        </AlertBlock>
                                     )
                                 }
                             </div>
                             {
                                 (styles.rtl.error) && (
-                                    <div className="text-red-400 text-sm flex gap-2 items-center">
-                                        <CircleAlert className="shrink-0" size={20}/>
-                                        <p>
-                                            {styles.rtl.text}
-                                        </p>
-                                    </div>
+                                    <AlertBlock>
+                                        {styles.rtl.text}
+                                    </AlertBlock>
                                 )
                             }
                             <Turnstile
@@ -267,22 +259,16 @@ export default function RegisterForm({
                             />
                             {
                                 (turnstileStatus === "required") && (
-                                    <div className="justify-center text-orange-400 text-sm flex gap-2 items-center">
-                                        <CircleAlert className="shrink-0" size={20}/>
-                                        <p>
-                                            {styles.turnstile.text}
-                                        </p>
-                                    </div>
+                                    <AlertBlock tailwindClasses="text-orange-400 justify-center">
+                                        {styles.turnstile.text}
+                                    </AlertBlock>
                                 )
                             }
                             {
                                 (styles.turnstile.error) && (
-                                    <div className="justify-center text-red-400 text-sm flex gap-2 items-center">
-                                        <CircleAlert className="shrink-0" size={20}/>
-                                        <p>
-                                            {styles.turnstile.text}
-                                        </p>
-                                    </div>
+                                    <AlertBlock>
+                                        {styles.turnstile.text}
+                                    </AlertBlock>
                                 )
                             }
                             {

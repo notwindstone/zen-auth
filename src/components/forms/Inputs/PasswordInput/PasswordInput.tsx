@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
-import { CircleAlert, Eye, EyeClosed } from "lucide-react";
+import { Eye, EyeClosed } from "lucide-react";
 import { PASSWORD_LENGTH_LIMIT } from "@/configs/constants";
+import AlertBlock from "@/components/misc/AlertBlock/AlertBlock";
 
 export default function PasswordInput({
     isError,
@@ -71,12 +72,9 @@ export default function PasswordInput({
             </div>
             {
                 (isError) && (
-                    <div className="text-red-400 text-sm flex gap-2 items-center">
-                        <CircleAlert className="shrink-0" size={20}/>
-                        <p>
-                            {errorText}
-                        </p>
-                    </div>
+                    <AlertBlock>
+                        {errorText}
+                    </AlertBlock>
                 )
             }
         </div>

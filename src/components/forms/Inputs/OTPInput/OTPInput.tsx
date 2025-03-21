@@ -1,7 +1,7 @@
-import { CircleAlert } from "lucide-react";
 import { DIGITS_ARRAY } from "@/configs/constants";
 import { useContext, useRef } from "react";
 import { OTPContext } from "@/utils/contexts/Contexts";
+import AlertBlock from "@/components/misc/AlertBlock/AlertBlock";
 
 export default function OTPInput() {
     const {
@@ -94,12 +94,9 @@ export default function OTPInput() {
             </div>
             {
                 (isError) && (
-                    <div className="text-red-400 text-sm flex gap-2 items-center">
-                        <CircleAlert className="shrink-0" size={20}/>
-                        <p>
-                            {errorText}
-                        </p>
-                    </div>
+                    <AlertBlock>
+                        {errorText}
+                    </AlertBlock>
                 )
             }
         </div>

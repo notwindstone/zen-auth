@@ -1,6 +1,6 @@
 "use client";
 
-import { CircleAlert, Signature } from "lucide-react";
+import { Signature } from "lucide-react";
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { API_REQUEST_METHODS, API_ROUTES } from "@/configs/api";
@@ -19,6 +19,7 @@ import GeneralForm from "@/components/forms/GeneralForm/GeneralForm";
 import OTPInput from "@/components/forms/Inputs/OTPInput/OTPInput";
 import { OTPContext } from "@/utils/contexts/Contexts";
 import getStylesErrorData from "@/utils/queries/getStylesErrorData";
+import AlertBlock from "@/components/misc/AlertBlock/AlertBlock";
 
 export default function CodeVerification({
     username,
@@ -330,12 +331,9 @@ export default function CodeVerification({
                             <PasswordInput isError={styles.password.error} errorText={styles.password.text} />
                             {
                                 (styles.rtl.error) && (
-                                    <div className="text-red-400 text-sm flex gap-2 items-center">
-                                        <CircleAlert className="shrink-0" size={20}/>
-                                        <p>
-                                            {styles.rtl.text}
-                                        </p>
-                                    </div>
+                                    <AlertBlock>
+                                        {styles.rtl.text}
+                                    </AlertBlock>
                                 )
                             }
                             {
@@ -402,12 +400,9 @@ export default function CodeVerification({
                     </p>
                     {
                         (styles.username.error || styles.email.error) && (
-                            <div className="text-red-400 text-center mx-auto text-sm flex gap-2 items-center">
-                                <CircleAlert className="shrink-0" size={20}/>
-                                <p>
-                                    {styles.username.text ?? styles.email.text}
-                                </p>
-                            </div>
+                            <AlertBlock>
+                                {styles.username.text ?? styles.email.text}
+                            </AlertBlock>
                         )
                     }
                     <div
