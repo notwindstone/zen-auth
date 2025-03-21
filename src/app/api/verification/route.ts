@@ -28,7 +28,13 @@ export async function POST(request: NextRequest): Promise<Response> {
     const username = data?.username;
     const token = data?.token;
 
-    if (!email || !username || !token) {
+    if (!token) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.NETWORK_AUTHENTICATION_REQUIRED,
+        });
+    }
+
+    if (!email || !username) {
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.BAD_REQUEST,
         });

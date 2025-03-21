@@ -46,7 +46,7 @@ export default function CodeVerification({
     const [styles, setStyles] = useImmer<
         Pick<
             StylesErrorType,
-            "rtl" | "username" | "email" | "code" | "password"
+            "rtl" | "username" | "email" | "code" | "password" | "turnstile"
         >
     >({
         rtl: STYLES_ERROR_INITIAL_DATA,
@@ -54,6 +54,7 @@ export default function CodeVerification({
         email: STYLES_ERROR_INITIAL_DATA,
         code: STYLES_ERROR_INITIAL_DATA,
         password: STYLES_ERROR_INITIAL_DATA,
+        turnstile: STYLES_ERROR_INITIAL_DATA,
     });
 
     async function checkEmailStatus() {
@@ -103,6 +104,7 @@ export default function CodeVerification({
             draft.rtl = STYLES_ERROR_INITIAL_DATA;
             draft.code = STYLES_ERROR_INITIAL_DATA;
             draft.password = STYLES_ERROR_INITIAL_DATA;
+            draft.turnstile = STYLES_ERROR_INITIAL_DATA;
         });
 
         if (!username || !email) {
@@ -138,6 +140,7 @@ export default function CodeVerification({
                 rtlError,
                 usernameError,
                 emailError,
+                turnstileError,
             } = getStylesErrorData({
                 status: status,
                 headers: response.headers,
@@ -147,6 +150,7 @@ export default function CodeVerification({
                 draft.rtl = rtlError;
                 draft.username = usernameError;
                 draft.email = emailError;
+                draft.turnstile = turnstileError;
             });
             setIsLoading({
                 submit: false,
