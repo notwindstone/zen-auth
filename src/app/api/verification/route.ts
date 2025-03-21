@@ -10,6 +10,8 @@ import { getIpAddress } from "@/utils/secure/getIpAddress";
 import { DecrementVerificationRateLimit, RateLimit, VerificationRateLimit } from "@/lib/ratelimit/ratelimit";
 import { CODE_DIGITS_COUNT, EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT, USERNAME_LENGTH_LIMIT } from "@/configs/constants";
 import validateEmail from "@/utils/secure/validateEmail";
+import { validateTurnstileToken } from "next-turnstile";
+import { v4 as uuid } from "uuid";
 
 export async function POST(request: NextRequest): Promise<Response> {
     let data;
@@ -24,8 +26,9 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     const email = data?.email;
     const username = data?.username;
+    const token = data?.token;
 
-    if (!email || !username) {
+    if (!email || !username || !token) {
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.BAD_REQUEST,
         });
@@ -67,6 +70,19 @@ export async function POST(request: NextRequest): Promise<Response> {
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS,
             headers: headers,
+        });
+    }
+
+    const turnstileResponse = await validateTurnstileToken({
+        token,
+        secretKey: process.env.TURNSTILE_SECRET_KEY!,
+        idempotencyKey: uuid(),
+        sandbox: process.env.NODE_ENV === "development",
+    });
+
+    if (!turnstileResponse.success) {
+        return new Response(null, {
+            status: API_STATUS_CODES.ERROR.BAD_REQUEST,
         });
     }
 
