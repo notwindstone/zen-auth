@@ -264,7 +264,16 @@ export default function CodeVerification({
         const isValidEmail = validateEmail({ email });
 
         if (!isValidEmail) {
-
+            setStyles((draft) => {
+                draft.email = {
+                    error: true,
+                    text: STYLES_ERROR_TYPES.EMAIL_FORMAT,
+                };
+            });
+            setIsLoading({
+                submit: false,
+                email: false,
+            });
 
             return;
         }
@@ -300,8 +309,29 @@ export default function CodeVerification({
         });
 
         if (!verificationResponse.ok) {
-            // TODO
-            alert('bruh what are you doing');
+            const { status } = verificationResponse;
+            const {
+                rtlError,
+                usernameError,
+                emailError,
+                codeError,
+                passwordError,
+            } = getStylesErrorData({
+                status: status,
+                headers: verificationResponse.headers,
+            });
+
+            setStyles((draft) => {
+                draft.rtl = rtlError;
+                draft.username = usernameError;
+                draft.email = emailError;
+                draft.code = codeError;
+                draft.password = passwordError;
+            });
+            setIsLoading({
+                submit: false,
+                email: false,
+            });
 
             return;
         }
@@ -313,10 +343,27 @@ export default function CodeVerification({
                 password: password,
             }),
         });
-        console.log(loginResponse);
+
         if (!loginResponse.ok) {
-            // TODO
-            alert('registration was successful, but login failed');
+            const { status } = verificationResponse;
+            const {
+                rtlError,
+                usernameError,
+                passwordError,
+            } = getStylesErrorData({
+                status: status,
+                headers: verificationResponse.headers,
+            });
+
+            setStyles((draft) => {
+                draft.rtl = rtlError;
+                draft.username = usernameError;
+                draft.password = passwordError;
+            });
+            setIsLoading({
+                submit: false,
+                email: false,
+            });
 
             return;
         }
