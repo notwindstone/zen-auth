@@ -74,7 +74,6 @@ export default function CodeVerification({
                 email: true,
             };
         });
-
         setEmailLetterData({
             show: true,
             status: "",
@@ -86,7 +85,6 @@ export default function CodeVerification({
             show: true,
             status: translateEmailStatus({ status: emailStatus }),
         });
-
         setIsLoading((state) => {
             return {
                 ...state,
