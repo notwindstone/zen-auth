@@ -43,7 +43,12 @@ export default function CodeVerification({
         show: false,
         status: "",
     });
-    const [styles, setStyles] = useImmer<StylesErrorType>({
+    const [styles, setStyles] = useImmer<
+        Pick<
+            StylesErrorType,
+            "rtl" | "username" | "email" | "code" | "password"
+        >
+    >({
         rtl: STYLES_ERROR_INITIAL_DATA,
         username: STYLES_ERROR_INITIAL_DATA,
         email: STYLES_ERROR_INITIAL_DATA,

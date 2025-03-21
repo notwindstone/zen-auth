@@ -1,0 +1,1 @@
+export type TurnstileStatusType = "success" | "error" | "expired" | "required";

@@ -12,6 +12,8 @@ import { useImmer } from "use-immer";
 import GeneralForm from "@/components/forms/GeneralForm/GeneralForm";
 import getStylesErrorData from "@/utils/queries/getStylesErrorData";
 import { PAGE_ROUTES } from "@/configs/pages";
+import { Turnstile } from "next-turnstile";
+import { TurnstileStatusType } from "@/types/Auth/TurnstileStatus.type";
 
 export default function RegisterForm({
     token,
@@ -23,16 +25,18 @@ export default function RegisterForm({
     emailPlaceholder: string;
 }) {
     const router = useRouter();
+    const [turnstileStatus, setTurnstileStatus] = useState<TurnstileStatusType | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [styles, setStyles] = useImmer<
         Pick<
             StylesErrorType,
-            "rtl" | "username" | "email"
+            "rtl" | "username" | "email" | "turnstile"
         >
     >({
         rtl: STYLES_ERROR_INITIAL_DATA,
         username: STYLES_ERROR_INITIAL_DATA,
         email: STYLES_ERROR_INITIAL_DATA,
+        turnstile: STYLES_ERROR_INITIAL_DATA,
     });
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
@@ -49,7 +53,14 @@ export default function RegisterForm({
             draft.email = STYLES_ERROR_INITIAL_DATA;
         });
 
+        if (turnstileStatus !== "success") {
+            setIsLoading(false);
+
+            return;
+        }
+
         const formData = new FormData(event.currentTarget);
+        const token = formData.get("cf-turnstile-response");
         const username = formData.get("username");
         const email = formData.get("email");
 
@@ -88,6 +99,7 @@ export default function RegisterForm({
             body: JSON.stringify({
                 username: username,
                 email: email,
+                token: token,
             }),
         });
 
@@ -117,6 +129,24 @@ export default function RegisterForm({
 
         setIsLoading(false);
         router.push(PAGE_ROUTES.VERIFICATION + routeParams);
+    }
+
+    function handleTurnstileVerification({
+        status,
+        isError,
+        errorText,
+    }: {
+        status: TurnstileStatusType;
+        isError: boolean;
+        errorText: string;
+    }) {
+        setTurnstileStatus(status);
+        setStyles((draft) => {
+            draft.turnstile = {
+                error: isError,
+                text: errorText,
+            };
+        });
     }
 
     return (
@@ -202,6 +232,43 @@ export default function RegisterForm({
                                         <CircleAlert className="shrink-0" size={20}/>
                                         <p>
                                             {styles.rtl.text}
+                                        </p>
+                                    </div>
+                                )
+                            }
+                            <Turnstile
+                                className="flex justify-center"
+                                siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+                                retry="auto"
+                                refreshExpired="auto"
+                                sandbox={process.env.NODE_ENV === "development"}
+                                onError={() => handleTurnstileVerification({
+                                    status: "error",
+                                    isError: true,
+                                    errorText: "Security check failed. Please try again.",
+                                })}
+                                onExpire={() => handleTurnstileVerification({
+                                    status: "expired",
+                                    isError: true,
+                                    errorText: "Security check expired. Please verify again.",
+                                })}
+                                onLoad={() => handleTurnstileVerification({
+                                    status: "required",
+                                    isError: false,
+                                    errorText: STYLES_ERROR_TYPES.EMPTY,
+                                })}
+                                onVerify={() => handleTurnstileVerification({
+                                    status: "success",
+                                    isError: false,
+                                    errorText: STYLES_ERROR_TYPES.EMPTY,
+                                })}
+                            />
+                            {
+                                (styles.turnstile.error) && (
+                                    <div className="text-red-400 text-sm flex gap-2 items-center">
+                                        <CircleAlert className="shrink-0" size={20}/>
+                                        <p>
+                                            {styles.turnstile.text}
                                         </p>
                                     </div>
                                 )

@@ -19,4 +19,8 @@ export type StylesErrorType = {
         error: boolean;
         text: string;
     };
+    turnstile: {
+        error: boolean;
+        text: string;
+    };
 };
