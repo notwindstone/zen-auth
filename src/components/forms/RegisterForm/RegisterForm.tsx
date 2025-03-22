@@ -15,6 +15,7 @@ import { PAGE_ROUTES } from "@/configs/pages";
 import { TurnstileStatusType } from "@/types/Auth/TurnstileStatus.type";
 import AlertBlock from "@/components/misc/AlertBlock/AlertBlock";
 import ConfiguredTurnstile from "@/components/forms/ConfiguredTurnstile/ConfiguredTurnstile";
+import { v4 as uuid } from "uuid";
 
 export default function RegisterForm({
     token,
@@ -26,6 +27,7 @@ export default function RegisterForm({
     emailPlaceholder: string;
 }) {
     const router = useRouter();
+    const [turnStileID, setTurnStileID] = useState<string>(uuid());
     const [turnstileStatus, setTurnstileStatus] = useState<TurnstileStatusType | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [styles, setStyles] = useImmer<
@@ -243,11 +245,15 @@ export default function RegisterForm({
                                 )
                             }
                             <ConfiguredTurnstile
-                                onError={() => handleTurnstileVerification({
-                                    status: "error",
-                                    isError: true,
-                                    errorText: STYLES_ERROR_TYPES.TURNSTILE_ERROR,
-                                })}
+                                id={turnStileID}
+                                onError={() => {
+                                    setTurnStileID(uuid());
+                                    handleTurnstileVerification({
+                                        status: "error",
+                                        isError: true,
+                                        errorText: STYLES_ERROR_TYPES.TURNSTILE_ERROR,
+                                    });
+                                }}
                                 onExpire={() => handleTurnstileVerification({
                                     status: "expired",
                                     isError: true,
