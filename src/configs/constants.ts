@@ -37,6 +37,7 @@ export const STYLES_ERROR_TYPES = {
     TURNSTILE_ERROR: "Верификация не удалась. Попробуйте ещё раз.",
     CREDENTIALS_ERROR: "Неверная почта или пароль.",
     EMAIL_NOT_FOUND: "Пользователя с такой почтой не существует.",
+    WRONG_RESET_TOKEN: "Неверный токен сброса пароля.",
 };
 export const STYLES_ERROR_INITIAL_DATA = {
     error: false,

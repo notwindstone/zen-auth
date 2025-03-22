@@ -108,6 +108,10 @@ export default function getStylesErrorData({
                 error: true,
                 text: STYLES_ERROR_TYPES.CODE_FAIL,
             };
+            passwordError = {
+                error: true,
+                text: STYLES_ERROR_TYPES.WRONG_RESET_TOKEN,
+            };
 
             break;
         case API_STATUS_CODES.ERROR.NOT_FOUND:

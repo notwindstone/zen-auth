@@ -3,7 +3,7 @@
 import { Signature } from "lucide-react";
 import { FormEvent, useRef, useState } from "react";
 import Link from "next/link";
-import { API_REQUEST_METHODS, API_ROUTES } from "@/configs/api";
+import { API_REQUEST_METHODS, API_ROUTES, API_STATUS_CODES } from "@/configs/api";
 import { useRouter } from "nextjs-toploader/app";
 import { getLastEmailInfo } from "@/lib/actions/email";
 import { setSessionTokenCookie } from "@/lib/actions/cookies";
@@ -252,10 +252,6 @@ export default function CodeVerification({
 
         if (!username || !email || !emailLetterId || !password) {
             setStyles((draft) => {
-                draft.username = {
-                    error: !Boolean(username),
-                    text: STYLES_ERROR_TYPES.NO_NICKNAME,
-                };
                 draft.email = {
                     error: !Boolean(email) || !Boolean(emailLetterId),
                     text: STYLES_ERROR_TYPES.NO_EMAIL,
@@ -324,8 +320,8 @@ export default function CodeVerification({
             const { status } = verificationResponse;
             const {
                 rtlError,
-                usernameError,
                 emailError,
+                usernameError,
                 codeError,
                 passwordError,
             } = getStylesErrorData({
@@ -335,10 +331,16 @@ export default function CodeVerification({
 
             setStyles((draft) => {
                 draft.rtl = rtlError;
-                draft.username = usernameError;
                 draft.email = emailError;
                 draft.code = codeError;
-                draft.password = passwordError;
+
+                if (status !== API_STATUS_CODES.ERROR.UNAUTHORIZED) {
+                    draft.password = passwordError;
+                }
+
+                if (status === API_STATUS_CODES.ERROR.CONFLICT) {
+                    draft.username = usernameError;
+                }
             });
             setIsLoading({
                 submit: false,
@@ -357,21 +359,8 @@ export default function CodeVerification({
         });
 
         if (!loginResponse.ok) {
-            const { status } = verificationResponse;
-            const {
-                rtlError,
-                usernameError,
-                passwordError,
-            } = getStylesErrorData({
-                status: status,
-                headers: verificationResponse.headers,
-            });
+            router.push(PAGE_ROUTES.LOGIN);
 
-            setStyles((draft) => {
-                draft.rtl = rtlError;
-                draft.username = usernameError;
-                draft.password = passwordError;
-            });
             setIsLoading({
                 submit: false,
                 email: false,
@@ -564,10 +553,12 @@ export default function CodeVerification({
                         )
                     }
                     {
-                        (styles.username.error || styles.email.error) && (
-                            <AlertBlock tailwindClasses="text-red-400 justify-center">
-                                {styles.username.text ?? styles.email.text}
-                            </AlertBlock>
+                        (styles.username.error) && (
+                            <div className="px-12">
+                                <AlertBlock tailwindClasses="text-red-400 justify-center">
+                                    {styles.username.text ?? styles.email.text}
+                                </AlertBlock>
+                            </div>
                         )
                     }
                     <div

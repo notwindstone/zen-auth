@@ -173,13 +173,6 @@ export default function ResetPassword({
                                 errorText={styles.password.text}
                             />
                             {
-                                (styles.password.error) && (
-                                    <AlertBlock>
-                                        {styles.password.text}
-                                    </AlertBlock>
-                                )
-                            }
-                            {
                                 (styles.rtl.error) && (
                                     <AlertBlock>
                                         {styles.rtl.text}
