@@ -7,13 +7,35 @@ import { types } from "node:util";
 import { checkUserExistence, createUser } from "@/lib/actions/user";
 import { generateSecurePassword } from "@/utils/secure/generateSecurePassword";
 import { getIpAddress } from "@/utils/secure/getIpAddress";
-import { DecrementVerificationRateLimit, RateLimit, VerificationRateLimit } from "@/lib/ratelimit/ratelimit";
+import {
+    DecrementVerificationRateLimit,
+    GlobalRateLimit,
+    RateLimit,
+    VerificationRateLimit,
+} from "@/lib/ratelimit/ratelimit";
 import { CODE_DIGITS_COUNT, EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT, USERNAME_LENGTH_LIMIT } from "@/configs/constants";
 import validateEmail from "@/utils/secure/validateEmail";
 import { validateTurnstileToken } from "next-turnstile";
 import { v4 as uuid } from "uuid";
 
 export async function POST(request: NextRequest): Promise<Response> {
+    const routeRTLKey = request.nextUrl.pathname;
+    const globalRTLResult = await GlobalRateLimit({
+        route: routeRTLKey,
+    });
+
+    if (types.isNativeError(globalRTLResult)) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
+        });
+    }
+
+    if (!globalRTLResult.success) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.SERVICE_UNAVAILABLE,
+        });
+    }
+
     let data;
 
     try {
@@ -158,6 +180,23 @@ export async function POST(request: NextRequest): Promise<Response> {
 }
 
 export async function PUT(request: NextRequest): Promise<Response> {
+    const routeRTLKey = request.nextUrl.pathname;
+    const globalRTLResult = await GlobalRateLimit({
+        route: routeRTLKey,
+    });
+
+    if (types.isNativeError(globalRTLResult)) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
+        });
+    }
+
+    if (!globalRTLResult.success) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.SERVICE_UNAVAILABLE,
+        });
+    }
+
     const ipAddress = getIpAddress(request);
     const rateLimitResult = await RateLimit({
         token: ipAddress,

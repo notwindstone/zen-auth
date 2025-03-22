@@ -27,6 +27,12 @@ export default function getStylesErrorData({
     };
 
     switch (status) {
+        case API_STATUS_CODES.SERVER.SERVICE_UNAVAILABLE:
+            rtlError = {
+                error: true,
+                text: STYLES_ERROR_TYPES.SERVICE_UNAVAILABLE,
+            };
+            break;
         case API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR:
             usernameError = somethingWentWrong;
             emailError = somethingWentWrong;

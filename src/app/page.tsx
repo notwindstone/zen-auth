@@ -5,6 +5,7 @@ import { deleteSessionTokenCookie, setSessionTokenCookie } from "@/lib/actions/c
 import { getLastEmailInfo } from "@/lib/actions/email";
 import { useRef } from "react";
 import { getMonthForwardDate } from "@/utils/misc/getMonthForwardDate";
+import { API_ROUTES } from "@/configs/api";
 
 export default function Page() {
     const emailLetterId = useRef('');
@@ -70,6 +71,16 @@ export default function Page() {
             <p>
                 This page is temporarily client-sided.
             </p>
+            <button
+                onClick={() => {
+                    for (let i = 0; i < Math.pow(10, 3); i++) {
+                        fetch(API_ROUTES.PROFILE);
+                    }
+                }}
+                className="bg-amber-950 w-fit py-2 px-4"
+            >
+                run http requests flood?
+            </button>
             <Link href="/register" className="text-lg hover:text-gray-300 transition">
                 ~~~ {">"} here {"<"} ~~~
             </Link>
