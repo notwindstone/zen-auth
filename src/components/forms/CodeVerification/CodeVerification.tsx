@@ -216,6 +216,8 @@ export default function CodeVerification({
 
         router.push(PAGE_ROUTES.VERIFICATION + routeParams);
 
+        setTurnstileKey(uuid());
+        setIsResend(false);
         setIsLoading({
             submit: false,
             email: false,
@@ -494,14 +496,20 @@ export default function CodeVerification({
                         </p>
                         <div className="w-full h-[1px] bg-gray-200"/>
                     </div>
-                    <p className="text-center text-gray-500 font-medium">
+                    <div className="flex flex-col text-center text-gray-500 font-medium">
                         <button
                             className="text-black font-medium transition hover:text-zinc-700"
                             onClick={handleResend}
                         >
-                            Отправьте код ещё раз
+                            {
+                                isResend ? (
+                                    "Отправить код ещё раз"
+                                ) : (
+                                    "Пройдите капчу для его повторной отправки"
+                                )
+                            }
                         </button>
-                    </p>
+                    </div>
                     {
                         isResend && (
                             <div className="w-full px-12 py-2">
