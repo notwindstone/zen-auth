@@ -8,9 +8,11 @@ import handleFailure from "@/utils/queries/handleFailure";
 export default function GeneralForm({
     children,
     token,
+    initialHeight,
 }: {
     children: React.ReactNode;
     token: string;
+    initialHeight?: string | number;
 }) {
     const {
         isPending,
@@ -27,9 +29,12 @@ export default function GeneralForm({
     if (isPending) {
         return (
             <div>
-                <p>
-                    Loading...
-                </p>
+                <div
+                    style={{
+                        height: `${initialHeight}px`,
+                    }}
+                    className={"w-[464px] bg-zinc-100 drop-shadow-xl rounded-md animate-pulse"}
+                />
                 {
                     failureCount > 0 && (
                         <p>

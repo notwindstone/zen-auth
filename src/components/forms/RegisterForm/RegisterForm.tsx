@@ -29,7 +29,7 @@ export default function RegisterForm({
 }) {
     const router = useRouter();
     const [turnstileKey, setTurnstileKey] = useState<string>(uuid);
-    const [turnstileStatus, setTurnstileStatus] = useState<TurnstileStatusType | null>(null);
+    const [turnstileStatus, setTurnstileStatus] = useState<TurnstileStatusType | null>("required");
     const [isLoading, setIsLoading] = useState(false);
     const [styles, setStyles] = useImmer<
         Pick<
@@ -175,7 +175,7 @@ export default function RegisterForm({
     }
 
     return (
-        <GeneralForm token={token}>
+        <GeneralForm token={token} initialHeight="617">
             <div className="h-fit w-full max-w-[464px] bg-zinc-100 drop-shadow-xl rounded-md">
                 <div className="py-6 px-12 rounded-md drop-shadow-sm bg-white">
                     <div className="flex flex-col items-center gap-4">

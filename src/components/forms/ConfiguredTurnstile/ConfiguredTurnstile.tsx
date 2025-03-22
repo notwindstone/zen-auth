@@ -13,7 +13,7 @@ export default function ConfiguredTurnstile({
 }) {
     return (
         <Turnstile
-            className="__global-cloudflare-turnstile flex w-full justify-center"
+            className="__global-cloudflare-turnstile min-h-[65px] flex w-full justify-center"
             siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
             retry="auto"
             refreshExpired="auto"
