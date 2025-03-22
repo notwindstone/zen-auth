@@ -3,12 +3,17 @@
 import { Signature } from "lucide-react";
 import { FormEvent, useRef, useState } from "react";
 import Link from "next/link";
-import { API_REQUEST_METHODS, API_ROUTES } from "@/configs/api";
+import { API_REQUEST_METHODS, API_ROUTES, API_STATUS_CODES } from "@/configs/api";
 import { useRouter } from "nextjs-toploader/app";
 import { getLastEmailInfo } from "@/lib/actions/email";
 import { setSessionTokenCookie } from "@/lib/actions/cookies";
 import { getMonthForwardDate } from "@/utils/misc/getMonthForwardDate";
-import { CODE_DIGITS_COUNT, STYLES_ERROR_INITIAL_DATA, STYLES_ERROR_TYPES } from "@/configs/constants";
+import {
+    CODE_DIGITS_COUNT,
+    STYLES_ERROR_INITIAL_DATA,
+    STYLES_ERROR_TYPES,
+    TURNSTILE_REGISTER_ID,
+} from "@/configs/constants";
 import PasswordInput from "@/components/forms/Inputs/PasswordInput/PasswordInput";
 import validateEmail from "@/utils/secure/validateEmail";
 import translateEmailStatus from "@/utils/misc/translateEmailStatus";
@@ -22,6 +27,7 @@ import getStylesErrorData from "@/utils/queries/getStylesErrorData";
 import AlertBlock from "@/components/misc/AlertBlock/AlertBlock";
 import ConfiguredTurnstile from "@/components/forms/ConfiguredTurnstile/ConfiguredTurnstile";
 import { TurnstileStatusType } from "@/types/Auth/TurnstileStatus.type";
+import handleTurnstileReset from "@/utils/secure/handleTurnstileReset";
 
 export default function CodeVerification({
     username,
@@ -182,6 +188,10 @@ export default function CodeVerification({
                 status: status,
                 headers: response.headers,
             });
+
+            if (status === API_STATUS_CODES.SERVER.NETWORK_AUTHENTICATION_REQUIRED) {
+                handleTurnstileReset(TURNSTILE_REGISTER_ID);
+            }
 
             setStyles((draft) => {
                 draft.rtl = rtlError;
@@ -506,6 +516,7 @@ export default function CodeVerification({
                                     className="rounded-md w-full h-32 bg-white border-[1px] border-gray-200 flex flex-col items-center justify-center text-center text-lg font-semibold text-black gap-2"
                                 >
                                     <ConfiguredTurnstile
+                                        id={TURNSTILE_REGISTER_ID}
                                         onError={() => handleTurnstileVerification({
                                             status: "error",
                                             isError: true,

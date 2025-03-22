@@ -15,6 +15,7 @@ import { PAGE_ROUTES } from "@/configs/pages";
 import { TurnstileStatusType } from "@/types/Auth/TurnstileStatus.type";
 import AlertBlock from "@/components/misc/AlertBlock/AlertBlock";
 import ConfiguredTurnstile from "@/components/forms/ConfiguredTurnstile/ConfiguredTurnstile";
+import handleTurnstileReset from "@/utils/secure/handleTurnstileReset";
 
 export default function RegisterForm({
     token,
@@ -39,10 +40,6 @@ export default function RegisterForm({
         email: STYLES_ERROR_INITIAL_DATA,
         turnstile: STYLES_ERROR_INITIAL_DATA,
     });
-
-    function resetTurnstile() {
-        window?.turnstile?.reset(TURNSTILE_REGISTER_ID);
-    }
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
@@ -133,7 +130,7 @@ export default function RegisterForm({
             });
 
             if (status === API_STATUS_CODES.SERVER.NETWORK_AUTHENTICATION_REQUIRED) {
-                resetTurnstile();
+                handleTurnstileReset(TURNSTILE_REGISTER_ID);
             }
 
             setStyles((draft) => {
@@ -252,13 +249,11 @@ export default function RegisterForm({
                             }
                             <ConfiguredTurnstile
                                 id={TURNSTILE_REGISTER_ID}
-                                onError={() => {
-                                    handleTurnstileVerification({
-                                        status: "error",
-                                        isError: true,
-                                        errorText: STYLES_ERROR_TYPES.TURNSTILE_ERROR,
-                                    });
-                                }}
+                                onError={() => handleTurnstileVerification({
+                                    status: "error",
+                                    isError: true,
+                                    errorText: STYLES_ERROR_TYPES.TURNSTILE_ERROR,
+                                })}
                                 onExpire={() => handleTurnstileVerification({
                                     status: "expired",
                                     isError: true,

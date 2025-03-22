@@ -4,15 +4,16 @@ import { FormEvent, useState } from "react";
 import { RectangleEllipsis } from "lucide-react";
 import { useRouter } from "nextjs-toploader/app";
 import AlertBlock from "@/components/misc/AlertBlock/AlertBlock";
-import { STYLES_ERROR_INITIAL_DATA, STYLES_ERROR_TYPES } from "@/configs/constants";
+import { STYLES_ERROR_INITIAL_DATA, STYLES_ERROR_TYPES, TURNSTILE_RESET_ID } from "@/configs/constants";
 import ConfiguredTurnstile from "@/components/forms/ConfiguredTurnstile/ConfiguredTurnstile";
 import { TurnstileStatusType } from "@/types/Auth/TurnstileStatus.type";
 import { useImmer } from "use-immer";
 import { StylesErrorType } from "@/types/UI/StylesError.type";
 import validateEmail from "@/utils/secure/validateEmail";
-import { API_REQUEST_METHODS, API_ROUTES } from "@/configs/api";
+import { API_REQUEST_METHODS, API_ROUTES, API_STATUS_CODES } from "@/configs/api";
 import getStylesErrorData from "@/utils/queries/getStylesErrorData";
 import { PAGE_ROUTES } from "@/configs/pages";
+import handleTurnstileReset from "@/utils/secure/handleTurnstileReset";
 
 export default function SendResetCode() {
     const router = useRouter();
@@ -109,6 +110,10 @@ export default function SendResetCode() {
                 headers: response.headers,
             });
 
+            if (status === API_STATUS_CODES.SERVER.NETWORK_AUTHENTICATION_REQUIRED) {
+                handleTurnstileReset(TURNSTILE_RESET_ID);
+            }
+
             setStyles((draft) => {
                 draft.rtl = rtlError;
                 draft.email = emailError;
@@ -193,6 +198,7 @@ export default function SendResetCode() {
                                 )
                             }
                             <ConfiguredTurnstile
+                                id={TURNSTILE_RESET_ID}
                                 onError={() => handleTurnstileVerification({
                                     status: "error",
                                     isError: true,
