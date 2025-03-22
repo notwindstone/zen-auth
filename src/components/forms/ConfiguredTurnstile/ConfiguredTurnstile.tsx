@@ -1,17 +1,17 @@
 import { Turnstile } from "next-turnstile";
 
 export default function ConfiguredTurnstile({
+    id,
     onError,
     onExpire,
     onLoad,
     onVerify,
-    id,
 }: {
+    id: string;
     onError?: (error?: unknown) => void;
     onExpire?: () => void;
     onLoad?: () => void;
     onVerify?: (token?: string) => void;
-    id?: string;
 }) {
     return (
         <Turnstile

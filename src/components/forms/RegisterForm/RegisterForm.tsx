@@ -1,8 +1,8 @@
 "use client";
 
 import { useRouter } from "nextjs-toploader/app";
-import { API_REQUEST_METHODS, API_ROUTES } from "@/configs/api";
-import { STYLES_ERROR_INITIAL_DATA, STYLES_ERROR_TYPES } from "@/configs/constants";
+import { API_REQUEST_METHODS, API_ROUTES, API_STATUS_CODES } from "@/configs/api";
+import { STYLES_ERROR_INITIAL_DATA, STYLES_ERROR_TYPES, TURNSTILE_REGISTER_ID } from "@/configs/constants";
 import { FormEvent, useState } from "react";
 import { SquareAsterisk } from "lucide-react";
 import Link from "next/link";
@@ -15,7 +15,6 @@ import { PAGE_ROUTES } from "@/configs/pages";
 import { TurnstileStatusType } from "@/types/Auth/TurnstileStatus.type";
 import AlertBlock from "@/components/misc/AlertBlock/AlertBlock";
 import ConfiguredTurnstile from "@/components/forms/ConfiguredTurnstile/ConfiguredTurnstile";
-import { v4 as uuid } from "uuid";
 
 export default function RegisterForm({
     token,
@@ -27,7 +26,6 @@ export default function RegisterForm({
     emailPlaceholder: string;
 }) {
     const router = useRouter();
-    const [turnStileID, setTurnStileID] = useState<string>(uuid());
     const [turnstileStatus, setTurnstileStatus] = useState<TurnstileStatusType | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [styles, setStyles] = useImmer<
@@ -41,6 +39,10 @@ export default function RegisterForm({
         email: STYLES_ERROR_INITIAL_DATA,
         turnstile: STYLES_ERROR_INITIAL_DATA,
     });
+
+    function resetTurnstile() {
+        window?.turnstile?.reset(TURNSTILE_REGISTER_ID);
+    }
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
@@ -129,6 +131,10 @@ export default function RegisterForm({
                 status: status,
                 headers: response.headers,
             });
+
+            if (status === API_STATUS_CODES.SERVER.NETWORK_AUTHENTICATION_REQUIRED) {
+                resetTurnstile();
+            }
 
             setStyles((draft) => {
                 draft.rtl = rtlError;
@@ -245,9 +251,8 @@ export default function RegisterForm({
                                 )
                             }
                             <ConfiguredTurnstile
-                                id={turnStileID}
+                                id={TURNSTILE_REGISTER_ID}
                                 onError={() => {
-                                    setTurnStileID(uuid());
                                     handleTurnstileVerification({
                                         status: "error",
                                         isError: true,

@@ -53,3 +53,5 @@ export const SECONDS_RUSSIAN_AFTER: [
     string,
 ] = ["секунду", "секунды", "секунд"];
 export const DIGITS_ARRAY = [0,1,2,3,4,5,6,7,8,9];
+export const TURNSTILE_REGISTER_ID = "turnstile_register_zen_auth";
+export const TURNSTILE_RESET_ID = "turnstile_reset_zen_auth";
