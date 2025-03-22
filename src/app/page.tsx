@@ -5,7 +5,6 @@ import { deleteSessionTokenCookie, setSessionTokenCookie } from "@/lib/actions/c
 import { getLastEmailInfo } from "@/lib/actions/email";
 import { useRef } from "react";
 import { getMonthForwardDate } from "@/utils/misc/getMonthForwardDate";
-import { API_ROUTES } from "@/configs/api";
 
 export default function Page() {
     const emailLetterId = useRef('');
@@ -74,14 +73,14 @@ export default function Page() {
             <button
                 onClick={() => {
                     for (let i = 0; i < Math.pow(10, 3); i++) {
-                        fetch(API_ROUTES.PROFILE);
-                        fetch(API_ROUTES.LOGIN, {
+                        fetch('https://zen-auth.windstone.space/api/profile?username=notwindstone');
+                        fetch('https://zen-auth.windstone.space/api/login', {
                             method: "POST",
                         });
-                        fetch(API_ROUTES.VERIFICATION, {
+                        fetch('https://zen-auth.windstone.space/api/verification', {
                             method: "POST",
                         });
-                        fetch(API_ROUTES.RESET, {
+                        fetch('https://zen-auth.windstone.space/api/reset', {
                             method: "POST",
                         });
                     }
@@ -307,6 +306,11 @@ export default function Page() {
                     They are not fully done yet and lack some features. This is a list of some things I want to implement:
                 </p>
                 <ul className="list-[katakana] pl-10 text-zinc-400">
+                    <li>
+                        this is peak:
+                        для неавторизованных пользователей глобальный рейтлимит на основе lru-cache и локальный на основе айпи, который получается из vercel функций (а не хедеров)
+                        для авторизованных пользователей рейтлимит на основе хэша, который представляет из себя юзер айди и данные сессии (по типу браузера, операционной системы)
+                    </li>
                     <li
                         className="before:content-['▢'] before:pr-2 before:text-latte-rosewater"
                     >

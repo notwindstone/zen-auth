@@ -8,6 +8,7 @@ import { USERNAME_LENGTH_LIMIT } from "@/configs/constants";
 import { ConfiguredLRUCacheRateLimit } from "@/lib/ratelimit/lrucache";
 
 export async function GET(request: NextRequest): Promise<Response> {
+    console.log(request.headers.get('X-Forwarded-For'));
     const routeRTLKey = request.nextUrl.pathname;
     const GlobalRTLResult = ConfiguredLRUCacheRateLimit(routeRTLKey);
 
