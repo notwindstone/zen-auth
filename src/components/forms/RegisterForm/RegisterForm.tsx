@@ -189,6 +189,11 @@ export default function RegisterForm({
                         <p className="text-center text-gray-500 font-medium">
                             Добро пожаловать! Зарегистрируйтесь, чтобы продолжить.
                         </p>
+                        <div className="w-full flex flex-nowrap items-center gap-2">
+                            <a href="/api/oauth/login">
+                                github
+                            </a>
+                        </div>
                         <div
                             className="w-full flex flex-nowrap items-center gap-4"
                         >
