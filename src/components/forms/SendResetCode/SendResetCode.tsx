@@ -16,7 +16,11 @@ import { PAGE_ROUTES } from "@/configs/pages";
 import { v4 as uuid } from "uuid";
 import handleTurnstileReset from "@/utils/secure/handleTurnstileReset";
 
-export default function SendResetCode() {
+export default function SendResetCode({
+    emailFromParams,
+}: {
+    emailFromParams: string | undefined;
+}) {
     const router = useRouter();
     const [turnstileKey, setTurnstileKey] = useState<string>(uuid);
     const [turnstileStatus, setTurnstileStatus] = useState<TurnstileStatusType | null>(null);
@@ -130,7 +134,7 @@ export default function SendResetCode() {
         }
 
         const emailLetterId = (await response.json())?.id;
-        const routeParams = `?emailLetterId=${emailLetterId}`;
+        const routeParams = `?emailLetterId=${emailLetterId}&email=${email}`;
 
         setIsLoading(false);
         router.push(PAGE_ROUTES.RESET.EMAILED + routeParams);
@@ -185,6 +189,7 @@ export default function SendResetCode() {
                                     type={"text"}
                                     name={"email"}
                                     placeholder=""
+                                    defaultValue={emailFromParams}
                                     required
                                 />
                                 {

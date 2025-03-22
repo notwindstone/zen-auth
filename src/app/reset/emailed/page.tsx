@@ -7,8 +7,9 @@ export default async function Page({
 }) {
     const searchParamsStore = await searchParams;
     const emailLetterId = searchParamsStore?.emailLetterId ?? null;
+    const email = searchParamsStore?.email ?? null;
 
-    if (!emailLetterId) {
+    if (!emailLetterId || !email) {
         return (
             <>
                 something went wrong...
@@ -21,7 +22,10 @@ export default async function Page({
             <div>
                 ссылка с токеном сброса была отправлена на почту. перейдите по ней.
             </div>
-            <ResetCodeSent emailLetterId={emailLetterId} />
+            <ResetCodeSent
+                emailLetterId={emailLetterId}
+                email={email}
+            />
         </>
     );
 }

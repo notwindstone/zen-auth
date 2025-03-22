@@ -8,8 +8,10 @@ import { PAGE_ROUTES } from "@/configs/pages";
 
 export default function ResetCodeSent({
     emailLetterId,
+    email,
 }: {
     emailLetterId: string;
+    email: string;
 }) {
     const [isLoading, setIsLoading] = useState(false);
     const [emailLetterData, setEmailLetterData] = useState({
@@ -62,7 +64,7 @@ export default function ResetCodeSent({
                     {/* lmao i'm too lazy to do another handleResend() function */}
                     <Link
                         className="text-black font-medium transition hover:text-zinc-700"
-                        href={PAGE_ROUTES.RESET.SEND}
+                        href={PAGE_ROUTES.RESET.SEND + `?email=${email}`}
                     >
                         Отправьте код ещё раз
                     </Link>
