@@ -5,22 +5,15 @@ import { COOKIES_KEY } from "@/configs/constants";
 import { invalidateSession } from "@/lib/actions/session";
 import { getAllSessions } from "@/lib/routes/session/getAllSessions";
 import { TableSessionType } from "@/db/schema";
-import { GlobalRateLimit, RateLimit } from "@/lib/ratelimit/ratelimit";
+import { RateLimit } from "@/lib/ratelimit/ratelimit";
 import { types } from "node:util";
+import { ConfiguredLRUCacheRateLimit } from "@/lib/ratelimit/lrucache";
 
 export async function DELETE(request: NextRequest): Promise<Response> {
     const routeRTLKey = request.nextUrl.pathname;
-    const globalRTLResult = await GlobalRateLimit({
-        route: routeRTLKey,
-    });
+    const GlobalRTLResult = ConfiguredLRUCacheRateLimit(routeRTLKey);
 
-    if (types.isNativeError(globalRTLResult)) {
-        return new Response(null, {
-            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
-        });
-    }
-
-    if (!globalRTLResult.success) {
+    if (GlobalRTLResult) {
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.SERVICE_UNAVAILABLE,
         });

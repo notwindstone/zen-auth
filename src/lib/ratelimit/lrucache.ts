@@ -1,6 +1,11 @@
 import { LRUCache } from "lru-cache";
 
-export default function LRUCacheRateLimit({
+export const ConfiguredLRUCacheRateLimit = LRUCacheRateLimit({
+    duration: 1,
+    limit: 20,
+});
+
+export function LRUCacheRateLimit({
     duration,
     limit,
 }: {
@@ -20,10 +25,9 @@ export default function LRUCacheRateLimit({
         }
 
         tokensCount[0] += 1;
-        console.log(tokenCache.get(token), duration, token)
 
         const currentUsage = tokensCount[0];
 
-        return currentUsage >= limit;
+        return currentUsage > limit;
     };
 }

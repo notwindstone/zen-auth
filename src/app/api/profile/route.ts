@@ -5,31 +5,13 @@ import { getIpAddress } from "@/utils/secure/getIpAddress";
 import { types } from "node:util";
 import { RateLimit } from "@/lib/ratelimit/ratelimit";
 import { USERNAME_LENGTH_LIMIT } from "@/configs/constants";
-import LRUCacheRateLimit from "@/lib/ratelimit/lrucache";
-
-const globalRTLResult = LRUCacheRateLimit({
-    duration: 1,
-    limit: 2,
-});
+import { ConfiguredLRUCacheRateLimit } from "@/lib/ratelimit/lrucache";
 
 export async function GET(request: NextRequest): Promise<Response> {
     const routeRTLKey = request.nextUrl.pathname;
+    const GlobalRTLResult = ConfiguredLRUCacheRateLimit(routeRTLKey);
 
-
-
-    console.log(routeRTLKey, globalRTLResult);
-
-    return Response.json({
-        status: globalRTLResult(routeRTLKey),
-    });
-
-    if (types.isNativeError(globalRTLResult)) {
-        return new Response(null, {
-            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
-        });
-    }
-
-    if (!globalRTLResult.success) {
+    if (GlobalRTLResult) {
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.SERVICE_UNAVAILABLE,
         });

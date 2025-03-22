@@ -9,7 +9,6 @@ import { generateSecurePassword } from "@/utils/secure/generateSecurePassword";
 import { getIpAddress } from "@/utils/secure/getIpAddress";
 import {
     DecrementVerificationRateLimit,
-    GlobalRateLimit,
     RateLimit,
     VerificationRateLimit,
 } from "@/lib/ratelimit/ratelimit";
@@ -17,21 +16,13 @@ import { CODE_DIGITS_COUNT, EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT, USERNAME_
 import validateEmail from "@/utils/secure/validateEmail";
 import { validateTurnstileToken } from "next-turnstile";
 import { v4 as uuid } from "uuid";
+import { ConfiguredLRUCacheRateLimit } from "@/lib/ratelimit/lrucache";
 
 export async function POST(request: NextRequest): Promise<Response> {
     const routeRTLKey = request.nextUrl.pathname;
-    console.log(routeRTLKey);
-    const globalRTLResult = await GlobalRateLimit({
-        route: routeRTLKey,
-    });
+    const GlobalRTLResult = ConfiguredLRUCacheRateLimit(routeRTLKey);
 
-    if (types.isNativeError(globalRTLResult)) {
-        return new Response(null, {
-            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
-        });
-    }
-
-    if (!globalRTLResult.success) {
+    if (GlobalRTLResult) {
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.SERVICE_UNAVAILABLE,
         });
@@ -182,17 +173,9 @@ export async function POST(request: NextRequest): Promise<Response> {
 
 export async function PUT(request: NextRequest): Promise<Response> {
     const routeRTLKey = request.nextUrl.pathname;
-    const globalRTLResult = await GlobalRateLimit({
-        route: routeRTLKey,
-    });
+    const GlobalRTLResult = ConfiguredLRUCacheRateLimit(routeRTLKey);
 
-    if (types.isNativeError(globalRTLResult)) {
-        return new Response(null, {
-            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
-        });
-    }
-
-    if (!globalRTLResult.success) {
+    if (GlobalRTLResult) {
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.SERVICE_UNAVAILABLE,
         });

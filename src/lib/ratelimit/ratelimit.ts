@@ -4,38 +4,11 @@ import {
     generalRateLimit as upstashGeneralRateLimit,
     verificationRateLimit as upstashVerificationRateLimit,
     resetTokenRateLimit as upstashResetTokenRateLimit,
-    globalRateLimit as upstashGlobalRateLimit,
 } from "@/lib/ratelimit/upstash";
 
 config({ path: ".env.local" });
 
 // TODO refactor this shit
-export async function GlobalRateLimit({
-    route,
-}: {
-    route: string;
-}) {
-    switch (process.env.REDIS_TYPE!.toLowerCase()) {
-        case "local":
-            return await localRateLimit({
-                token: route,
-                limit: 20,
-                duration: 2,
-                rtlKey: "global",
-            });
-        case "upstash":
-            const expirationTime = await upstashGlobalRateLimit.getRemaining(route);
-            const rateLimitResponse = await upstashGlobalRateLimit.limit(route);
-
-            return {
-                ...rateLimitResponse,
-                expirationTime: expirationTime.reset,
-            };
-        default:
-            return new Error();
-    }
-}
-
 export async function RateLimit({
     token,
 }: {

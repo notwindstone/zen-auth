@@ -6,23 +6,15 @@ import { createSession } from "@/lib/actions/session";
 import { generateSessionToken } from "@/utils/secure/generateSessionToken";
 import { getIpAddress } from "@/utils/secure/getIpAddress";
 import { types } from "node:util";
-import { GlobalRateLimit, RateLimit } from "@/lib/ratelimit/ratelimit";
+import { RateLimit } from "@/lib/ratelimit/ratelimit";
 import { EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT } from "@/configs/constants";
+import { ConfiguredLRUCacheRateLimit } from "@/lib/ratelimit/lrucache";
 
 export async function POST(request: NextRequest): Promise<Response> {
     const routeRTLKey = request.nextUrl.pathname;
-    console.log(routeRTLKey);
-    const globalRTLResult = await GlobalRateLimit({
-        route: routeRTLKey,
-    });
+    const GlobalRTLResult = ConfiguredLRUCacheRateLimit(routeRTLKey);
 
-    if (types.isNativeError(globalRTLResult)) {
-        return new Response(null, {
-            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
-        });
-    }
-
-    if (!globalRTLResult.success) {
+    if (GlobalRTLResult) {
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.SERVICE_UNAVAILABLE,
         });
