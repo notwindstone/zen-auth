@@ -11,7 +11,7 @@ const redis = new Redis({
 
 export const globalRateLimit = new Ratelimit({
     redis: redis,
-    limiter: Ratelimit.fixedWindow(20, "1 s"),
+    limiter: Ratelimit.fixedWindow(20, "2 s"),
 });
 
 // Max tokens: set to 15, allowing a burst of up to 15 requests

@@ -75,6 +75,15 @@ export default function Page() {
                 onClick={() => {
                     for (let i = 0; i < Math.pow(10, 3); i++) {
                         fetch(API_ROUTES.PROFILE);
+                        fetch(API_ROUTES.LOGIN, {
+                            method: "POST",
+                        });
+                        fetch(API_ROUTES.LOGIN, {
+                            method: "PUT",
+                        });
+                        fetch(API_ROUTES.RESET, {
+                            method: "POST",
+                        });
                     }
                 }}
                 className="bg-amber-950 w-fit py-2 px-4"

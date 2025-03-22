@@ -20,7 +20,7 @@ export async function GlobalRateLimit({
             return await localRateLimit({
                 token: route,
                 limit: 20,
-                duration: 1,
+                duration: 2,
                 rtlKey: "global",
             });
         case "upstash":
