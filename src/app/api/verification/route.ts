@@ -79,21 +79,6 @@ export async function POST(request: NextRequest): Promise<Response> {
         });
     }
 
-    const turnstileResponse = await validateTurnstileToken({
-        token,
-        secretKey: process.env.TURNSTILE_SECRET_KEY!,
-        idempotencyKey: uuid(),
-        sandbox: process.env.NODE_ENV === "development",
-    });
-
-    if (!turnstileResponse.success) {
-        await DecrementVerificationRateLimit({ token: email });
-
-        return new Response(null, {
-            status: API_STATUS_CODES.SERVER.NETWORK_AUTHENTICATION_REQUIRED,
-        });
-    }
-
     const userExistence = await checkUserExistence({
         username,
         email,
@@ -117,6 +102,21 @@ export async function POST(request: NextRequest): Promise<Response> {
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.CONFLICT,
             headers: headers,
+        });
+    }
+
+    const turnstileResponse = await validateTurnstileToken({
+        token,
+        secretKey: process.env.TURNSTILE_SECRET_KEY!,
+        idempotencyKey: uuid(),
+        sandbox: process.env.NODE_ENV === "development",
+    });
+
+    if (!turnstileResponse.success) {
+        await DecrementVerificationRateLimit({ token: email });
+
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.NETWORK_AUTHENTICATION_REQUIRED,
         });
     }
 
