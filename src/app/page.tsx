@@ -1,7 +1,5 @@
-"use client";
-
 import Link from "next/link";
-import { API_ROUTES } from "@/configs/api";
+import FloodRequests from "@/components/misc/FloodRequests/FloodRequests";
 
 export default function Page() {
     return (
@@ -9,56 +7,22 @@ export default function Page() {
             <p>
                 This page is temporarily client-sided.
             </p>
-            <button
-                onClick={() => {
-                    for (let i = 0; i < Math.pow(10, 3); i++) {
-                        fetch(API_ROUTES.PROFILE);
 
-                        /*
-                        fetch('https://zen-auth.windstone.space/api/profile?username=notwindstone');
-                        fetch('https://zen-auth.windstone.space/api/login', {
-                            method: "POST",
-                        });
-                        fetch('https://zen-auth.windstone.space/api/verification', {
-                            method: "POST",
-                        });
-                        fetch('https://zen-auth.windstone.space/api/reset', {
-                            method: "POST",
-                        });
-                         */
-                    }
-                }}
-                className="bg-amber-950 w-fit py-2 px-4"
-            >
-                run http requests flood?
-            </button>
             <Link href="/register" className="text-lg hover:text-gray-300 transition">
                 ~~~ {">"} here {"<"} ~~~
             </Link>
+            <FloodRequests />
             <div className="flex flex-col gap-2">
                 <p>
                     Dev buttons {
                         <span className="text-zinc-400">(бля почему на английском фразы менее кринжово звучат, даже если смысл один)</span>
                     }:
                 </p>
-                <button
-                    onClick={async () => {
-                        const response = await fetch('/api/session/all', {
-                            method: "DELETE",
-                        });
-
-                        if (!response.ok) {
-                            alert('Response is not ok');
-
-                            return;
-                        }
-
-                        alert("Truth.");
-                    }}
-                    className="w-fit bg-latte-rosewater text-black rounded px-2 py-1 transition hover:bg-orange-200"
+                <div
+                    className="w-fit bg-amber-950 text-white rounded px-2 py-1 transition"
                 >
                     Remove all sessions except current
-                </button>
+                </div>
                 <div
                     className="w-fit bg-amber-950 text-white rounded px-2 py-1 transition "
                 >
