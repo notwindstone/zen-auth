@@ -17,6 +17,7 @@ import AlertBlock from "@/components/misc/AlertBlock/AlertBlock";
 import ConfiguredTurnstile from "@/components/forms/ConfiguredTurnstile/ConfiguredTurnstile";
 import { v4 as uuid } from "uuid";
 import handleTurnstileReset from "@/utils/secure/handleTurnstileReset";
+import {SiGithub, SiGoogle, SiShikimori} from "react-icons/si";
 
 export default function RegisterForm({
     token,
@@ -190,9 +191,41 @@ export default function RegisterForm({
                             Добро пожаловать! Зарегистрируйтесь, чтобы продолжить.
                         </p>
                         <div className="w-full flex flex-nowrap items-center gap-2">
-                            <a href="/api/oauth/login">
-                                github
+                            <a
+                                className="flex-1 border-gray-200 h-8 flex justify-center items-center text-zinc-800 font-medium border-[1px] rounded-md hover:bg-zinc-100 transition text-sm"
+                                href="/api/oauth/login/google"
+                            >
+                                <div className="flex flex-nowrap items-center gap-2">
+                                    <SiGoogle/>
+                                    <p>
+                                        Google
+                                    </p>
+                                </div>
                             </a>
+                            <a
+                                className="flex-1 border-gray-200 h-8 flex justify-center items-center text-zinc-800 font-medium border-[1px] rounded-md hover:bg-zinc-100 transition text-sm"
+                                href="/api/oauth/login/github"
+                            >
+                                <div className="flex flex-nowrap items-center gap-2">
+                                    <SiGithub/>
+                                    <p>
+                                        Github
+                                    </p>
+                                </div>
+                            </a>
+                            {/*
+                            <a
+                                className="flex-1 border-gray-200 h-8 flex justify-center items-center text-zinc-800 font-medium border-[1px] rounded-md hover:bg-zinc-100 transition text-sm"
+                                href="/api/oauth/login/shikimori"
+                            >
+                                <div className="flex flex-nowrap items-center gap-2">
+                                    <SiShikimori />
+                                    <p>
+                                        Shikimori
+                                    </p>
+                                </div>
+                            </a>
+                            */}
                         </div>
                         <div
                             className="w-full flex flex-nowrap items-center gap-4"
