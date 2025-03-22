@@ -1,5 +1,4 @@
 import Link from "next/link";
-import FloodRequests from "@/components/misc/FloodRequests/FloodRequests";
 
 export default function Page() {
     return (
@@ -11,7 +10,6 @@ export default function Page() {
             <Link href="/register" className="text-lg hover:text-gray-300 transition">
                 ~~~ {">"} here {"<"} ~~~
             </Link>
-            <FloodRequests />
             <div className="flex flex-col gap-2">
                 <p>
                     Dev buttons {

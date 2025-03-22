@@ -2,7 +2,7 @@ import { LRUCache } from "lru-cache";
 
 export const ConfiguredLRUCacheRateLimit = LRUCacheRateLimit({
     duration: 2,
-    limit: 15,
+    limit: 10,
 });
 
 export function LRUCacheRateLimit({
