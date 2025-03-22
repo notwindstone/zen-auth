@@ -5,9 +5,7 @@ import { invalidateSession } from "@/lib/actions/session";
 import { deleteSessionTokenCookie } from "@/lib/actions/cookies";
 import getSessionId from "@/utils/secure/getSessionId";
 import { API_STATUS_CODES } from "@/configs/api";
-import { getIpAddress } from "@/utils/secure/getIpAddress";
 import { types } from "node:util";
-import { RateLimit } from "@/lib/ratelimit/ratelimit";
 import { ConfiguredLRUCacheRateLimit } from "@/lib/ratelimit/lrucache";
 
 export async function GET(request: NextRequest): Promise<Response> {
@@ -17,23 +15,6 @@ export async function GET(request: NextRequest): Promise<Response> {
     if (GlobalRTLResult) {
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.SERVICE_UNAVAILABLE,
-        });
-    }
-
-    const ipAddress = getIpAddress(request);
-    const rateLimitResult = await RateLimit({
-        token: ipAddress,
-    });
-
-    if (types.isNativeError(rateLimitResult)) {
-        return new Response(null, {
-            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
-        });
-    }
-
-    if (!rateLimitResult.success) {
-        return new Response(null, {
-            status: API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS,
         });
     }
 
@@ -51,23 +32,6 @@ export async function DELETE(request: NextRequest): Promise<Response> {
     if (GlobalRTLResult) {
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.SERVICE_UNAVAILABLE,
-        });
-    }
-
-    const ipAddress = getIpAddress(request);
-    const rateLimitResult = await RateLimit({
-        token: ipAddress,
-    });
-
-    if (types.isNativeError(rateLimitResult)) {
-        return new Response(null, {
-            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
-        });
-    }
-
-    if (!rateLimitResult.success) {
-        return new Response(null, {
-            status: API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS,
         });
     }
 

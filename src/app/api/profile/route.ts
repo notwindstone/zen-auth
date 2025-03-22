@@ -1,37 +1,17 @@
 import type { NextRequest } from "next/server";
 import { getPublicProfile } from "@/lib/actions/user";
 import { API_STATUS_CODES } from "@/configs/api";
-import { getIpAddress } from "@/utils/secure/getIpAddress";
 import { types } from "node:util";
-import { RateLimit } from "@/lib/ratelimit/ratelimit";
 import { USERNAME_LENGTH_LIMIT } from "@/configs/constants";
 import { ConfiguredLRUCacheRateLimit } from "@/lib/ratelimit/lrucache";
 
 export async function GET(request: NextRequest): Promise<Response> {
-    console.log(request.headers.get('X-Forwarded-For'));
     const routeRTLKey = request.nextUrl.pathname;
     const GlobalRTLResult = ConfiguredLRUCacheRateLimit(routeRTLKey);
 
     if (GlobalRTLResult) {
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.SERVICE_UNAVAILABLE,
-        });
-    }
-
-    const ipAddress = getIpAddress(request);
-    const rateLimitResult = await RateLimit({
-        token: ipAddress,
-    });
-
-    if (types.isNativeError(rateLimitResult)) {
-        return new Response(null, {
-            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
-        });
-    }
-
-    if (!rateLimitResult.success) {
-        return new Response(null, {
-            status: API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS,
         });
     }
 

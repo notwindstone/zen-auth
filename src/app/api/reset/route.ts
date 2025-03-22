@@ -1,5 +1,4 @@
 import { NextRequest } from "next/server";
-import { getIpAddress } from "@/utils/secure/getIpAddress";
 import { API_STATUS_CODES } from "@/configs/api";
 import { createResetToken, getResetToken, removeResetToken } from "@/lib/actions/reset";
 import { generateResetToken } from "@/utils/secure/generateResetToken";
@@ -7,7 +6,7 @@ import { checkUserExistence, updateUser } from "@/lib/actions/user";
 import { types } from "node:util";
 import { sendResetCodeEmail } from "@/lib/actions/email";
 import { generateSecurePassword } from "@/utils/secure/generateSecurePassword";
-import { DecrementResetRateLimit, RateLimit, ResetRateLimit } from "@/lib/ratelimit/ratelimit";
+import { DecrementResetRateLimit, ResetRateLimit } from "@/lib/ratelimit/ratelimit";
 import { EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT } from "@/configs/constants";
 import validateEmail from "@/utils/secure/validateEmail";
 import { validateTurnstileToken } from "next-turnstile";
@@ -167,23 +166,6 @@ export async function PUT(request: NextRequest): Promise<Response> {
     if (GlobalRTLResult) {
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.SERVICE_UNAVAILABLE,
-        });
-    }
-
-    const ipAddress = getIpAddress(request);
-    const rateLimitResult = await RateLimit({
-        token: ipAddress,
-    });
-
-    if (types.isNativeError(rateLimitResult)) {
-        return new Response(null, {
-            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
-        });
-    }
-
-    if (!rateLimitResult.success) {
-        return new Response(null, {
-            status: API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS,
         });
     }
 

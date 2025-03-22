@@ -6,7 +6,6 @@ import { createSession } from "@/lib/actions/session";
 import { generateSessionToken } from "@/utils/secure/generateSessionToken";
 import { getIpAddress } from "@/utils/secure/getIpAddress";
 import { types } from "node:util";
-import { RateLimit } from "@/lib/ratelimit/ratelimit";
 import { EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT } from "@/configs/constants";
 import { ConfiguredLRUCacheRateLimit } from "@/lib/ratelimit/lrucache";
 
@@ -21,21 +20,6 @@ export async function POST(request: NextRequest): Promise<Response> {
     }
 
     const ipAddress = getIpAddress(request);
-    const rateLimitResult = await RateLimit({
-        token: ipAddress,
-    });
-
-    if (types.isNativeError(rateLimitResult)) {
-        return new Response(null, {
-            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
-        });
-    }
-
-    if (!rateLimitResult.success) {
-        return new Response(null, {
-            status: API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS,
-        });
-    }
 
     let data;
 

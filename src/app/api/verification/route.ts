@@ -6,10 +6,8 @@ import { generateVerificationCode } from "@/utils/secure/generateVerificationCod
 import { types } from "node:util";
 import { checkUserExistence, createUser } from "@/lib/actions/user";
 import { generateSecurePassword } from "@/utils/secure/generateSecurePassword";
-import { getIpAddress } from "@/utils/secure/getIpAddress";
 import {
     DecrementVerificationRateLimit,
-    RateLimit,
     VerificationRateLimit,
 } from "@/lib/ratelimit/ratelimit";
 import { CODE_DIGITS_COUNT, EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT, USERNAME_LENGTH_LIMIT } from "@/configs/constants";
@@ -178,23 +176,6 @@ export async function PUT(request: NextRequest): Promise<Response> {
     if (GlobalRTLResult) {
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.SERVICE_UNAVAILABLE,
-        });
-    }
-
-    const ipAddress = getIpAddress(request);
-    const rateLimitResult = await RateLimit({
-        token: ipAddress,
-    });
-
-    if (types.isNativeError(rateLimitResult)) {
-        return new Response(null, {
-            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
-        });
-    }
-
-    if (!rateLimitResult.success) {
-        return new Response(null, {
-            status: API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS,
         });
     }
 
