@@ -11,6 +11,7 @@ import { EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT } from "@/configs/constants";
 
 export async function POST(request: NextRequest): Promise<Response> {
     const routeRTLKey = request.nextUrl.pathname;
+    console.log(routeRTLKey);
     const globalRTLResult = await GlobalRateLimit({
         route: routeRTLKey,
     });

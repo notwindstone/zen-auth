@@ -78,8 +78,8 @@ export default function Page() {
                         fetch(API_ROUTES.LOGIN, {
                             method: "POST",
                         });
-                        fetch(API_ROUTES.LOGIN, {
-                            method: "PUT",
+                        fetch(API_ROUTES.VERIFICATION, {
+                            method: "POST",
                         });
                         fetch(API_ROUTES.RESET, {
                             method: "POST",

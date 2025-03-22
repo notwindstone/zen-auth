@@ -3,13 +3,24 @@ import { getPublicProfile } from "@/lib/actions/user";
 import { API_STATUS_CODES } from "@/configs/api";
 import { getIpAddress } from "@/utils/secure/getIpAddress";
 import { types } from "node:util";
-import { GlobalRateLimit, RateLimit } from "@/lib/ratelimit/ratelimit";
+import { RateLimit } from "@/lib/ratelimit/ratelimit";
 import { USERNAME_LENGTH_LIMIT } from "@/configs/constants";
+import LRUCacheRateLimit from "@/lib/ratelimit/lrucache";
+
+const globalRTLResult = LRUCacheRateLimit({
+    duration: 1,
+    limit: 2,
+});
 
 export async function GET(request: NextRequest): Promise<Response> {
     const routeRTLKey = request.nextUrl.pathname;
-    const globalRTLResult = await GlobalRateLimit({
-        route: routeRTLKey,
+
+
+
+    console.log(routeRTLKey, globalRTLResult);
+
+    return Response.json({
+        status: globalRTLResult(routeRTLKey),
     });
 
     if (types.isNativeError(globalRTLResult)) {

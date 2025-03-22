@@ -20,6 +20,7 @@ import { v4 as uuid } from "uuid";
 
 export async function POST(request: NextRequest): Promise<Response> {
     const routeRTLKey = request.nextUrl.pathname;
+    console.log(routeRTLKey);
     const globalRTLResult = await GlobalRateLimit({
         route: routeRTLKey,
     });
