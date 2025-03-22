@@ -20,7 +20,7 @@ export async function sendVerificationCodeEmail({
         from: 'Zen-Auth <onboarding@windstone.space>',
         to: email,
         subject: 'Верификация Email',
-        html: `<p>Добро пожаловать, ${username}. Ваш код подтверждения: ${code}.</p>`,
+        html: `<p>Добро пожаловать, ${username}. Ваш код подтверждения: ${code}</p>`,
     });
 }
 
@@ -35,7 +35,7 @@ export async function sendResetCodeEmail({
         from: 'Zen-Auth <onboarding@windstone.space>',
         to: email,
         subject: 'Сброс пароля',
-        html: `<p>Используйте эту ссылку, чтобы сбросить пароль для вашей учетной записи. Ваша ссылка: https://zen-auth.vercel.app/reset?token=${resetToken}&email=${email}.</p>`,
+        html: `<p>Используйте эту ссылку, чтобы сбросить пароль для вашей учетной записи. Ваша ссылка: https://zen-auth.vercel.app/reset?token=${resetToken}&email=${email}</p>`,
     });
 }
 
