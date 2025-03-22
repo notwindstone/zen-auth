@@ -3,7 +3,7 @@
 import { Signature } from "lucide-react";
 import { FormEvent, useRef, useState } from "react";
 import Link from "next/link";
-import { API_REQUEST_METHODS, API_ROUTES, API_STATUS_CODES } from "@/configs/api";
+import { API_REQUEST_METHODS, API_ROUTES } from "@/configs/api";
 import { useRouter } from "nextjs-toploader/app";
 import { getLastEmailInfo } from "@/lib/actions/email";
 import { setSessionTokenCookie } from "@/lib/actions/cookies";
@@ -27,6 +27,7 @@ import AlertBlock from "@/components/misc/AlertBlock/AlertBlock";
 import ConfiguredTurnstile from "@/components/forms/ConfiguredTurnstile/ConfiguredTurnstile";
 import { TurnstileStatusType } from "@/types/Auth/TurnstileStatus.type";
 import { v4 as uuid } from "uuid";
+import handleTurnstileReset from "@/utils/secure/handleTurnstileReset";
 
 export default function CodeVerification({
     username,
@@ -189,9 +190,12 @@ export default function CodeVerification({
                 headers: response.headers,
             });
 
-            if (status === API_STATUS_CODES.SERVER.NETWORK_AUTHENTICATION_REQUIRED) {
-                setTurnstileKey(uuid());
-            }
+            setTurnstileKey(
+                handleTurnstileReset({
+                    key: turnstileKey,
+                    status: status,
+                }),
+            );
 
             setStyles((draft) => {
                 draft.rtl = rtlError;

@@ -10,10 +10,11 @@ import { TurnstileStatusType } from "@/types/Auth/TurnstileStatus.type";
 import { useImmer } from "use-immer";
 import { StylesErrorType } from "@/types/UI/StylesError.type";
 import validateEmail from "@/utils/secure/validateEmail";
-import { API_REQUEST_METHODS, API_ROUTES, API_STATUS_CODES } from "@/configs/api";
+import { API_REQUEST_METHODS, API_ROUTES } from "@/configs/api";
 import getStylesErrorData from "@/utils/queries/getStylesErrorData";
 import { PAGE_ROUTES } from "@/configs/pages";
 import { v4 as uuid } from "uuid";
+import handleTurnstileReset from "@/utils/secure/handleTurnstileReset";
 
 export default function SendResetCode() {
     const router = useRouter();
@@ -111,9 +112,12 @@ export default function SendResetCode() {
                 headers: response.headers,
             });
 
-            if (status === API_STATUS_CODES.SERVER.NETWORK_AUTHENTICATION_REQUIRED) {
-                setTurnstileKey(uuid());
-            }
+            setTurnstileKey(
+                handleTurnstileReset({
+                    key: turnstileKey,
+                    status: status,
+                }),
+            );
 
             setStyles((draft) => {
                 draft.rtl = rtlError;

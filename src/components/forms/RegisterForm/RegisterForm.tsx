@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "nextjs-toploader/app";
-import { API_REQUEST_METHODS, API_ROUTES, API_STATUS_CODES } from "@/configs/api";
+import { API_REQUEST_METHODS, API_ROUTES } from "@/configs/api";
 import { STYLES_ERROR_INITIAL_DATA, STYLES_ERROR_TYPES } from "@/configs/constants";
 import { FormEvent, useState } from "react";
 import { SquareAsterisk } from "lucide-react";
@@ -16,6 +16,7 @@ import { TurnstileStatusType } from "@/types/Auth/TurnstileStatus.type";
 import AlertBlock from "@/components/misc/AlertBlock/AlertBlock";
 import ConfiguredTurnstile from "@/components/forms/ConfiguredTurnstile/ConfiguredTurnstile";
 import { v4 as uuid } from "uuid";
+import handleTurnstileReset from "@/utils/secure/handleTurnstileReset";
 
 export default function RegisterForm({
     token,
@@ -130,9 +131,12 @@ export default function RegisterForm({
                 headers: response.headers,
             });
 
-            if (status === API_STATUS_CODES.SERVER.NETWORK_AUTHENTICATION_REQUIRED) {
-                setTurnstileKey(uuid());
-            }
+            setTurnstileKey(
+                handleTurnstileReset({
+                    key: turnstileKey,
+                    status: status,
+                }),
+            );
 
             setStyles((draft) => {
                 draft.rtl = rtlError;
