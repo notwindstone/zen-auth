@@ -12,7 +12,6 @@ import {
     CODE_DIGITS_COUNT,
     STYLES_ERROR_INITIAL_DATA,
     STYLES_ERROR_TYPES,
-    TURNSTILE_REGISTER_ID,
 } from "@/configs/constants";
 import PasswordInput from "@/components/forms/Inputs/PasswordInput/PasswordInput";
 import validateEmail from "@/utils/secure/validateEmail";
@@ -27,7 +26,7 @@ import getStylesErrorData from "@/utils/queries/getStylesErrorData";
 import AlertBlock from "@/components/misc/AlertBlock/AlertBlock";
 import ConfiguredTurnstile from "@/components/forms/ConfiguredTurnstile/ConfiguredTurnstile";
 import { TurnstileStatusType } from "@/types/Auth/TurnstileStatus.type";
-import handleTurnstileReset from "@/utils/secure/handleTurnstileReset";
+import { v4 as uuid } from "uuid";
 
 export default function CodeVerification({
     username,
@@ -41,6 +40,7 @@ export default function CodeVerification({
     token: string;
 }) {
     const router = useRouter();
+    const [turnstileKey, setTurnstileKey] = useState<string>(uuid);
     const turnstileToken = useRef<string | null | undefined>(null);
     const [turnstileStatus, setTurnstileStatus] = useState<TurnstileStatusType | null>(null);
     const [isResend, setIsResend] = useState(false);
@@ -190,7 +190,7 @@ export default function CodeVerification({
             });
 
             if (status === API_STATUS_CODES.SERVER.NETWORK_AUTHENTICATION_REQUIRED) {
-                handleTurnstileReset(TURNSTILE_REGISTER_ID);
+                setTurnstileKey(uuid());
             }
 
             setStyles((draft) => {
@@ -516,7 +516,7 @@ export default function CodeVerification({
                                     className="rounded-md w-full h-32 bg-white border-[1px] border-gray-200 flex flex-col items-center justify-center text-center text-lg font-semibold text-black gap-2"
                                 >
                                     <ConfiguredTurnstile
-                                        id={TURNSTILE_REGISTER_ID}
+                                        key={turnstileKey}
                                         onError={() => handleTurnstileVerification({
                                             status: "error",
                                             isError: true,

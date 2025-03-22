@@ -2,7 +2,7 @@
 
 import { useRouter } from "nextjs-toploader/app";
 import { API_REQUEST_METHODS, API_ROUTES, API_STATUS_CODES } from "@/configs/api";
-import { STYLES_ERROR_INITIAL_DATA, STYLES_ERROR_TYPES, TURNSTILE_REGISTER_ID } from "@/configs/constants";
+import { STYLES_ERROR_INITIAL_DATA, STYLES_ERROR_TYPES } from "@/configs/constants";
 import { FormEvent, useState } from "react";
 import { SquareAsterisk } from "lucide-react";
 import Link from "next/link";
@@ -15,7 +15,7 @@ import { PAGE_ROUTES } from "@/configs/pages";
 import { TurnstileStatusType } from "@/types/Auth/TurnstileStatus.type";
 import AlertBlock from "@/components/misc/AlertBlock/AlertBlock";
 import ConfiguredTurnstile from "@/components/forms/ConfiguredTurnstile/ConfiguredTurnstile";
-import handleTurnstileReset from "@/utils/secure/handleTurnstileReset";
+import { v4 as uuid } from "uuid";
 
 export default function RegisterForm({
     token,
@@ -27,6 +27,7 @@ export default function RegisterForm({
     emailPlaceholder: string;
 }) {
     const router = useRouter();
+    const [turnstileKey, setTurnstileKey] = useState<string>(uuid);
     const [turnstileStatus, setTurnstileStatus] = useState<TurnstileStatusType | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [styles, setStyles] = useImmer<
@@ -130,7 +131,7 @@ export default function RegisterForm({
             });
 
             if (status === API_STATUS_CODES.SERVER.NETWORK_AUTHENTICATION_REQUIRED) {
-                handleTurnstileReset(TURNSTILE_REGISTER_ID);
+                setTurnstileKey(uuid());
             }
 
             setStyles((draft) => {
@@ -248,7 +249,7 @@ export default function RegisterForm({
                                 )
                             }
                             <ConfiguredTurnstile
-                                id={TURNSTILE_REGISTER_ID}
+                                key={turnstileKey}
                                 onError={() => handleTurnstileVerification({
                                     status: "error",
                                     isError: true,
