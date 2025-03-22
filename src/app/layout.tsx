@@ -39,7 +39,7 @@ export default function RootLayout({
                     {children}
                     <div className="p-2 text-lg">
                         <Link href={"/"}>
-                            ← Назад
+                            ← На главную
                         </Link>
                     </div>
                 </body>

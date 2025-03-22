@@ -1,70 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { deleteSessionTokenCookie, setSessionTokenCookie } from "@/lib/actions/cookies";
-import { getLastEmailInfo } from "@/lib/actions/email";
-import { useRef } from "react";
-import { getMonthForwardDate } from "@/utils/misc/getMonthForwardDate";
+import { API_ROUTES } from "@/configs/api";
 
 export default function Page() {
-    const emailLetterId = useRef('');
-    const isVerified = useRef(false);
-
-    async function verifyEmail() {
-        const response = await fetch('/api/verification', {
-            method: "PUT",
-            body: JSON.stringify({
-                email: 'notwindstone@gmail.com',
-                code: "883239",
-                username: "notwindstone",
-                displayName: 'windstone',
-                password: 'sheet',
-            }),
-        });
-
-        if (!response.ok) {
-            alert('Response is not ok');
-
-            return;
-        }
-
-        isVerified.current = true;
-        alert(true);
-
-        return;
-    }
-
-    async function checkEmailLetter() {
-        const response = await getLastEmailInfo({
-            id: emailLetterId.current,
-        });
-
-        alert(response);
-    }
-
-    async function sendVerificationCode() {
-        const response = await fetch('/api/verification', {
-            method: "POST",
-            body: JSON.stringify({
-                email: "notwindstone@gmail.com",
-                username: "notwindstone",
-            }),
-        });
-
-        if (!response.ok) {
-            alert('Response is not ok');
-
-            return;
-        }
-
-        const id = (await response.json())?.id;
-
-        emailLetterId.current = id;
-        alert(id);
-
-        return;
-    }
-
     return (
         <div className="flex flex-col gap-4">
             <p>
@@ -73,6 +12,9 @@ export default function Page() {
             <button
                 onClick={() => {
                     for (let i = 0; i < Math.pow(10, 3); i++) {
+                        fetch(API_ROUTES.PROFILE);
+
+                        /*
                         fetch('https://zen-auth.windstone.space/api/profile?username=notwindstone');
                         fetch('https://zen-auth.windstone.space/api/login', {
                             method: "POST",
@@ -83,6 +25,7 @@ export default function Page() {
                         fetch('https://zen-auth.windstone.space/api/reset', {
                             method: "POST",
                         });
+                         */
                     }
                 }}
                 className="bg-amber-950 w-fit py-2 px-4"
@@ -116,123 +59,41 @@ export default function Page() {
                 >
                     Remove all sessions except current
                 </button>
-                <button
-                    disabled
-                    onClick={async () => {
-                        const response = await fetch('/api/reset', {
-                            method: "PUT",
-                            body: JSON.stringify({
-                                email: 'notwindstone@gmail.com',
-                                newPassword: "sheesh",
-                                resetToken: "bBxmKUrkfZAXrrcAKOsMnhYLgExgmDWjlHhLsoXHxmVPPAmILYheRreYtGMIfijh",
-                            }),
-                        });
-
-                        if (!response.ok) {
-                            alert('Response is not ok');
-
-                            return;
-                        }
-
-                        alert("Truth.");
-                    }}
+                <div
                     className="w-fit bg-amber-950 text-white rounded px-2 py-1 transition "
                 >
                     Reset password
-                </button>
-                <button
-                    disabled
-                    onClick={async () => {
-                        const response = await fetch('/api/reset', {
-                            method: "POST",
-                            body: JSON.stringify({
-                                email: "notwindstone@gmail.com",
-                            }),
-                        });
-
-                        if (!response.ok) {
-                            alert('Response is not ok');
-
-                            return;
-                        }
-
-                        alert("Truth.");
-                    }}
+                </div>
+                <div
                     className="w-fit bg-amber-950 text-white rounded px-2 py-1 transition "
                 >
                     Send reset token
-                </button>
-                <button
-                    disabled
-                    onClick={async () => {
-                        await verifyEmail();
-                    }}
+                </div>
+                <div
                     className="w-fit bg-amber-950 text-white rounded px-2 py-1 transition "
                 >
                     Verify email
-                </button>
-                <button
-                    disabled
-                    onClick={async () => {
-                        await checkEmailLetter();
-                    }}
+                </div>
+                <div
                     className="w-fit bg-amber-950 text-white rounded px-2 py-1 transition "
                 >
                     Check email letter
-                </button>
-                <button
-                    disabled
-                    onClick={async () => {
-                        await sendVerificationCode();
-                    }}
+                </div>
+                <div
                     className="w-fit bg-amber-950 text-white rounded px-2 py-1 transition"
                 >
                     Send verification code
-                </button>
-                <button
-                    disabled
-                    onClick={async () => {
-                        await fetch('/api/session/current', {
-                            method: "DELETE",
-                        });
-
-                        deleteSessionTokenCookie().then(() => alert('Now you are not authorized.'));
-                    }}
+                </div>
+                <div
                     className="w-fit bg-amber-950 text-white rounded px-2 py-1 transition"
                 >
                     Log out
-                </button>
-                <button
-                    disabled
-                    onClick={async () => {
-                        const response = await fetch('/api/login', {
-                            method: "POST",
-                            body: JSON.stringify({
-                                login: "notwindstone",
-                                password: "sheesh",
-                            }),
-                        });
-
-                        if (!response.ok) {
-                            alert('bruh what are you doing');
-
-                            return;
-                        }
-
-                        const data = await response.json();
-                        const { sessionToken } = data;
-
-                        setSessionTokenCookie({
-                            token: sessionToken,
-                            expiresAt: getMonthForwardDate(),
-                        }).then(() => {
-                            alert('Now you are an authorized user.');
-                        });
-                    }}
+                </div>
+                <div
                     className="w-fit bg-amber-950 text-white rounded px-2 py-1 transition"
                 >
                     Log in using notwindstone&lsquo;s credentials
-                </button>
+                </div>
             </div>
             <div className="flex flex-col">
                 <p>
@@ -330,7 +191,6 @@ export default function Page() {
                     </li>
                     <li>Client-side Rate limit</li>
                     <li>OAuth2</li>
-                    <li>TOTP authentication</li>
                     <li>...more</li>
                 </ul>
             </div>

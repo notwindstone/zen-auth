@@ -35,7 +35,7 @@ export const STYLES_ERROR_TYPES = {
     TURNSTILE_REQUIRED: "Пожалуйста, пройдите капчу.",
     TURNSTILE_EXPIRED: "Превышено время ожидания. Попробуйте ещё раз.",
     TURNSTILE_ERROR: "Верификация не удалась. Попробуйте ещё раз.",
-    CREDENTIALS_ERROR: "Неверная почта или пароль.",
+    CREDENTIALS_ERROR: "Неверный логин или пароль.",
     EMAIL_NOT_FOUND: "Пользователя с такой почтой не существует.",
     WRONG_RESET_TOKEN: "Неверный токен сброса пароля.",
     SERVICE_UNAVAILABLE: "Сервер перегружен. Повторите попытку чуть позже.",
