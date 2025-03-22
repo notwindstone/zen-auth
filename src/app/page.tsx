@@ -24,7 +24,7 @@ export default function Page() {
                     emailPlaceholder={""}
                 />
                 <Link
-                    className="w-full max-w-[464px] text-center hover:bg-zinc-700 bg-zinc-800 focus:bg-zinc-600 text-white rounded-md py-2 px-4 transition"
+                    className="w-full max-w-[464px] text-center hover:bg-zinc-200 bg-white focus:bg-zinc-300 text-black rounded-md py-2 px-4 transition"
                     href={PAGE_ROUTES.PROFILE.ROOT}
                 >
                     Перейти в профиль

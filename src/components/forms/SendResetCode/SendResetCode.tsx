@@ -247,10 +247,10 @@ export default function SendResetCode({
                             {
                                 isLoading ? (
                                     <div
-                                        className="h-[40px] w-full mt-2 transition animate-pulse bg-zinc-400 rounded-md"/>
+                                        className="h-[40px] w-full transition animate-pulse bg-zinc-400 rounded-md"/>
                                 ) : (
                                     <button
-                                        className={`hover:bg-zinc-700 bg-zinc-800 transition mt-2 rounded-md p-2 text-white h-[40px]`}
+                                        className={`hover:bg-zinc-700 bg-zinc-800 transition rounded-md p-2 text-white h-[40px]`}
                                         type="submit"
                                     >
                                         Продолжить

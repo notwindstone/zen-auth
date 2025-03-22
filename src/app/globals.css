@@ -11,3 +11,9 @@ body {
     color: var(--foreground);
     background: var(--background);
 }
+
+.__global-cloudflare-turnstile {
+    div {
+        display: flex
+    }
+}
