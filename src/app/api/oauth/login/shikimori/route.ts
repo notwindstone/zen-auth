@@ -25,7 +25,7 @@ export async function GET(request: NextRequest): Promise<Response> {
     const url = shikimori.createAuthorizationURL(state);
 
     cookieStore.set("state", state, {
-        secure: false,
+        secure: process.env.NODE_ENV === "production",
         path: "/",
         httpOnly: true,
         maxAge: 60 * 10,

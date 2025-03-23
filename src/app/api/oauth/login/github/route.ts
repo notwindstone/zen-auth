@@ -18,7 +18,7 @@ export async function GET(request: NextRequest): Promise<Response> {
     if (GlobalRTLResult) {
         return redirect(errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_RTL_PARAMS}`);
     }
-
+    console.log(errorUrl);
     const cookieStore = await cookies();
     const github = await GitHubProvider();
     const state = arctic.generateState();
