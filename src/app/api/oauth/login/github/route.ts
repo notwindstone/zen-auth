@@ -25,18 +25,20 @@ export async function GET(request: NextRequest): Promise<Response> {
     const scopes = ["user:email"];
     const url = github.createAuthorizationURL(state, scopes);
 
-    cookieStore.set("state", state, {
+    const stateCookiesResponse = cookieStore.set("state", state, {
         secure: process.env.NODE_ENV === "production",
         path: "/",
         httpOnly: true,
         maxAge: 60 * 10,
     });
-    cookieStore.set(OAUTH2_REDIRECT_ERROR_URL_PARAMS, errorUrl as string, {
+    const errorUrlCookiesResponse = cookieStore.set(OAUTH2_REDIRECT_ERROR_URL_PARAMS, errorUrl as string, {
         secure: process.env.NODE_ENV === "production",
         path: "/",
         httpOnly: true,
         maxAge: 60 * 10,
     });
+
+    console.log(stateCookiesResponse, errorUrlCookiesResponse);
 
     return redirect(url.toString());
 }
