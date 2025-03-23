@@ -12,17 +12,19 @@ export async function createUser({
     email,
     password,
     id,
+    avatarUrl,
 }: {
     username: TableUserType['username'];
     displayName: TableUserType['displayName'];
     email: TableUserType['email'];
     password: TableUserType['password'];
     id?: TableUserType['id'];
+    avatarUrl?: TableUserType['avatarUrl'];
 }): Promise<TableUserType | Error> {
     const user: TableUserType = {
         id: id ?? generateUUID(),
         username,
-        avatarUrl: PUBLIC_AVATAR_URL,
+        avatarUrl: avatarUrl ?? PUBLIC_AVATAR_URL,
         displayName,
         email,
         password,

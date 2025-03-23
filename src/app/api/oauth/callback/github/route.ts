@@ -23,6 +23,7 @@ export async function GET(request: NextRequest): Promise<Response> {
     return redirect(await handleCallback({
         request,
         provider,
+        providerName: "github",
         fetchUserProfile,
     }));
 }

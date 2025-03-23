@@ -48,10 +48,14 @@ export const API_REQUEST_METHODS = {
 };
 export const OAUTH2_API_BASES = {
     GITHUB: "https://api.github.com",
+    SHIKIMORI: "https://shikimori.one/api",
 };
 export const OAUTH2_API_ROUTES = {
     GITHUB: {
         USER: OAUTH2_API_BASES.GITHUB + "/user",
+    },
+    SHIKIMORI: {
+        USER: OAUTH2_API_BASES.SHIKIMORI + "/users/whoami",
     },
 };
 export const OAUTH2_REDIRECT_ERROR_URL_PARAMS = "error_url";

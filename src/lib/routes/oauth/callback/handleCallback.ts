@@ -19,10 +19,13 @@ import { setSessionTokenCookie } from "@/lib/actions/cookies";
 import { getMonthForwardDate } from "@/utils/misc/getMonthForwardDate";
 import { PAGE_ROUTES } from "@/configs/pages";
 import { UniversalUserResponseType } from "@/types/OAuth2/Responses/UniversalUserResponse.type";
+import { ProviderListType } from "@/types/OAuth2/Provider/ProviderList.type";
+import getUniversalOAuth2UserResponse from "@/utils/misc/getUniversalOAuth2UserResponse";
 
 export async function handleCallback({
     request,
     provider,
+    providerName,
     fetchUserProfile,
 }: {
     request: NextRequest;
@@ -31,6 +34,7 @@ export async function handleCallback({
             accessToken: () => string;
         }>;
     };
+    providerName: ProviderListType;
     fetchUserProfile: (accessToken: string) => Promise<Response>;
 }): Promise<string> {
     let tokens;
@@ -60,7 +64,12 @@ export async function handleCallback({
     let user: UniversalUserResponseType;
 
     try {
-        user = await response.json();
+        const data = await response.json();
+
+        user = getUniversalOAuth2UserResponse({
+            data,
+            provider: providerName,
+        });
     } catch (e) {
         console.error(e);
 
