@@ -47,7 +47,7 @@ export async function handleCallback({
     const state = request.nextUrl.searchParams.get("state") as string;
     const storedState = cookieStore.get('state')?.value as string;
     const errorUrl = cookieStore.get(OAUTH2_REDIRECT_ERROR_URL_PARAMS)?.value as string;
-
+    console.log("error_url: " + errorUrl);
     if (code === null || storedState === null || state !== storedState) {
         console.log('error 1?');
         return errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_BAD_REQUEST_PARAMS}`;
