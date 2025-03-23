@@ -49,7 +49,7 @@ export async function handleCallback({
     const errorUrl = cookieStore.get(OAUTH2_REDIRECT_ERROR_URL_PARAMS)?.value as string;
     console.log("error_url: " + errorUrl);
     if (code === null || storedState === null || state !== storedState) {
-        console.log('error 1?');
+        console.log('error 1?', code, storedState, state, cookieStore);
         return errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_BAD_REQUEST_PARAMS}`;
     }
 
