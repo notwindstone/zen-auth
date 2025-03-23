@@ -123,7 +123,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         await DecrementVerificationRateLimit({ token: email });
 
         const headers = new Headers({
-            "X-Zen-Auth-Conflict": userExistence,
+            "X-Zen-Auth-Conflict": String(userExistence.username ?? userExistence.email),
         });
 
         return new Response(null, {
@@ -234,7 +234,7 @@ export async function PUT(request: NextRequest): Promise<Response> {
 
     if (userExistence !== null) {
         const headers = new Headers({
-            "X-Zen-Auth-Conflict": userExistence,
+            "X-Zen-Auth-Conflict": String(userExistence.username ?? userExistence.email),
         });
 
         return new Response(null, {

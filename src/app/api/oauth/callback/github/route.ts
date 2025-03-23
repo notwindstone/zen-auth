@@ -56,17 +56,16 @@ export async function GET(request: NextRequest): Promise<Response> {
         },
     });
 
-    let oauth2Response: GithubUserResponseType;
+    let user: GithubUserResponseType;
 
     try {
-        oauth2Response = await response.json();
+        user = await response.json();
     } catch (e) {
         console.error(e);
 
         return redirect(errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_INTERNAL_SERVER_ERROR_PARAMS}`);
     }
 
-    const user = oauth2Response?.user;
     const username = user?.login;
     const email = user?.email;
     const userId = `${request.nextUrl.pathname}_${user?.id ?? uuid()}`;
@@ -80,13 +79,13 @@ export async function GET(request: NextRequest): Promise<Response> {
         return redirect(errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_INTERNAL_SERVER_ERROR_PARAMS}`);
     }
 
-    if (userExistence === "email") {
+    if (userExistence !== null && userExistence.email) {
         return redirect(errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_USER_EXISTS_PARAMS}`);
     }
 
     let newUsername;
 
-    if (userExistence === "username") {
+    if (userExistence !== null && userExistence?.username) {
         newUsername = uuid();
     } else {
         newUsername = username;

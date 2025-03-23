@@ -93,7 +93,10 @@ export async function checkUserExistence({
 }: {
     username: TableUserType['username'];
     email: TableUserType['email'];
-}): Promise<"username" | "email" | null | Error> {
+}): Promise<{
+    username: boolean;
+    email: boolean;
+} | null | Error> {
     let users;
 
     try {
@@ -110,14 +113,26 @@ export async function checkUserExistence({
         return new Error("Internal server error.");
     }
 
+    const existingUser = {
+        username: false,
+        email: false,
+        exists: false,
+    };
+
     for (const user of users) {
         if (user.username === username) {
-            return "username";
+            existingUser.username = true;
+            existingUser.exists = true;
         }
 
         if (user.email === email) {
-            return "email";
+            existingUser.email = true;
+            existingUser.exists = true;
         }
+    }
+
+    if (existingUser.exists) {
+        return existingUser;
     }
 
     return null;
