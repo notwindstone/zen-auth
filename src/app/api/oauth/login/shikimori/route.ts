@@ -3,12 +3,12 @@ import * as arctic from "arctic";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import {
-    API_ROUTES,
     OAUTH2_ERROR_BASE_PARAMS,
     OAUTH2_REDIRECT_ERROR_URL_PARAMS,
     OAUTH2_RTL_PARAMS,
 } from "@/configs/api";
 import { ConfiguredLRUCacheRateLimit } from "@/lib/ratelimit/lrucache";
+import { ShikimoriProvider } from "@/utils/providers/OAuth2Providers";
 
 export async function GET(request: NextRequest): Promise<Response> {
     const routeRTLKey = request.nextUrl.pathname;
@@ -20,11 +20,7 @@ export async function GET(request: NextRequest): Promise<Response> {
     }
 
     const cookieStore = await cookies();
-    const shikimori = new arctic.Shikimori(
-        process.env.SHIKIMORI_CLIENT_ID!,
-        process.env.SHIKIMORI_SECRET_KEY!,
-        process.env.HOST_URL! + API_ROUTES.OAUTH.CALLBACK.SHIKIMORI,
-    );
+    const shikimori = await ShikimoriProvider();
     const state = arctic.generateState();
     const url = shikimori.createAuthorizationURL(state);
 

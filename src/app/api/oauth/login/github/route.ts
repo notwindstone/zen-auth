@@ -8,6 +8,7 @@ import {
     OAUTH2_REDIRECT_ERROR_URL_PARAMS,
     OAUTH2_RTL_PARAMS,
 } from "@/configs/api";
+import { GitHubProvider } from "@/utils/providers/OAuth2Providers";
 
 export async function GET(request: NextRequest): Promise<Response> {
     const routeRTLKey = request.nextUrl.pathname;
@@ -19,11 +20,7 @@ export async function GET(request: NextRequest): Promise<Response> {
     }
 
     const cookieStore = await cookies();
-    const github = new arctic.GitHub(
-        process.env.GITHUB_CLIENT_ID!,
-        process.env.GITHUB_SECRET_KEY!,
-        null,
-    );
+    const github = await GitHubProvider();
     const state = arctic.generateState();
     const scopes = ["user:email"];
     const url = github.createAuthorizationURL(state, scopes);
