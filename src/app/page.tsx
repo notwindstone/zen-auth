@@ -1,11 +1,16 @@
 import Link from "next/link";
 import RegisterForm from "@/components/forms/RegisterForm/RegisterForm";
 import { PAGE_ROUTES } from "@/configs/pages";
+import { cookies } from "next/headers";
+import { COOKIES_KEY } from "@/configs/constants";
 
-export default function Page() {
+export default async function Page() {
+    const cookieStorage = await cookies();
+    const token = cookieStorage.get(COOKIES_KEY)?.value as string;
+
     return (
         <main className="p-10">
-            <div className="mx-auto p-4 rounded-md flex flex-col gap-4 w-fit bg-zinc-800 border-[1px] border-zinc-500">
+            <div className="mx-auto p-4 rounded-md flex flex-col gap-4 w-full max-w-fit bg-zinc-800 border-[1px] border-zinc-500">
                 <div className="mb-4">
                     <p className="text-2xl font-bold">
                         Главная
@@ -19,7 +24,7 @@ export default function Page() {
                     </a>
                 </div>
                 <RegisterForm
-                    token={""}
+                    token={token}
                     usernamePlaceholder={""}
                     emailPlaceholder={""}
                 />

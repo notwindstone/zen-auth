@@ -28,7 +28,7 @@ export default function GeneralForm({
 
     if (isPending) {
         return (
-            <div>
+            <div className="flex">
                 <div
                     style={{
                         height: `${initialHeight}px`,
