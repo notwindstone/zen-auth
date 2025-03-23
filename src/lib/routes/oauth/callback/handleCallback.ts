@@ -37,6 +37,8 @@ export async function handleCallback({
     providerName: ProviderListType;
     fetchUserProfile: (accessToken: string) => Promise<Response>;
 }): Promise<string> {
+    console.log('success 1?');
+
     let tokens;
     let accessToken;
 
@@ -47,6 +49,7 @@ export async function handleCallback({
     const errorUrl = cookieStore.get(OAUTH2_REDIRECT_ERROR_URL_PARAMS)?.value as string;
 
     if (code === null || storedState === null || state !== storedState) {
+        console.log('error 1?');
         return errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_BAD_REQUEST_PARAMS}`;
     }
 
@@ -55,9 +58,11 @@ export async function handleCallback({
         accessToken = tokens.accessToken();
     } catch (e) {
         console.error(e);
+        console.log('error 2?');
 
         return errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_INTERNAL_SERVER_ERROR_PARAMS}`;
     }
+    console.log('success 2?');
 
     const response = await fetchUserProfile(accessToken);
 
@@ -72,12 +77,14 @@ export async function handleCallback({
         });
     } catch (e) {
         console.error(e);
+        console.log('error 3?');
 
         return errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_INTERNAL_SERVER_ERROR_PARAMS}`;
     }
+    console.log('success 3?');
 
     const username = user?.login;
-    const email = user?.email;
+    const email = user?.email ?? `oauth_email_${uuid()}`;
     const userId = `${request.nextUrl.pathname}_${user?.id ?? uuid()}`;
 
     let userExistence = await checkUserExistence({
@@ -85,16 +92,21 @@ export async function handleCallback({
         email,
     });
     let isSameUser = false;
+    console.log('success 4?');
 
     if (types.isNativeError(userExistence)) {
+        console.log('error 4?');
         return errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_INTERNAL_SERVER_ERROR_PARAMS}`;
     }
 
     if (userExistence !== null && userExistence.email) {
+        console.log('error 5?');
         if (userExistence.id === userId) {
+            console.log('success 5?');
             userExistence = null;
             isSameUser = true;
         } else {
+            console.log('error 6?');
             return errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_USER_EXISTS_PARAMS}`;
         }
     }
@@ -106,13 +118,16 @@ export async function handleCallback({
     } else {
         newUsername = username;
     }
+    console.log('success 6?');
 
     if (!isSameUser) {
+        console.log('success 7?');
         const secureAccessTokenResponse = await generateSecurePassword({
             password: accessToken,
         });
 
         if (types.isNativeError(secureAccessTokenResponse)) {
+            console.log('error 7?');
             return errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_INTERNAL_SERVER_ERROR_PARAMS}`;
         }
 
@@ -127,10 +142,12 @@ export async function handleCallback({
         });
 
         if (types.isNativeError(userDatabaseResponse)) {
+            console.log('error 8?');
             return errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_INTERNAL_SERVER_ERROR_PARAMS}`;
         }
     }
 
+    console.log('success 8?');
     const {
         cpu,
         os,
@@ -150,13 +167,16 @@ export async function handleCallback({
     });
 
     if (types.isNativeError(sessionResponse)) {
+        console.log('error 9?');
         return errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_INTERNAL_SERVER_ERROR_PARAMS}`;
     }
+    console.log('success 9?');
 
     await setSessionTokenCookie({
         token: sessionToken,
         expiresAt: getMonthForwardDate(),
     });
+    console.log('success 10?');
 
     return PAGE_ROUTES.PROFILE.ROOT;
 }
