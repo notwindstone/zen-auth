@@ -23,10 +23,14 @@ export default function getOAuthErrorInitialStylesData(error: string) {
                 text: STYLES_ERROR_TYPES.OAUTH2_USER_EXISTS,
             };
         case OAUTH2_INTERNAL_SERVER_ERROR_PARAMS:
-        default:
             return {
                 error: true,
                 text: STYLES_ERROR_TYPES.INTERNAL_SERVER_ERROR,
+            };
+        default:
+            return {
+                error: false,
+                text: STYLES_ERROR_TYPES.EMPTY,
             };
     }
 }

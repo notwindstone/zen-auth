@@ -96,6 +96,8 @@ export async function checkUserExistence({
 }): Promise<{
     username: boolean;
     email: boolean;
+    exists: boolean;
+    id: string | null;
 } | null | Error> {
     let users;
 
@@ -103,6 +105,7 @@ export async function checkUserExistence({
         users = await db.select({
             username: userTable.username,
             email: userTable.email,
+            id: userTable.id,
         }).from(userTable).where(
             or(
                 eq(userTable.username, username),
@@ -113,10 +116,16 @@ export async function checkUserExistence({
         return new Error("Internal server error.");
     }
 
-    const existingUser = {
+    const existingUser: {
+        username: boolean;
+        email: boolean;
+        exists: boolean;
+        id: string | null;
+    } = {
         username: false,
         email: false,
         exists: false,
+        id: null,
     };
 
     for (const user of users) {
@@ -128,6 +137,7 @@ export async function checkUserExistence({
         if (user.email === email) {
             existingUser.email = true;
             existingUser.exists = true;
+            existingUser.id = user.id;
         }
     }
 

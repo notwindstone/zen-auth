@@ -1,0 +1,153 @@
+"use server";
+
+import { cookies } from "next/headers";
+import {
+    OAUTH2_BAD_REQUEST_PARAMS,
+    OAUTH2_ERROR_BASE_PARAMS,
+    OAUTH2_INTERNAL_SERVER_ERROR_PARAMS,
+    OAUTH2_REDIRECT_ERROR_URL_PARAMS, OAUTH2_USER_EXISTS_PARAMS,
+} from "@/configs/api";
+import { v4 as uuid } from "uuid";
+import { checkUserExistence, createUser } from "@/lib/actions/user";
+import { types } from "node:util";
+import { generateSecurePassword } from "@/utils/secure/generateSecurePassword";
+import { NextRequest, userAgent } from "next/server";
+import { getIpAddress } from "@/utils/secure/getIpAddress";
+import { generateSessionToken } from "@/utils/secure/generateSessionToken";
+import { createSession } from "@/lib/actions/session";
+import { setSessionTokenCookie } from "@/lib/actions/cookies";
+import { getMonthForwardDate } from "@/utils/misc/getMonthForwardDate";
+import { PAGE_ROUTES } from "@/configs/pages";
+import { UniversalUserResponseType } from "@/types/OAuth2/Responses/UniversalUserResponse.type";
+
+export async function handleCallback({
+    request,
+    provider,
+    fetchUserProfile,
+}: {
+    request: NextRequest;
+    provider: {
+        validateAuthorizationCode: (code: string) => Promise<{
+            accessToken: () => string;
+        }>;
+    };
+    fetchUserProfile: (accessToken: string) => Promise<Response>;
+}): Promise<string> {
+    let tokens;
+    let accessToken;
+
+    const cookieStore = await cookies();
+    const code = request.nextUrl.searchParams.get("code") as string;
+    const state = request.nextUrl.searchParams.get("state") as string;
+    const storedState = cookieStore.get('state')?.value as string;
+    const errorUrl = cookieStore.get(OAUTH2_REDIRECT_ERROR_URL_PARAMS)?.value as string;
+
+    if (code === null || storedState === null || state !== storedState) {
+        return errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_BAD_REQUEST_PARAMS}`;
+    }
+
+    try {
+        tokens = await provider.validateAuthorizationCode(code);
+        accessToken = tokens.accessToken();
+    } catch (e) {
+        console.error(e);
+
+        return errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_INTERNAL_SERVER_ERROR_PARAMS}`;
+    }
+
+    const response = await fetchUserProfile(accessToken);
+
+    let user: UniversalUserResponseType;
+
+    try {
+        user = await response.json();
+    } catch (e) {
+        console.error(e);
+
+        return errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_INTERNAL_SERVER_ERROR_PARAMS}`;
+    }
+
+    const username = user?.login;
+    const email = user?.email;
+    const userId = `${request.nextUrl.pathname}_${user?.id ?? uuid()}`;
+
+    let userExistence = await checkUserExistence({
+        username,
+        email,
+    });
+    let isSameUser = false;
+
+    if (types.isNativeError(userExistence)) {
+        return errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_INTERNAL_SERVER_ERROR_PARAMS}`;
+    }
+
+    if (userExistence !== null && userExistence.email) {
+        if (userExistence.id === userId) {
+            userExistence = null;
+            isSameUser = true;
+        } else {
+            return errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_USER_EXISTS_PARAMS}`;
+        }
+    }
+
+    let newUsername;
+
+    if (userExistence !== null && userExistence?.username) {
+        newUsername = uuid();
+    } else {
+        newUsername = username;
+    }
+
+    if (!isSameUser) {
+        const secureAccessTokenResponse = await generateSecurePassword({
+            password: accessToken,
+        });
+
+        if (types.isNativeError(secureAccessTokenResponse)) {
+            return errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_INTERNAL_SERVER_ERROR_PARAMS}`;
+        }
+
+        const { hash } = secureAccessTokenResponse;
+
+        const userDatabaseResponse = await createUser({
+            id: userId,
+            username: newUsername,
+            displayName: newUsername,
+            email,
+            password: hash,
+        });
+
+        if (types.isNativeError(userDatabaseResponse)) {
+            return errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_INTERNAL_SERVER_ERROR_PARAMS}`;
+        }
+    }
+
+    const {
+        cpu,
+        os,
+        browser,
+    } = userAgent(request);
+    const ipAddress = getIpAddress(request);
+
+    // sessionToken is NOT a sessionId
+    const sessionToken = generateSessionToken();
+    const sessionResponse = await createSession({
+        token: sessionToken,
+        userId: userId,
+        architecture: cpu?.architecture ?? "unknown",
+        os: `${os?.name} ${os?.version}`,
+        browser: `${browser?.name} ${browser?.version}`,
+        ipAddress: ipAddress,
+    });
+
+    if (types.isNativeError(sessionResponse)) {
+        return errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_INTERNAL_SERVER_ERROR_PARAMS}`;
+    }
+
+    await setSessionTokenCookie({
+        token: sessionToken,
+        expiresAt: getMonthForwardDate(),
+    });
+
+    return PAGE_ROUTES.PROFILE.ROOT;
+}

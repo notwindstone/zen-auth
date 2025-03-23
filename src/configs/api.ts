@@ -1,5 +1,17 @@
 export const API_ROUTES = {
     LOGIN: "/api/login",
+    OAUTH: {
+        CALLBACK: {
+            GITHUB: "/api/oauth/callback/github",
+            GOOGLE: "/api/oauth/callback/google",
+            SHIKIMORI: "/api/oauth/callback/shikimori",
+        },
+        LOGIN: {
+            GITHUB: "/api/oauth/login/github",
+            GOOGLE: "/api/oauth/login/google",
+            SHIKIMORI: "/api/oauth/login/shikimori",
+        },
+    },
     PROFILE: "/api/profile",
     RESET: "/api/reset",
     SESSION: {
