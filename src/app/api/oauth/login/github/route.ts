@@ -3,7 +3,11 @@ import * as arctic from "arctic";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { ConfiguredLRUCacheRateLimit } from "@/lib/ratelimit/lrucache";
-import {OAUTH2_ERROR_BASE_PARAMS, OAUTH2_REDIRECT_ERROR_URL_PARAMS, OAUTH2_RTL_PARAMS} from "@/configs/api";
+import {
+    OAUTH2_ERROR_BASE_PARAMS,
+    OAUTH2_REDIRECT_ERROR_URL_PARAMS,
+    OAUTH2_RTL_PARAMS,
+} from "@/configs/api";
 
 export async function GET(request: NextRequest): Promise<Response> {
     const routeRTLKey = request.nextUrl.pathname;
