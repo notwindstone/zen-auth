@@ -3,6 +3,7 @@ import RegisterForm from "@/components/forms/RegisterForm/RegisterForm";
 import { PAGE_ROUTES } from "@/configs/pages";
 import { cookies } from "next/headers";
 import { COOKIES_KEY } from "@/configs/constants";
+import { OAUTH2_ERROR_BASE_PARAMS } from "@/configs/api";
 
 export default async function Page({
     searchParams,
@@ -10,7 +11,7 @@ export default async function Page({
     searchParams?: Promise<{ [key: string]: string | null }>;
 }) {
     const searchParamsStore = await searchParams;
-    const oauthRTL = Boolean(searchParamsStore?.oauthRTL);
+    const oauthError = searchParamsStore?.[OAUTH2_ERROR_BASE_PARAMS] as string;
 
     const cookieStorage = await cookies();
     const token = cookieStorage.get(COOKIES_KEY)?.value as string;
@@ -34,7 +35,7 @@ export default async function Page({
                     token={token}
                     usernamePlaceholder={""}
                     emailPlaceholder={""}
-                    oauthRTL={oauthRTL}
+                    oauthError={oauthError}
                 />
                 <Link
                     className="w-full max-w-[464px] text-center hover:bg-zinc-200 bg-white focus:bg-zinc-300 text-black rounded-md py-2 px-4 transition"

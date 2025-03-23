@@ -38,7 +38,9 @@ export const STYLES_ERROR_TYPES = {
     CREDENTIALS_ERROR: "Неверный логин или пароль.",
     EMAIL_NOT_FOUND: "Пользователя с такой почтой не существует.",
     WRONG_RESET_TOKEN: "Неверный токен сброса пароля.",
-    SERVICE_UNAVAILABLE: "Сервер перегружен. Повторите попытку.",
+    SERVICE_UNAVAILABLE: "Сервер перегружен. Повторите попытку. Если проблема не уйдет, попробуйте позже.",
+    OAUTH2_BAD_REQUEST: "Произошла некая ошибка. Возможно, вы отказались от авторизации через OAuth2.",
+    INTERNAL_SERVER_ERROR: "Произошла ошибка на стороне сервера. Попробуйте ещё раз.",
 };
 export const STYLES_ERROR_INITIAL_DATA = {
     error: false,

@@ -1,7 +1,14 @@
 import { NextRequest } from "next/server";
 import * as arctic from "arctic";
 import { cookies } from "next/headers";
-import { API_STATUS_CODES } from "@/configs/api";
+import {
+    OAUTH2_API_ROUTES,
+    OAUTH2_BAD_REQUEST_PARAMS,
+    OAUTH2_REDIRECT_ERROR_URL_PARAMS,
+    OAUTH2_INTERNAL_SERVER_ERROR_PARAMS,
+    OAUTH2_ERROR_BASE_PARAMS,
+} from "@/configs/api";
+import { redirect } from "next/navigation";
 
 export async function GET(request: NextRequest): Promise<Response> {
     let tokens;
@@ -16,38 +23,35 @@ export async function GET(request: NextRequest): Promise<Response> {
     const code = request.nextUrl.searchParams.get("code") as string;
     const state = request.nextUrl.searchParams.get("state") as string;
     const storedState = cookieStore.get('state')?.value as string;
+    const errorUrl = cookieStore.get(OAUTH2_REDIRECT_ERROR_URL_PARAMS)?.value as string;
 
     if (code === null || storedState === null || state !== storedState) {
-        return new Response(null, {
-            status: API_STATUS_CODES.ERROR.BAD_REQUEST,
-        });
+        return redirect(errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_BAD_REQUEST_PARAMS}`);
     }
 
     try {
         tokens = await github.validateAuthorizationCode(code);
         accessToken = tokens.accessToken();
     } catch (e) {
-        if (e instanceof arctic.OAuth2RequestError) {
-            // Invalid authorization code, credentials, or redirect URI
-            const code = e.code;
-            // ...
-            console.error(code);
-        }
-        if (e instanceof arctic.ArcticFetchError) {
-            // Failed to call `fetch()`
-            const cause = e.cause;
-            console.error(cause);
-        }
-        // Parse error
+        console.error(e);
+
+        return redirect(errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_INTERNAL_SERVER_ERROR_PARAMS}`);
     }
 
-    const response = await fetch("https://api.github.com/user", {
+    const response = await fetch(OAUTH2_API_ROUTES.GITHUB.USER, {
         headers: {
             Authorization: `Bearer ${accessToken}`,
         },
     });
-    const user = await response.json();
+    let user;
 
+    try {
+        user = await response.json();
+    } catch (e) {
+        console.error(e);
+
+        return redirect(errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_INTERNAL_SERVER_ERROR_PARAMS}`);
+    }
 
     return Response.json({
         accessToken: accessToken,

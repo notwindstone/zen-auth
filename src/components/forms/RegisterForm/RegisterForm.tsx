@@ -18,18 +18,18 @@ import ConfiguredTurnstile from "@/components/forms/ConfiguredTurnstile/Configur
 import { v4 as uuid } from "uuid";
 import handleTurnstileReset from "@/utils/secure/handleTurnstileReset";
 import OAuth2Providers from "@/components/forms/OAuth2Providers/OAuth2Providers";
-import getRTLInitialStylesData from "@/utils/secure/getRTLInitialStylesData";
+import getOAuthErrorInitialStylesData from "@/utils/secure/getOAuthErrorInitialStylesData";
 
 export default function RegisterForm({
     token,
     usernamePlaceholder,
     emailPlaceholder,
-    oauthRTL,
+    oauthError,
 }: {
     token: string;
     usernamePlaceholder: string;
     emailPlaceholder: string;
-    oauthRTL: boolean;
+    oauthError: string;
 }) {
     const router = useRouter();
     const [turnstileKey, setTurnstileKey] = useState<string>(uuid);
@@ -41,7 +41,7 @@ export default function RegisterForm({
             "rtl" | "username" | "email" | "turnstile"
         >
     >({
-        rtl: getRTLInitialStylesData(oauthRTL),
+        rtl: getOAuthErrorInitialStylesData(oauthError),
         username: STYLES_ERROR_INITIAL_DATA,
         email: STYLES_ERROR_INITIAL_DATA,
         turnstile: STYLES_ERROR_INITIAL_DATA,
