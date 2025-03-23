@@ -47,3 +47,4 @@ export const OAUTH2_ERROR_BASE_PARAMS = "oauth_error";
 export const OAUTH2_RTL_PARAMS = "oauth_rtl";
 export const OAUTH2_BAD_REQUEST_PARAMS = "oauth_bad_request";
 export const OAUTH2_INTERNAL_SERVER_ERROR_PARAMS = "oauth_internal_server_error";
+export const OAUTH2_USER_EXISTS_PARAMS = "oauth_user_exists";

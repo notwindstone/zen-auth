@@ -40,6 +40,7 @@ export const STYLES_ERROR_TYPES = {
     WRONG_RESET_TOKEN: "Неверный токен сброса пароля.",
     SERVICE_UNAVAILABLE: "Сервер перегружен. Повторите попытку. Если проблема не уйдет, попробуйте позже.",
     OAUTH2_BAD_REQUEST: "Произошла некая ошибка. Возможно, вы отказались от авторизации через OAuth2.",
+    OAUTH2_USER_EXISTS: "Пользователь с такой почтой уже существует.",
     INTERNAL_SERVER_ERROR: "Произошла ошибка на стороне сервера. Попробуйте ещё раз.",
 };
 export const STYLES_ERROR_INITIAL_DATA = {
