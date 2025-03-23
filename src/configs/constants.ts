@@ -38,7 +38,7 @@ export const STYLES_ERROR_TYPES = {
     CREDENTIALS_ERROR: "Неверный логин или пароль.",
     EMAIL_NOT_FOUND: "Пользователя с такой почтой не существует.",
     WRONG_RESET_TOKEN: "Неверный токен сброса пароля.",
-    SERVICE_UNAVAILABLE: "Сервер перегружен. Повторите попытку чуть позже.",
+    SERVICE_UNAVAILABLE: "Сервер перегружен. Повторите попытку.",
 };
 export const STYLES_ERROR_INITIAL_DATA = {
     error: false,

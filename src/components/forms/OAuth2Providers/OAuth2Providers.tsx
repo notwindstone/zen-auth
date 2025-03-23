@@ -1,10 +1,17 @@
-import { SiGithub, SiGoogle } from "react-icons/si";
+import {
+    SiGithub,
+    SiGoogle,
+    SiShikimori,
+} from "react-icons/si";
+import { usePathname } from "next/navigation";
 
 export default function OAuth2Providers() {
+    const pathname = usePathname();
+
     return (
         <>
             <a
-                className="flex-1 border-gray-200 h-8 flex justify-center items-center text-zinc-800 font-medium border-[1px] rounded-md hover:bg-zinc-100 transition text-sm"
+                className="min-w-[40%] flex-1 border-gray-200 h-8 flex justify-center items-center text-zinc-800 font-medium border-[1px] rounded-md hover:bg-zinc-100 transition text-sm"
                 href="/api/oauth/login/google"
             >
                 <div className="flex flex-nowrap items-center gap-2">
@@ -15,8 +22,8 @@ export default function OAuth2Providers() {
                 </div>
             </a>
             <a
-                className="flex-1 border-gray-200 h-8 flex justify-center items-center text-zinc-800 font-medium border-[1px] rounded-md hover:bg-zinc-100 transition text-sm"
-                href="/api/oauth/login/github"
+                className="min-w-[40%] flex-1 border-gray-200 h-8 flex justify-center items-center text-zinc-800 font-medium border-[1px] rounded-md hover:bg-zinc-100 transition text-sm"
+                href={"/api/oauth/login/github?error_url=" + pathname}
             >
                 <div className="flex flex-nowrap items-center gap-2">
                     <SiGithub/>
@@ -25,19 +32,17 @@ export default function OAuth2Providers() {
                     </p>
                 </div>
             </a>
-            {/*
-                            <a
-                                className="flex-1 border-gray-200 h-8 flex justify-center items-center text-zinc-800 font-medium border-[1px] rounded-md hover:bg-zinc-100 transition text-sm"
-                                href="/api/oauth/login/shikimori"
-                            >
-                                <div className="flex flex-nowrap items-center gap-2">
-                                    <SiShikimori />
-                                    <p>
-                                        Shikimori
-                                    </p>
-                                </div>
-                            </a>
-                            */}
+            <a
+                className="min-w-[40%] flex-[2] border-gray-200 h-8 flex justify-center items-center text-zinc-800 font-medium border-[1px] rounded-md hover:bg-zinc-100 transition text-sm"
+                href={"/api/oauth/login/shikimori"}
+            >
+                <div className="flex flex-nowrap items-center gap-2">
+                    <SiShikimori />
+                    <p>
+                        Shikimori
+                    </p>
+                </div>
+            </a>
         </>
     );
 }

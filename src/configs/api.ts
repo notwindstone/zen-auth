@@ -34,3 +34,11 @@ export const API_REQUEST_METHODS = {
     PUT: "PUT",
     DELETE: "DELETE",
 };
+export const OAUTH2_API_BASES = {
+    GITHUB: "https://api.github.com",
+};
+export const OAUTH2_API_ROUTES = {
+    GITHUB: {
+        USER: OAUTH2_API_BASES.GITHUB + "/user",
+    },
+};

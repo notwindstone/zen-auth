@@ -18,15 +18,18 @@ import ConfiguredTurnstile from "@/components/forms/ConfiguredTurnstile/Configur
 import { v4 as uuid } from "uuid";
 import handleTurnstileReset from "@/utils/secure/handleTurnstileReset";
 import OAuth2Providers from "@/components/forms/OAuth2Providers/OAuth2Providers";
+import getRTLInitialStylesData from "@/utils/secure/getRTLInitialStylesData";
 
 export default function RegisterForm({
     token,
     usernamePlaceholder,
     emailPlaceholder,
+    oauthRTL,
 }: {
     token: string;
     usernamePlaceholder: string;
     emailPlaceholder: string;
+    oauthRTL: boolean;
 }) {
     const router = useRouter();
     const [turnstileKey, setTurnstileKey] = useState<string>(uuid);
@@ -38,7 +41,7 @@ export default function RegisterForm({
             "rtl" | "username" | "email" | "turnstile"
         >
     >({
-        rtl: STYLES_ERROR_INITIAL_DATA,
+        rtl: getRTLInitialStylesData(oauthRTL),
         username: STYLES_ERROR_INITIAL_DATA,
         email: STYLES_ERROR_INITIAL_DATA,
         turnstile: STYLES_ERROR_INITIAL_DATA,
@@ -176,7 +179,7 @@ export default function RegisterForm({
     }
 
     return (
-        <GeneralForm token={token} initialHeight="665">
+        <GeneralForm token={token} initialHeight="705">
             <div className="h-fit w-full max-w-[464px] bg-zinc-100 drop-shadow-xl rounded-md">
                 <div className="py-6 px-12 rounded-md drop-shadow-sm bg-white">
                     <div className="flex flex-col items-center gap-4">
@@ -190,7 +193,7 @@ export default function RegisterForm({
                         <p className="text-center text-gray-500 font-medium">
                             Добро пожаловать! Зарегистрируйтесь, чтобы продолжить.
                         </p>
-                        <div className="w-full flex flex-nowrap items-center gap-2">
+                        <div className="w-full flex flex-wrap items-center gap-2">
                             <OAuth2Providers />
                         </div>
                         <div

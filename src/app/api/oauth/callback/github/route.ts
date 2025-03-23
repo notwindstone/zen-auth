@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import * as arctic from "arctic";
 import { cookies } from "next/headers";
-import {API_STATUS_CODES} from "@/configs/api";
+import { API_STATUS_CODES } from "@/configs/api";
 
 export async function GET(request: NextRequest): Promise<Response> {
     let tokens;
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest): Promise<Response> {
     }
 
     try {
-        tokens = await github.validateAuthorizationCode(code ?? "");
+        tokens = await github.validateAuthorizationCode(code);
         accessToken = tokens.accessToken();
     } catch (e) {
         if (e instanceof arctic.OAuth2RequestError) {
