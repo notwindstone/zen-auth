@@ -5,7 +5,7 @@ import {
     OAUTH2_BAD_REQUEST_PARAMS,
     OAUTH2_ERROR_BASE_PARAMS,
     OAUTH2_INTERNAL_SERVER_ERROR_PARAMS,
-    OAUTH2_REDIRECT_ERROR_URL_PARAMS, OAUTH2_USER_EXISTS_PARAMS,
+    OAUTH2_REDIRECT_ERROR_URL_PARAMS,
 } from "@/configs/api";
 import { v4 as uuid } from "uuid";
 import { checkUserExistence, createUser } from "@/lib/actions/user";
@@ -99,6 +99,8 @@ export async function handleCallback({
         return errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_INTERNAL_SERVER_ERROR_PARAMS}`;
     }
 
+    let newEmail = email;
+
     if (userExistence !== null && userExistence.email) {
         console.log('error 5?');
         if (userExistence.id === userId) {
@@ -107,7 +109,8 @@ export async function handleCallback({
             isSameUser = true;
         } else {
             console.log('error 6?');
-            return errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_USER_EXISTS_PARAMS}`;
+
+            newEmail = `oauth_${providerName}_${uuid()}`;
         }
     }
 
@@ -137,7 +140,7 @@ export async function handleCallback({
             id: userId,
             username: newUsername,
             displayName: newUsername,
-            email,
+            email: newEmail,
             password: hash,
         });
 
