@@ -121,18 +121,39 @@ export default function getStylesErrorData({
 
             break;
         case API_STATUS_CODES.ERROR.NOT_FOUND:
-            usernameError = {
-                error: true,
-                text: STYLES_ERROR_TYPES.CREDENTIALS_ERROR,
-            };
-            passwordError = {
-                error: true,
-                text: STYLES_ERROR_TYPES.CREDENTIALS_ERROR,
-            };
-            emailError = {
-                error: true,
-                text: STYLES_ERROR_TYPES.EMAIL_NOT_FOUND,
-            };
+            const errorElement = headers.get('X-Zen-Auth-Not-Found') ?? "";
+
+            switch (errorElement) {
+                case "login":
+                    usernameError = {
+                        error: true,
+                        text: STYLES_ERROR_TYPES.CREDENTIALS_ERROR_LOGIN,
+                    };
+
+                    break;
+                case "password":
+                    passwordError = {
+                        error: true,
+                        text: STYLES_ERROR_TYPES.CREDENTIALS_ERROR_PASSWORD,
+                    };
+
+                    break;
+                default:
+                    usernameError = {
+                        error: true,
+                        text: STYLES_ERROR_TYPES.CREDENTIALS_ERROR,
+                    };
+                    passwordError = {
+                        error: true,
+                        text: STYLES_ERROR_TYPES.CREDENTIALS_ERROR,
+                    };
+                    emailError = {
+                        error: true,
+                        text: STYLES_ERROR_TYPES.EMAIL_NOT_FOUND,
+                    };
+
+                    break;
+            }
 
             break;
         case API_STATUS_CODES.SERVER.NETWORK_AUTHENTICATION_REQUIRED:

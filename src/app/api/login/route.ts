@@ -60,8 +60,13 @@ export async function POST(request: NextRequest): Promise<Response> {
     const user = users?.[0];
 
     if (!user) {
+        const headers = new Headers({
+            "X-Zen-Auth-Not-Found": "login",
+        });
+
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.NOT_FOUND,
+            headers: headers,
         });
     }
 
@@ -71,8 +76,13 @@ export async function POST(request: NextRequest): Promise<Response> {
     });
 
     if (!isValid) {
+        const headers = new Headers({
+            "X-Zen-Auth-Not-Found": "password",
+        });
+
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.NOT_FOUND,
+            headers: headers,
         });
     }
 
