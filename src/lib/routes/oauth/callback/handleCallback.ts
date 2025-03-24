@@ -46,7 +46,7 @@ export async function handleCallback({
     const storedState = cookieStore.get('state')?.value;
     const errorUrl = cookieStore.get(OAUTH2_REDIRECT_ERROR_URL_PARAMS)?.value ?? PAGE_ROUTES.REGISTER;
 
-    if (storedState === null ) {
+    if (storedState === undefined) {
         return PAGE_ROUTES.OAUTH_DIFFERENT_BROWSER;
     }
 
