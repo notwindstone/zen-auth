@@ -13,4 +13,5 @@ export const PAGE_ROUTES = {
     },
     SESSIONS: "/sessions",
     VERIFICATION: "/verification",
+    OAUTH_DIFFERENT_BROWSER: "/oauth_different_browser",
 };

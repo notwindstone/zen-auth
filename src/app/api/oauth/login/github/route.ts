@@ -18,27 +18,25 @@ export async function GET(request: NextRequest): Promise<Response> {
     if (GlobalRTLResult) {
         return redirect(errorUrl + `?${OAUTH2_ERROR_BASE_PARAMS}=${OAUTH2_RTL_PARAMS}`);
     }
-    console.log(errorUrl);
+
     const cookieStore = await cookies();
     const github = await GitHubProvider();
     const state = arctic.generateState();
     const scopes = ["user:email"];
     const url = github.createAuthorizationURL(state, scopes);
 
-    const stateCookiesResponse = cookieStore.set("state", state, {
+    cookieStore.set("state", state, {
         secure: process.env.NODE_ENV === "production",
         path: "/",
         httpOnly: true,
         maxAge: 60 * 10,
     });
-    const errorUrlCookiesResponse = cookieStore.set(OAUTH2_REDIRECT_ERROR_URL_PARAMS, errorUrl as string, {
+    cookieStore.set(OAUTH2_REDIRECT_ERROR_URL_PARAMS, errorUrl as string, {
         secure: process.env.NODE_ENV === "production",
         path: "/",
         httpOnly: true,
         maxAge: 60 * 10,
     });
-
-    console.log(stateCookiesResponse, errorUrlCookiesResponse);
 
     return redirect(url.toString());
 }
