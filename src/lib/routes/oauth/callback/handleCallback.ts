@@ -20,7 +20,7 @@ import { getMonthForwardDate } from "@/utils/misc/getMonthForwardDate";
 import { PAGE_ROUTES } from "@/configs/pages";
 import { UniversalUserResponseType } from "@/types/OAuth2/Responses/UniversalUserResponse.type";
 import { ProviderListType } from "@/types/OAuth2/Provider/ProviderList.type";
-import getUniversalOAuth2UserResponse from "@/utils/misc/getUniversalOAuth2UserResponse";
+import getUniversalOAuth2UserResponse from "@/utils/secure/getUniversalOAuth2UserResponse";
 
 export async function handleCallback({
     request,

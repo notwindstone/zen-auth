@@ -21,7 +21,10 @@ export default function getUniversalOAuth2UserResponse({
     switch (provider) {
         case "github":
             response.id = String(data?.id);
-            response.avatar_url = String(data?.avatar_url);
+
+            if ('avatar_url' in data) {
+                response.avatar_url = String(data?.avatar_url);
+            }
 
             if ('email' in data) {
                 response.email = String(data?.email);
@@ -34,8 +37,11 @@ export default function getUniversalOAuth2UserResponse({
             break;
         case "shikimori":
             response.id = String(data?.id);
-            response.avatar_url = String(data?.avatar_url);
             response.email = `shikimori_oauth_email_${data?.id}`;
+
+            if ('image' in data) {
+                response.avatar_url = String(data?.image.x160);
+            }
 
             if ('nickname' in data) {
                 response.login = data?.nickname;

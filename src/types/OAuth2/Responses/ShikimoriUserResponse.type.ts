@@ -1,5 +1,8 @@
 export type ShikimoriUserResponse = {
     id: number;
     nickname: string;
-    avatar_url: string;
+    avatar: string;
+    image: {
+        x160: string;
+    };
 };
