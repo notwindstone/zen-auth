@@ -251,6 +251,9 @@ export default function RegisterForm({
                                         </AlertBlock>
                                     )
                                 }
+                                <div className="text-gray-300">
+                                    Ввод пароля на следующей странице.
+                                </div>
                             </div>
                             {
                                 (styles.rtl.error) && (
