@@ -44,6 +44,7 @@ export const STYLES_ERROR_TYPES = {
     OAUTH2_BAD_REQUEST: "Произошла некая ошибка. Возможно, вы отказались от авторизации через OAuth2.",
     OAUTH2_USER_EXISTS: "Пользователь с такой почтой уже существует.",
     INTERNAL_SERVER_ERROR: "Произошла ошибка на стороне сервера. Попробуйте ещё раз.",
+    RESEND_DAILY_QUOTA_EXCEEDED: "К сожалению, сервер не может отправить письмо с верификацией из-за превышения тарифного плана. Попробуйте завтра.",
 };
 export const STYLES_ERROR_INITIAL_DATA = {
     error: false,

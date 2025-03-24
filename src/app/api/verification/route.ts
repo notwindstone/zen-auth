@@ -155,12 +155,25 @@ export async function POST(request: NextRequest): Promise<Response> {
     if (emailResponse.error) {
         await DecrementVerificationRateLimit({ token: email });
 
+        // they actually have it.
+        // source: https://resend.com/docs/api-reference/errors#daily-quota-exceeded
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        const isDailyQuotaExceeded = emailResponse.error.name === "daily_quota_exceeded";
+
         const statusCode = ('statusCode' in emailResponse?.error)
             ? Number(emailResponse.error.statusCode)
             : API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR;
+        const headers = new Headers(
+            isDailyQuotaExceeded ? {
+                "X-Zen-Auth-Quota-Exceeded": "why is bro writing code like that :crying_emoji::skull_emoji::brainrot_emoji:",
+            } : {
+                "Retry-After": "1",
+            });
 
         return new Response(null, {
             status: statusCode,
+            headers: headers,
         });
     }
 

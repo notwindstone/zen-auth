@@ -41,6 +41,17 @@ export default function getStylesErrorData({
 
             break;
         case API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS:
+            const dailyQuotaExceeded = headers.get('X-Zen-Auth-Quota-Exceeded');
+
+            if (dailyQuotaExceeded) {
+                rtlError = {
+                    error: true,
+                    text: STYLES_ERROR_TYPES.RESEND_DAILY_QUOTA_EXCEEDED,
+                };
+
+                break;
+            }
+
             const remaining = headers.get('Retry-After');
 
             rtlError = {
