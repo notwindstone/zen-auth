@@ -251,7 +251,7 @@ export default function RegisterForm({
                                         </AlertBlock>
                                     )
                                 }
-                                <div className="text-gray-300">
+                                <div className="text-gray-500">
                                     Ввод пароля на следующей странице.
                                 </div>
                             </div>

@@ -35,7 +35,14 @@ export async function DELETE(request: NextRequest): Promise<Response> {
         });
     }
 
-    const token = request.cookies.get(COOKIES_KEY)?.value as string;
+    const token = request.cookies.get(COOKIES_KEY)?.value;
+
+    if (!token) {
+        return new Response(null, {
+            status: API_STATUS_CODES.ERROR.FORBIDDEN,
+        });
+    }
+
     const sessionId = getSessionId({ token });
 
     await deleteSessionTokenCookie();

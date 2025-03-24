@@ -90,7 +90,11 @@ export default function Profile({
             <ProfileUser
                 { ...user }
             />
-            <LogOut />
+            {
+                !username && (
+                    <LogOut />
+                )
+            }
         </div>
     );
 }
