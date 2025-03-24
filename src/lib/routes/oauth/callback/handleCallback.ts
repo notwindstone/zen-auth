@@ -83,6 +83,7 @@ export async function handleCallback({
     const username = user?.login;
     const email = user?.email ?? `oauth_email_${uuid()}`;
     const userId = `${request.nextUrl.pathname}_${user?.id ?? uuid()}`;
+    const avatarUrl = user?.avatar_url;
 
     let userExistence = await checkUserExistence({
         username,
@@ -131,6 +132,7 @@ export async function handleCallback({
             displayName: newUsername,
             email: newEmail,
             password: hash,
+            avatarUrl: avatarUrl,
         });
 
         if (types.isNativeError(userDatabaseResponse)) {
