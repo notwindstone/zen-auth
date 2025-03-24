@@ -7,7 +7,7 @@ import { generateSessionToken } from "@/utils/secure/generateSessionToken";
 import { getIpAddress } from "@/utils/secure/getIpAddress";
 import { types } from "node:util";
 import { EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT } from "@/configs/constants";
-import { ConfiguredLRUCacheRateLimit } from "@/lib/ratelimit/lrucache";
+import { ConfiguredLoginLRUCacheRateLimit, ConfiguredLRUCacheRateLimit } from "@/lib/ratelimit/lrucache";
 
 export async function POST(request: NextRequest): Promise<Response> {
     const routeRTLKey = request.nextUrl.pathname;
@@ -18,8 +18,6 @@ export async function POST(request: NextRequest): Promise<Response> {
             status: API_STATUS_CODES.SERVER.SERVICE_UNAVAILABLE,
         });
     }
-
-    const ipAddress = getIpAddress(request);
 
     let data;
 
@@ -33,6 +31,19 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     // Login can either be a username or an email
     const login = data?.login;
+    const LoginRTLResult = ConfiguredLoginLRUCacheRateLimit(login ?? "");
+
+    if (LoginRTLResult) {
+        const headers = new Headers({
+            "Retry-After": "1",
+        });
+
+        return new Response(null, {
+            status: API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS,
+            headers: headers,
+        });
+    }
+
     const password = data?.password;
 
     if (!login || !password) {
@@ -91,6 +102,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         os,
         browser,
     } = userAgent(request);
+    const ipAddress = getIpAddress(request);
 
     // sessionToken is NOT a sessionId
     const sessionToken = generateSessionToken();
