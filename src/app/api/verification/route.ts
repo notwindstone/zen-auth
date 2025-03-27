@@ -234,6 +234,24 @@ export async function PUT(request: NextRequest): Promise<Response> {
         });
     }
 
+    const codesResponse = await getVerificationCodes({
+        email,
+    });
+
+    if (types.isNativeError(codesResponse)) {
+        return new Response(null, {
+            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
+        });
+    }
+
+    const existingCode = codesResponse?.[0]?.code;
+
+    if (code !== existingCode) {
+        return new Response(null, {
+            status: API_STATUS_CODES.ERROR.UNAUTHORIZED,
+        });
+    }
+
     const userExistence = await checkUserExistence({
         username,
         email,
@@ -253,24 +271,6 @@ export async function PUT(request: NextRequest): Promise<Response> {
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.CONFLICT,
             headers: headers,
-        });
-    }
-
-    const codesResponse = await getVerificationCodes({
-        email,
-    });
-
-    if (types.isNativeError(codesResponse)) {
-        return new Response(null, {
-            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
-        });
-    }
-
-    const existingCode = codesResponse?.[0]?.code;
-
-    if (code !== existingCode) {
-        return new Response(null, {
-            status: API_STATUS_CODES.ERROR.UNAUTHORIZED,
         });
     }
 
