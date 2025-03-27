@@ -1,9 +1,8 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import ProfileSession from "@/components/account/Profile/ProfileSession/ProfileSession";
-import { TableSessionType } from "@/db/schema";
 import { API_ROUTES } from "@/configs/api";
+import VirtualizedList from "@/components/misc/VirtualizedList/VirtualizedList";
 
 export default function Page() {
     const queryKey = [API_ROUTES.SESSION.ALL];
@@ -38,176 +37,10 @@ export default function Page() {
 
     return (
         <div>
-            {data?.sessions?.map((session: TableSessionType) => {
-                return (
-                    <ProfileSession
-                        key={session?.id}
-                        mutationKey={queryKey}
-                        removable={true}
-                        { ...session }
-                    />
-                );
-            })}
-            {data?.sessions?.map((session: TableSessionType) => {
-                return (
-                    <ProfileSession
-                        key={session?.id}
-                        mutationKey={queryKey}
-                        removable={true}
-                        { ...session }
-                    />
-                );
-            })}
-            {data?.sessions?.map((session: TableSessionType) => {
-                return (
-                    <ProfileSession
-                        key={session?.id}
-                        mutationKey={queryKey}
-                        removable={true}
-                        { ...session }
-                    />
-                );
-            })}
-            {data?.sessions?.map((session: TableSessionType) => {
-                return (
-                    <ProfileSession
-                        key={session?.id}
-                        mutationKey={queryKey}
-                        removable={true}
-                        { ...session }
-                    />
-                );
-            })}
-            {data?.sessions?.map((session: TableSessionType) => {
-                return (
-                    <ProfileSession
-                        key={session?.id}
-                        mutationKey={queryKey}
-                        removable={true}
-                        { ...session }
-                    />
-                );
-            })}
-            {data?.sessions?.map((session: TableSessionType) => {
-                return (
-                    <ProfileSession
-                        key={session?.id}
-                        mutationKey={queryKey}
-                        removable={true}
-                        { ...session }
-                    />
-                );
-            })}
-            {data?.sessions?.map((session: TableSessionType) => {
-                return (
-                    <ProfileSession
-                        key={session?.id}
-                        mutationKey={queryKey}
-                        removable={true}
-                        { ...session }
-                    />
-                );
-            })}
-            {data?.sessions?.map((session: TableSessionType) => {
-                return (
-                    <ProfileSession
-                        key={session?.id}
-                        mutationKey={queryKey}
-                        removable={true}
-                        { ...session }
-                    />
-                );
-            })}
-            {data?.sessions?.map((session: TableSessionType) => {
-                return (
-                    <ProfileSession
-                        key={session?.id}
-                        mutationKey={queryKey}
-                        removable={true}
-                        { ...session }
-                    />
-                );
-            })}
-            {data?.sessions?.map((session: TableSessionType) => {
-                return (
-                    <ProfileSession
-                        key={session?.id}
-                        mutationKey={queryKey}
-                        removable={true}
-                        { ...session }
-                    />
-                );
-            })}
-            {data?.sessions?.map((session: TableSessionType) => {
-                return (
-                    <ProfileSession
-                        key={session?.id}
-                        mutationKey={queryKey}
-                        removable={true}
-                        { ...session }
-                    />
-                );
-            })}
-            {data?.sessions?.map((session: TableSessionType) => {
-                return (
-                    <ProfileSession
-                        key={session?.id}
-                        mutationKey={queryKey}
-                        removable={true}
-                        { ...session }
-                    />
-                );
-            })}
-            {data?.sessions?.map((session: TableSessionType) => {
-                return (
-                    <ProfileSession
-                        key={session?.id}
-                        mutationKey={queryKey}
-                        removable={true}
-                        { ...session }
-                    />
-                );
-            })}
-            {data?.sessions?.map((session: TableSessionType) => {
-                return (
-                    <ProfileSession
-                        key={session?.id}
-                        mutationKey={queryKey}
-                        removable={true}
-                        { ...session }
-                    />
-                );
-            })}
-            {data?.sessions?.map((session: TableSessionType) => {
-                return (
-                    <ProfileSession
-                        key={session?.id}
-                        mutationKey={queryKey}
-                        removable={true}
-                        { ...session }
-                    />
-                );
-            })}
-            {data?.sessions?.map((session: TableSessionType) => {
-                return (
-                    <ProfileSession
-                        key={session?.id}
-                        mutationKey={queryKey}
-                        removable={true}
-                        { ...session }
-                    />
-                );
-            })}
-            {data?.sessions?.map((session: TableSessionType) => {
-                return (
-                    <ProfileSession
-                        key={session?.id}
-                        mutationKey={queryKey}
-                        removable={true}
-                        { ...session }
-                    />
-                );
-            })}
+            <VirtualizedList
+                data={data}
+                queryKey={queryKey}
+            />
         </div>
     );
 }
