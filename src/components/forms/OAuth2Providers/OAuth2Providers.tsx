@@ -3,9 +3,10 @@ import {
     SiGoogle,
     SiShikimori,
 } from "react-icons/si";
+import { usePathname } from "next/navigation";
 
 export default function OAuth2Providers() {
-    const pathname = "/register";
+    const pathname = usePathname();
 
     return (
         <>

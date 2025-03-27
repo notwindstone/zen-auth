@@ -179,8 +179,8 @@ export default function RegisterForm({
     }
 
     return (
-        <GeneralForm token={token} initialHeight="705">
-            <div className="h-fit w-full max-w-[464px] bg-zinc-100 drop-shadow-xl rounded-md">
+        <GeneralForm token={token} initialHeight={737}>
+            <div className="h-fit max-w-full w-[464px] bg-zinc-100 drop-shadow-xl rounded-md">
                 <div className="py-6 px-12 rounded-md drop-shadow-sm bg-white">
                     <div className="flex flex-col items-center gap-4">
                         <SquareAsterisk

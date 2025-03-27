@@ -15,11 +15,15 @@ import { useImmer } from "use-immer";
 import { StylesErrorType } from "@/types/UI/StylesError.type";
 import { STYLES_ERROR_INITIAL_DATA, STYLES_ERROR_TYPES } from "@/configs/constants";
 import AlertBlock from "@/components/misc/AlertBlock/AlertBlock";
+import getOAuthErrorInitialStylesData from "@/utils/secure/getOAuthErrorInitialStylesData";
+import OAuth2Providers from "@/components/forms/OAuth2Providers/OAuth2Providers";
 
 export default function LoginForm({
     token,
+    oauthError,
 }: {
     token: string;
+    oauthError: string;
 }) {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +33,7 @@ export default function LoginForm({
             "rtl" | "username" | "password"
         >
     >({
-        rtl: STYLES_ERROR_INITIAL_DATA,
+        rtl: getOAuthErrorInitialStylesData(oauthError),
         username: STYLES_ERROR_INITIAL_DATA,
         password: STYLES_ERROR_INITIAL_DATA,
     });
@@ -113,8 +117,8 @@ export default function LoginForm({
     }
 
     return (
-        <GeneralForm token={token}>
-            <div className="h-fit w-full max-w-[464px] bg-zinc-100 drop-shadow-xl rounded-md">
+        <GeneralForm token={token} initialHeight={613}>
+            <div className="h-fit max-w-full w-[464px] bg-zinc-100 drop-shadow-xl rounded-md">
                 <div className="py-6 px-12 rounded-md drop-shadow-sm bg-white">
                     <div className="flex flex-col items-center gap-4">
                         <Shield
@@ -127,14 +131,17 @@ export default function LoginForm({
                         <p className="text-center text-gray-500 font-medium">
                             Добро пожаловать! Войдите, чтобы продолжить.
                         </p>
+                        <div className="w-full flex flex-wrap items-center gap-2">
+                            <OAuth2Providers/>
+                        </div>
                         <div
                             className="w-full flex flex-nowrap items-center gap-4"
                         >
-                            <div className="w-full h-[1px] bg-gray-200" />
+                            <div className="w-full h-[1px] bg-gray-200"/>
                             <p className="text-zinc-700">
                                 или
                             </p>
-                            <div className="w-full h-[1px] bg-gray-200" />
+                            <div className="w-full h-[1px] bg-gray-200"/>
                         </div>
                         <form
                             className="w-full flex flex-col gap-4"

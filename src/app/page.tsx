@@ -1,9 +1,9 @@
 import Link from "next/link";
-import RegisterForm from "@/components/forms/RegisterForm/RegisterForm";
 import { PAGE_ROUTES } from "@/configs/pages";
 import { cookies } from "next/headers";
 import { COOKIES_KEY } from "@/configs/constants";
 import { OAUTH2_ERROR_BASE_PARAMS } from "@/configs/api";
+import LoginForm from "@/components/forms/LoginForm/LoginForm";
 
 export default async function Page({
     searchParams,
@@ -18,7 +18,7 @@ export default async function Page({
 
     return (
         <main className="p-10">
-            <div className="mx-auto p-4 rounded-md flex flex-col gap-4 w-full max-w-fit bg-zinc-800 border-[1px] border-zinc-500">
+            <div className="mx-auto p-4 rounded-md flex flex-col gap-4 w-full max-w-fit bg-zinc-900 border-[1px] border-zinc-500">
                 <div className="mb-4">
                     <p className="text-2xl font-bold">
                         Главная
@@ -31,10 +31,8 @@ export default async function Page({
                         Github репозиторий
                     </a>
                 </div>
-                <RegisterForm
+                <LoginForm
                     token={token}
-                    usernamePlaceholder={""}
-                    emailPlaceholder={""}
                     oauthError={oauthError}
                 />
                 <Link
