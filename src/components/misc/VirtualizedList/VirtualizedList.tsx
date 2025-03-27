@@ -19,7 +19,7 @@ export default function VirtualizedList({
     const rowVirtualizer = useVirtualizer({
         count: data.sessions.length,
         getScrollElement: () => parentRef.current,
-        estimateSize: () => 72,
+        estimateSize: () => 96,
     });
     const currentSessionId = data.currentSessionId;
 
@@ -55,13 +55,15 @@ export default function VirtualizedList({
                                     transform: `translateY(${virtualItem.start}px)`,
                                 }}
                             >
-                                <ProfileSession
-                                    mutationKey={queryKey}
-                                    removable={
-                                        data.sessions[virtualItem.index].id !== currentSessionId
-                                    }
-                                    { ...data.sessions[virtualItem.index] }
-                                />
+                                <div className="pt-2 px-2">
+                                    <ProfileSession
+                                        mutationKey={queryKey}
+                                        removable={
+                                            data.sessions[virtualItem.index].id !== currentSessionId
+                                        }
+                                        { ...data.sessions[virtualItem.index] }
+                                    />
+                                </div>
                             </div>
                         ))
                     }

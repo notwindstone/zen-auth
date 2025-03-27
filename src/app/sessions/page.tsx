@@ -28,7 +28,7 @@ export default function Page() {
     });
 
     if (isPending) {
-        return <div>Loading...asdfjlasdkjf;lkasdjf;l</div>;
+        return <div>Loading...</div>;
     }
 
     if (error) {

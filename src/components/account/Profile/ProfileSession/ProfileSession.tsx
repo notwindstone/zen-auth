@@ -1,7 +1,7 @@
 import { TableSessionType, TableUserType } from "@/db/schema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getPlatformName } from "@/utils/misc/getPlatformName";
-import { Cpu, LaptopMinimal, Monitor, MonitorCog, Smartphone } from "lucide-react";
+import { Cpu, LaptopMinimal, Monitor, MonitorCog, Smartphone, X } from "lucide-react";
 import { useState } from "react";
 import { API_REQUEST_METHODS, API_ROUTES, API_STATUS_CODES } from "@/configs/api";
 
@@ -131,21 +131,21 @@ export default function ProfileSession({
 
     if (isLoading) {
         return (
-            <div className="w-[512px] h-[64px] bg-zinc-900 rounded-md animate-pulse" />
+            <div className="w-[512px] h-[88px] bg-zinc-900 rounded-md animate-pulse" />
         );
     }
 
     return (
         <div
-            className="flex flex-nowrap"
+            className="bg-zinc-900 min-w-[512px] h-[88px] w-fit rounded-md flex flex-nowrap items-center"
             style={(success || isRemoved) ? {
                 color: "#ff6961",
             } : undefined}
         >
-            <div className="flex justify-center items-center w-[72px] h-[72px]">
+            <div className="flex justify-center items-center w-[72px] h-[72px] flex-shrink-0">
                 {icon}
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col flex-shrink-0">
                 {
                     (!isRemoved && !success) ? (
                         <>
@@ -171,13 +171,18 @@ export default function ProfileSession({
             </div>
             {
                 (!isRemoved && !success && removable) && (
-                    <button
-                        onClick={async () => {
-                            mutate(id);
-                        }}
+                    <div
+                        className="py-2 px-5 w-full h-fit flex justify-end"
                     >
-                        remove
-                    </button>
+                        <button
+                            className="text-white hover:text-zinc-500 transition"
+                            onClick={async () => {
+                                mutate(id);
+                            }}
+                        >
+                            <X size={24} />
+                        </button>
+                    </div>
                 )
             }
         </div>
