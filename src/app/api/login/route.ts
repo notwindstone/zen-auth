@@ -31,6 +31,8 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     // Login can either be a username or an email
     const login = data?.login;
+    // I was thinking for like 2 minutes why do i need this.
+    // That's because we don't wanna people to brute force passwords
     const LoginRTLResult = ConfiguredLoginLRUCacheRateLimit(login ?? "");
 
     if (LoginRTLResult) {
@@ -70,6 +72,12 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     const user = users?.[0];
 
+    // Do we really need to handle incorrect login or password errors as
+    // "Incorrect login/password provided"?
+    // Why don't we just send user what is exactly wrong?
+    // This is MUCH better in terms of UX with minimal security loss
+    // Don't use emails for auth if that's the problem for you.
+    // - inspired by https://pilcrowonpaper.com/blog/how-i-would-do-auth/
     if (!user) {
         const headers = new Headers({
             "X-Zen-Auth-Not-Found": "login",
