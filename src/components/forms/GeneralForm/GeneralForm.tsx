@@ -27,6 +27,14 @@ export default function GeneralForm({
     });
 
     if (isPending) {
+        if (token) {
+            return (
+                <div>
+                    Seems like you are logged in. Loading...
+                </div>
+            );
+        }
+
         return (
             <div className="flex">
                 <div

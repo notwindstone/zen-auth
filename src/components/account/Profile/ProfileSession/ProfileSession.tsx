@@ -12,8 +12,10 @@ export default function ProfileSession({
     lastSignedIn,
     os,
     mutationKey,
+    removable,
 }: TableSessionType & {
     mutationKey: Array<string | undefined>;
+    removable?: boolean;
 }) {
     const queryClient = useQueryClient();
     const {
@@ -97,13 +99,17 @@ export default function ProfileSession({
                     {lastSignedIn.toString()}, {expiresAt.toString()}
                 </p>
             </div>
-            <button
-                onClick={async () => {
-                    mutate(id);
-                }}
-            >
-                remove
-            </button>
+            {
+                removable && (
+                    <button
+                        onClick={async () => {
+                            mutate(id);
+                        }}
+                    >
+                        remove
+                    </button>
+                )
+            }
         </div>
     );
 }

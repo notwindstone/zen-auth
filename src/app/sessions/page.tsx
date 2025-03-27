@@ -43,6 +43,7 @@ export default function Page() {
                     <ProfileSession
                         key={session?.id}
                         mutationKey={queryKey}
+                        removable={true}
                         { ...session }
                     />
                 );
