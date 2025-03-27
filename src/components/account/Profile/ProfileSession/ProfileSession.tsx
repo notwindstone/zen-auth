@@ -131,15 +131,15 @@ export default function ProfileSession({
 
     if (isLoading) {
         return (
-            <div className="w-[512px] h-[88px] bg-zinc-900 rounded-md animate-pulse" />
+            <div className="w-[560px] h-[88px] border-[1px] border-zinc-500 bg-zinc-900 rounded-md animate-pulse" />
         );
     }
 
     return (
         <div
-            className="bg-zinc-900 min-w-[512px] h-[88px] w-fit rounded-md flex flex-nowrap items-center"
+            className="bg-zinc-900 border-[1px] border-zinc-500 min-w-[560px] h-[88px] w-fit rounded-md flex flex-nowrap items-center"
             style={(success || isRemoved) ? {
-                color: "#ff6961",
+                color: "#ff9090",
             } : undefined}
         >
             <div className="flex justify-center items-center w-[72px] h-[72px] flex-shrink-0">
@@ -157,13 +157,19 @@ export default function ProfileSession({
                                 {os}, {browser}, {architecture}
                             </p>
                             <p className="text-zinc-500">
-                                {lastSignedIn.toString()}, {expiresAt.toString()}
+                                Последний вход {(new Date(lastSignedIn)).toLocaleDateString("ru-RU", {
+                                    dateStyle: "medium",
+                                })}
+                                {", "}
+                                Истекает {(new Date(expiresAt)).toLocaleDateString("ru-RU", {
+                                    dateStyle: "medium",
+                                })}
                             </p>
                         </>
                     ) : (
                         <>
                             <p className="font-semibold h-full flex flex-col justify-center">
-                                This session was removed
+                                Сессия была завершена
                             </p>
                         </>
                     )
