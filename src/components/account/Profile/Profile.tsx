@@ -82,13 +82,13 @@ export default function Profile({
     const session = data?.session;
 
     return (
-        <div>
+        <div className="flex flex-col gap-4 justify-start w-fit">
+            <ProfileUser
+                { ...user }
+            />
             <ProfileSession
                 mutationKey={queryKey}
                 { ...session }
-            />
-            <ProfileUser
-                { ...user }
             />
             {
                 !username && (

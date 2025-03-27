@@ -36,12 +36,12 @@ export default function RootLayout({
                         showSpinner={false}
                         color="#dc8a78"
                     />
-                    {children}
                     <div className="p-2 text-lg">
                         <Link href={"/"}>
-                            ← На главную
+                    ← На главную
                         </Link>
                     </div>
+                    {children}
                 </body>
             </html>
         </TanstackQueryProviders>

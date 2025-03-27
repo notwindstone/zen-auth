@@ -112,20 +112,20 @@ export default function ProfileSession({
 
     switch (getPlatformName(os)) {
         case "windows":
-            icon = <Monitor size={48} />;
+            icon = <Monitor size={56} />;
             break;
         case "phone":
-            icon = <Smartphone size={48} />;
+            icon = <Smartphone size={56} />;
             break;
         case "linux":
-            icon = <MonitorCog size={48} />;
+            icon = <MonitorCog size={56} />;
             break;
         case "mac":
-            icon = <LaptopMinimal size={48} />;
+            icon = <LaptopMinimal size={56} />;
             break;
         case "unknown":
         default:
-            icon = <Cpu size={48} />;
+            icon = <Cpu size={56} />;
             break;
     }
 
@@ -137,12 +137,12 @@ export default function ProfileSession({
 
     return (
         <div
-            className="bg-zinc-900 border-[1px] border-zinc-500 min-w-[560px] h-[88px] w-fit rounded-md flex flex-nowrap items-center"
+            className="bg-zinc-900 text-zinc-100 border-[1px] border-zinc-500 min-w-[560px] h-[88px] w-fit rounded-md flex flex-nowrap items-center"
             style={(success || isRemoved) ? {
                 color: "#ff9090",
             } : undefined}
         >
-            <div className="flex justify-center items-center w-[72px] h-[72px] flex-shrink-0">
+            <div className="flex justify-center items-center w-[96px] h-[72px] flex-shrink-0">
                 {icon}
             </div>
             <div className="flex flex-col flex-shrink-0">
@@ -156,12 +156,12 @@ export default function ProfileSession({
                             <p className="text-zinc-200">
                                 {os}, {browser}, {architecture}
                             </p>
-                            <p className="text-zinc-500">
+                            <p className="text-sm text-zinc-500">
                                 Последний вход {(new Date(lastSignedIn)).toLocaleDateString("ru-RU", {
                                     dateStyle: "medium",
                                 })}
                                 {", "}
-                                Истекает {(new Date(expiresAt)).toLocaleDateString("ru-RU", {
+                                истекает {(new Date(expiresAt)).toLocaleDateString("ru-RU", {
                                     dateStyle: "medium",
                                 })}
                             </p>

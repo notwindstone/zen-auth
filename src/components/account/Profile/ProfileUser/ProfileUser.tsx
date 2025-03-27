@@ -36,7 +36,7 @@ export default function ProfileUser({
     
     return (
         <div>
-            <div className="flex w-fit p-4 bg-zinc-100 rounded-md text-zinc-900 gap-4 items-start">
+            <div className="flex min-w-[560px] w-fit px-4 py-2 border-[1px] border-zinc-500 bg-zinc-900 rounded-md text-zinc-100 gap-4 items-center">
                 <Image
                     className="rounded-md w-16 h-16"
                     src={avatarUrl === PUBLIC_AVATAR_URL ? "/favicon.ico" : avatarUrl}
@@ -49,7 +49,7 @@ export default function ProfileUser({
                         <p className="text-lg font-semibold">
                             {displayName}
                         </p>
-                        <p className="text-gray-600">
+                        <p className="text-zinc-200">
                             @{username}
                         </p>
                     </div>
@@ -64,7 +64,7 @@ export default function ProfileUser({
                             }
 
                             return (
-                                <p key={text} className="text-sm text-gray-400">
+                                <p key={text} className="text-sm text-zinc-500">
                                     {text}: {value}
                                 </p>
                             );
