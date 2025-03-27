@@ -14,7 +14,10 @@ import { CODE_DIGITS_COUNT, EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT, USERNAME_
 import validateEmail from "@/utils/secure/validateEmail";
 import { validateTurnstileToken } from "next-turnstile";
 import { v4 as uuid } from "uuid";
-import { ConfiguredLRUCacheRateLimit } from "@/lib/ratelimit/lrucache";
+import {
+    ConfiguredLRUCacheRateLimit,
+    ConfiguredVerificationCodeLRUCacheRateLimit,
+} from "@/lib/ratelimit/lrucache";
 
 export async function POST(request: NextRequest): Promise<Response> {
     const routeRTLKey = request.nextUrl.pathname;
@@ -208,6 +211,34 @@ export async function PUT(request: NextRequest): Promise<Response> {
     const password = data?.password;
     const code = data?.code;
 
+    // Better verification code bruteforce protection
+    // --- some info ---
+    // Verification codes (and reset tokens too) expire after an hour after creation
+    // Already existing api path ratelimit blocks only 10+ requests per second
+    // If someone creates a verification code and starts sending
+    // 10 requests per second with random verification code
+    // Then there's a 3,6% chance that he will succeed (in perfect conditions)
+    //                60 * 60 * 10 requests per hour
+    //                1 000 000 code values
+    // Chances are not that big, but what if this dude keeps going?
+    // After 2 hours he will get 7,0704% chances (if my math is correct)
+    // After 24 hours it will be even bigger.
+    //
+    // With this ratelimit (3 requests per 5 seconds) there are smaller chances (0,216%)
+    // That this dude will sign up without knowing the verification code
+    const EmailRTLResult = ConfiguredVerificationCodeLRUCacheRateLimit(email ?? "");
+
+    if (EmailRTLResult) {
+        const headers = new Headers({
+            "Retry-After": "5",
+        });
+
+        return new Response(null, {
+            status: API_STATUS_CODES.ERROR.TOO_MANY_REQUESTS,
+            headers: headers,
+        });
+    }
+
     if (!email || !code || !username || !displayName || !password) {
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.BAD_REQUEST,
@@ -234,6 +265,8 @@ export async function PUT(request: NextRequest): Promise<Response> {
         });
     }
 
+    // Don't remove verification code from database
+    // until user is successfully created
     const codesResponse = await getVerificationCodes({
         email,
     });
@@ -274,8 +307,6 @@ export async function PUT(request: NextRequest): Promise<Response> {
         });
     }
 
-    // Don't remove verification code from database
-    // until secure password is successfully generated
     const securePasswordResponse = await generateSecurePassword({
         password: password,
     });

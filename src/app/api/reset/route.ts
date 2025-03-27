@@ -214,7 +214,7 @@ export async function PUT(request: NextRequest): Promise<Response> {
     }
 
     // Don't remove reset token from database
-    // until secure password is successfully generated
+    // until user is successfully updated
     const securePasswordResponse = await generateSecurePassword({
         password: newPassword,
     });
