@@ -2,6 +2,7 @@ import { TableSessionType, TableUserType } from "@/db/schema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getPlatformName } from "@/utils/misc/getPlatformName";
 import { Cpu, LaptopMinimal, Monitor, MonitorCog, Smartphone } from "lucide-react";
+import { useState } from "react";
 
 export default function ProfileSession({
     id,
@@ -17,13 +18,42 @@ export default function ProfileSession({
     mutationKey: Array<string | undefined>;
     removable?: boolean;
 }) {
+    const [currentState, setCurrentState] = useState({
+        isLoading: false,
+        isError: false,
+    });
+    const [success, setSuccess] = useState(false);
+    const isRemoved = ipAddress === "removed";
     const queryClient = useQueryClient();
     const {
         mutate,
     } = useMutation({
         mutationKey: mutationKey,
         mutationFn: async (sessionId: string) => {
+            if (currentState.isLoading) {
+                setCurrentState((prev) => {
+                    return {
+                        ...prev,
+                        isError: true,
+                    };
+                });
+
+                return sessionId;
+            }
+
+            setCurrentState((prev) => {
+                return {
+                    ...prev,
+                    isLoading: true,
+                };
+            });
+
             console.log(sessionId);
+
+            setCurrentState({
+                isError: false,
+                isLoading: false,
+            });
 
             return sessionId;
         },
@@ -35,10 +65,27 @@ export default function ProfileSession({
                 user: TableUserType;
             }) => {
                 if ('sessions' in oldData) {
+                    if (currentState.isError) {
+                        return oldData;
+                    }
+
+                    const foundIndex = oldData.sessions.findIndex((oldSession: TableSessionType) => {
+                        return oldSession.id === sessionId;
+                    });
+                    oldData.sessions[foundIndex] = {
+                        architecture: "removed",
+                        browser: "removed",
+                        ipAddress: "removed",
+                        expiresAt: new Date(),
+                        os: oldData.sessions[foundIndex].os,
+                        lastSignedIn: new Date(),
+                        id: "removed",
+                        userId: "removed",
+                    };
+                    setSuccess(true);
+
                     return {
-                        sessions: oldData.sessions.filter((oldSession: TableSessionType) => {
-                            return oldSession.id !== sessionId;
-                        }),
+                        sessions: oldData.sessions,
                     };
                 }
 
@@ -84,23 +131,40 @@ export default function ProfileSession({
     }
 
     return (
-        <div className="flex flex-nowrap">
+        <div
+            className="flex flex-nowrap"
+            style={(success || isRemoved) ? {
+                color: "#ff6961",
+            } : undefined}
+        >
             <div className="flex justify-center items-center w-[72px] h-[72px]">
                 {icon}
             </div>
             <div className="flex flex-col">
-                <p className="font-semibold">
-                    {ipAddress}
-                </p>
-                <p className="text-zinc-200">
-                    {os}, {browser}, {architecture}
-                </p>
-                <p className="text-zinc-500">
-                    {lastSignedIn.toString()}, {expiresAt.toString()}
-                </p>
+                {
+                    (!isRemoved && !success) ? (
+                        <>
+                            <p className="font-semibold">
+                                {ipAddress}
+                            </p>
+                            <p className="text-zinc-200">
+                                {os}, {browser}, {architecture}
+                            </p>
+                            <p className="text-zinc-500">
+                                {lastSignedIn.toString()}, {expiresAt.toString()}
+                            </p>
+                        </>
+                    ) : (
+                        <>
+                            <p className="font-semibold h-full flex flex-col justify-center">
+                                This session was removed
+                            </p>
+                        </>
+                    )
+                }
             </div>
             {
-                removable && (
+                (!isRemoved && !success && removable) && (
                     <button
                         onClick={async () => {
                             mutate(id);

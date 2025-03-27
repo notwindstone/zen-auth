@@ -11,6 +11,7 @@ export default function VirtualizedList({
 }: {
     data: {
         sessions: TableSessionType[];
+        currentSessionId: string;
     };
     queryKey: string[];
 }) {
@@ -20,6 +21,7 @@ export default function VirtualizedList({
         getScrollElement: () => parentRef.current,
         estimateSize: () => 72,
     });
+    const currentSessionId = data.currentSessionId;
 
     return (
         <>
@@ -37,25 +39,29 @@ export default function VirtualizedList({
                         position: 'relative',
                     }}
                 >
-                    {rowVirtualizer.getVirtualItems().map((virtualItem) => (
-                        <div
-                            key={virtualItem.key}
-                            style={{
-                                position: 'absolute',
-                                top: 0,
-                                left: 0,
-                                width: '100%',
-                                height: `${virtualItem.size}px`,
-                                transform: `translateY(${virtualItem.start}px)`,
-                            }}
-                        >
-                            <ProfileSession
-                                mutationKey={queryKey}
-                                removable={true}
-                                { ...data.sessions[virtualItem.index] }
-                            />
-                        </div>
-                    ))}
+                    {
+                        rowVirtualizer.getVirtualItems().map((virtualItem) => (
+                            <div
+                                key={virtualItem.key}
+                                style={{
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                    width: '100%',
+                                    height: `${virtualItem.size}px`,
+                                    transform: `translateY(${virtualItem.start}px)`,
+                                }}
+                            >
+                                <ProfileSession
+                                    mutationKey={queryKey}
+                                    removable={
+                                        data.sessions[virtualItem.index].id !== currentSessionId
+                                    }
+                                    { ...data.sessions[virtualItem.index] }
+                                />
+                            </div>
+                        ))
+                    }
                 </div>
             </div>
         </>

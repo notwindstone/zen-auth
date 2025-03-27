@@ -45,5 +45,6 @@ export async function getAllSessions({
 
     return Response.json({
         sessions: allSessionsResponse,
+        currentSessionId: session.id,
     });
 }
