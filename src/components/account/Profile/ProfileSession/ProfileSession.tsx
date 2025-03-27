@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getPlatformName } from "@/utils/misc/getPlatformName";
 import { Cpu, LaptopMinimal, Monitor, MonitorCog, Smartphone } from "lucide-react";
 import { useState } from "react";
+import { API_REQUEST_METHODS, API_ROUTES, API_STATUS_CODES } from "@/configs/api";
 
 export default function ProfileSession({
     id,
@@ -18,10 +19,8 @@ export default function ProfileSession({
     mutationKey: Array<string | undefined>;
     removable?: boolean;
 }) {
-    const [currentState, setCurrentState] = useState({
-        isLoading: false,
-        isError: false,
-    });
+    const [isLoading, setIsLoading] = useState(false);
+    const [isError, setIsError] = useState(false);
     const [success, setSuccess] = useState(false);
     const isRemoved = ipAddress === "removed";
     const queryClient = useQueryClient();
@@ -30,30 +29,28 @@ export default function ProfileSession({
     } = useMutation({
         mutationKey: mutationKey,
         mutationFn: async (sessionId: string) => {
-            if (currentState.isLoading) {
-                setCurrentState((prev) => {
-                    return {
-                        ...prev,
-                        isError: true,
-                    };
-                });
+            setIsError(false);
 
-                return sessionId;
+            if (isLoading) {
+                return API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR.toString();
             }
 
-            setCurrentState((prev) => {
-                return {
-                    ...prev,
-                    isLoading: true,
-                };
+            setIsLoading(true);
+
+            const response = await fetch(API_ROUTES.SESSION.SPECIFIC, {
+                method: API_REQUEST_METHODS.DELETE,
+                body: JSON.stringify({
+                    sessionId: sessionId,
+                }),
             });
 
-            console.log(sessionId);
+            if (!response.ok) {
+                setIsLoading(false);
 
-            setCurrentState({
-                isError: false,
-                isLoading: false,
-            });
+                return API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR.toString();
+            }
+
+            setIsLoading(false);
 
             return sessionId;
         },
@@ -65,7 +62,9 @@ export default function ProfileSession({
                 user: TableUserType;
             }) => {
                 if ('sessions' in oldData) {
-                    if (currentState.isError) {
+                    if (sessionId === API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR.toString()) {
+                        setIsError(true);
+
                         return oldData;
                     }
 
@@ -130,6 +129,12 @@ export default function ProfileSession({
             break;
     }
 
+    if (isLoading) {
+        return (
+            <div className="w-[512px] h-[64px] bg-zinc-900 rounded-md animate-pulse" />
+        );
+    }
+
     return (
         <div
             className="flex flex-nowrap"
@@ -146,6 +151,7 @@ export default function ProfileSession({
                         <>
                             <p className="font-semibold">
                                 {ipAddress}
+                                {isError && " ~~~ There was an error..."}
                             </p>
                             <p className="text-zinc-200">
                                 {os}, {browser}, {architecture}

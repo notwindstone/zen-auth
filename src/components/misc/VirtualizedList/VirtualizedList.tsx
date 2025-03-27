@@ -32,6 +32,9 @@ export default function VirtualizedList({
                     overflow: 'auto', // Make it scroll!
                 }}
             >
+                <div className="text-lg font-semibold">
+                    Fetched {data.sessions.length} sessions...
+                </div>
                 <div
                     style={{
                         height: `${rowVirtualizer.getTotalSize()}px`,
