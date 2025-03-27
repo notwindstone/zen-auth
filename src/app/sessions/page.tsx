@@ -48,6 +48,166 @@ export default function Page() {
                     />
                 );
             })}
+            {data?.sessions?.map((session: TableSessionType) => {
+                return (
+                    <ProfileSession
+                        key={session?.id}
+                        mutationKey={queryKey}
+                        removable={true}
+                        { ...session }
+                    />
+                );
+            })}
+            {data?.sessions?.map((session: TableSessionType) => {
+                return (
+                    <ProfileSession
+                        key={session?.id}
+                        mutationKey={queryKey}
+                        removable={true}
+                        { ...session }
+                    />
+                );
+            })}
+            {data?.sessions?.map((session: TableSessionType) => {
+                return (
+                    <ProfileSession
+                        key={session?.id}
+                        mutationKey={queryKey}
+                        removable={true}
+                        { ...session }
+                    />
+                );
+            })}
+            {data?.sessions?.map((session: TableSessionType) => {
+                return (
+                    <ProfileSession
+                        key={session?.id}
+                        mutationKey={queryKey}
+                        removable={true}
+                        { ...session }
+                    />
+                );
+            })}
+            {data?.sessions?.map((session: TableSessionType) => {
+                return (
+                    <ProfileSession
+                        key={session?.id}
+                        mutationKey={queryKey}
+                        removable={true}
+                        { ...session }
+                    />
+                );
+            })}
+            {data?.sessions?.map((session: TableSessionType) => {
+                return (
+                    <ProfileSession
+                        key={session?.id}
+                        mutationKey={queryKey}
+                        removable={true}
+                        { ...session }
+                    />
+                );
+            })}
+            {data?.sessions?.map((session: TableSessionType) => {
+                return (
+                    <ProfileSession
+                        key={session?.id}
+                        mutationKey={queryKey}
+                        removable={true}
+                        { ...session }
+                    />
+                );
+            })}
+            {data?.sessions?.map((session: TableSessionType) => {
+                return (
+                    <ProfileSession
+                        key={session?.id}
+                        mutationKey={queryKey}
+                        removable={true}
+                        { ...session }
+                    />
+                );
+            })}
+            {data?.sessions?.map((session: TableSessionType) => {
+                return (
+                    <ProfileSession
+                        key={session?.id}
+                        mutationKey={queryKey}
+                        removable={true}
+                        { ...session }
+                    />
+                );
+            })}
+            {data?.sessions?.map((session: TableSessionType) => {
+                return (
+                    <ProfileSession
+                        key={session?.id}
+                        mutationKey={queryKey}
+                        removable={true}
+                        { ...session }
+                    />
+                );
+            })}
+            {data?.sessions?.map((session: TableSessionType) => {
+                return (
+                    <ProfileSession
+                        key={session?.id}
+                        mutationKey={queryKey}
+                        removable={true}
+                        { ...session }
+                    />
+                );
+            })}
+            {data?.sessions?.map((session: TableSessionType) => {
+                return (
+                    <ProfileSession
+                        key={session?.id}
+                        mutationKey={queryKey}
+                        removable={true}
+                        { ...session }
+                    />
+                );
+            })}
+            {data?.sessions?.map((session: TableSessionType) => {
+                return (
+                    <ProfileSession
+                        key={session?.id}
+                        mutationKey={queryKey}
+                        removable={true}
+                        { ...session }
+                    />
+                );
+            })}
+            {data?.sessions?.map((session: TableSessionType) => {
+                return (
+                    <ProfileSession
+                        key={session?.id}
+                        mutationKey={queryKey}
+                        removable={true}
+                        { ...session }
+                    />
+                );
+            })}
+            {data?.sessions?.map((session: TableSessionType) => {
+                return (
+                    <ProfileSession
+                        key={session?.id}
+                        mutationKey={queryKey}
+                        removable={true}
+                        { ...session }
+                    />
+                );
+            })}
+            {data?.sessions?.map((session: TableSessionType) => {
+                return (
+                    <ProfileSession
+                        key={session?.id}
+                        mutationKey={queryKey}
+                        removable={true}
+                        { ...session }
+                    />
+                );
+            })}
         </div>
     );
 }
