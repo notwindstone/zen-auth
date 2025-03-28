@@ -36,7 +36,7 @@ export default function GeneralForm({
         }
 
         return (
-            <div className="flex">
+            <div className="flex w-full justify-center">
                 <div
                     style={{
                         height: `${initialHeight}px`,

@@ -32,7 +32,7 @@ export default function WrapperBlock({
     return (
         <div className="p-1 sm:p-10">
             <div
-                className="sm:mx-auto sm:max-w-fit sm:rounded-md p-4 flex flex-col gap-4 w-full bg-zinc-900 border-[1px] border-zinc-500 items-center">
+                className="sm:mx-auto sm:max-w-fit rounded-md p-4 flex flex-col gap-4 w-full bg-zinc-900 border-[1px] border-zinc-500 items-center">
                 <div className="mb-4 w-full">
                     <p className="text-2xl font-bold">
                         {translatedPathname}
