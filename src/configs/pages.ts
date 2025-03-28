@@ -1,4 +1,5 @@
 export const PAGE_ROUTES = {
+    HOME: "/",
     DASHBOARD: "/dashboard",
     LOGIN: "/login",
     PROFILE: {

@@ -2,6 +2,7 @@ import RegisterForm from "@/components/forms/RegisterForm/RegisterForm";
 import { cookies } from "next/headers";
 import { COOKIES_KEY } from "@/configs/constants";
 import { OAUTH2_ERROR_BASE_PARAMS } from "@/configs/api";
+import WrapperBlock from "@/components/misc/WrapperBlock/WrapperBlock";
 
 export default async function Page({
     searchParams,
@@ -17,13 +18,13 @@ export default async function Page({
     const token = cookieStorage.get(COOKIES_KEY)?.value as string;
 
     return (
-        <>
+        <WrapperBlock>
             <RegisterForm
                 token={token}
                 usernamePlaceholder={username as string}
                 emailPlaceholder={email as string}
                 oauthError={oauthError}
             />
-        </>
+        </WrapperBlock>
     );
 }
