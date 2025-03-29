@@ -1,3 +1,16 @@
+# Plans for v3 rewrite
+
+- https://pilcrowonpaper.com/blog/how-i-would-do-auth/
+- https://owasp.org/www-community/Slow_Down_Online_Guessing_Attacks_with_Device_Cookies
+
+but wait... do i really need it?
+
+https://www.better-auth.com/ looks too good to be true. maybe it's the only thing i need for auth?
+
+HOLY FUCK WHAT ARE THOSE PLUGINS SECTION https://www.better-auth.com/docs/plugins/captcha
+
+---
+
 acl setuser myuser on >mypassword +@all -@dangerous ~*
 ACL SAVE
 
