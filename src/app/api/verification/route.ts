@@ -230,7 +230,7 @@ export async function PUT(request: NextRequest): Promise<Response> {
 
     if (EmailRTLResult) {
         const headers = new Headers({
-            "Retry-After": "25",
+            "Retry-After": "20",
         });
 
         return new Response(null, {
