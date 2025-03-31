@@ -6,8 +6,8 @@ export const ConfiguredLRUCacheRateLimit = LRUCacheRateLimit({
 });
 
 export const ConfiguredVerificationCodeLRUCacheRateLimit = LRUCacheRateLimit({
-    duration: 5,
-    limit: 3,
+    duration: 20,
+    limit: 5,
 });
 
 export const ConfiguredLoginLRUCacheRateLimit = LRUCacheRateLimit({

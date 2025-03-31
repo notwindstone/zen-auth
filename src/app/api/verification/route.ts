@@ -214,23 +214,23 @@ export async function PUT(request: NextRequest): Promise<Response> {
     // Better verification code bruteforce protection
     // --- some info ---
     // Verification codes (and reset tokens too) expire after an hour after creation
-    // Already existing api path ratelimit blocks only 10+ requests per second
+    // Already existing api path ratelimit blocks only 25+ requests per second
     // If someone creates a verification code and starts sending
-    // 10 requests per second with random verification code
-    // Then there's a 3,6% chance that he will succeed (in perfect conditions)
-    //                60 * 60 * 10 requests per hour
+    // 25 requests per second with random verification code
+    // Then there's a 9% chance that he will succeed (in perfect conditions)
+    //                60 * 60 * 25 requests per hour
     //                1 000 000 code values
     // Chances are not that big, but what if this dude keeps going?
-    // After 2 hours he will get 7,0704% chances (if my math is correct)
+    // After 2 hours he will get 17,19% chances (if my math is correct)
     // After 24 hours it will be even bigger.
     //
-    // With this ratelimit (3 requests per 5 seconds) there are smaller chances (0,216%)
+    // With this ratelimit (5 requests per 20 seconds) there are way smaller chances (0,09%)
     // That this dude will sign up without knowing the verification code
     const EmailRTLResult = ConfiguredVerificationCodeLRUCacheRateLimit(email ?? "");
 
     if (EmailRTLResult) {
         const headers = new Headers({
-            "Retry-After": "5",
+            "Retry-After": "25",
         });
 
         return new Response(null, {
