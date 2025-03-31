@@ -13,7 +13,7 @@ export default function ConfiguredTurnstile({
 }) {
     return (
         <Turnstile
-            className="__global-cloudflare-turnstile min-h-[65px] flex w-full justify-center"
+            className={"__global-cloudflare-turnstile relative min-h-[65px] flex w-full justify-center before:content-['Если_капча_не_появляется,_значит_ваша_сеть_блокирует_Cloudflare_Turnstile'] before:text-center before:text-balance before:absolute before:text-zinc-900 before:text-sm before:-z-10 before:top-4 before:px-9"}
             siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
             retry="auto"
             refreshExpired="auto"
