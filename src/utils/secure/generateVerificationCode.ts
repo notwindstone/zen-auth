@@ -1,7 +1,13 @@
-export function generateVerificationCode(): string {
-    const randomSixDigitNumber = Math.floor(
-        Math.pow(10, 5) + (Math.random() * 9 * Math.pow(10, 5)),
-    );
+import { generateRandomString } from "@oslojs/crypto/random";
+import type { RandomReader } from "@oslojs/crypto/random";
+import { VERIFICATION_CODE_ALPHABET } from "@/configs/constants";
 
-    return randomSixDigitNumber.toString();
+export function generateVerificationCode() {
+    const random: RandomReader = {
+        read(bytes) {
+            crypto.getRandomValues(bytes);
+        },
+    };
+
+    return generateRandomString(random, VERIFICATION_CODE_ALPHABET, 6);
 }
