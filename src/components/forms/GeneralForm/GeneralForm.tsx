@@ -30,7 +30,7 @@ export default function GeneralForm({
         if (token) {
             return (
                 <div>
-                    Seems like you are logged in. Loading...
+                    Симс лайк ю а логгед ин. Лоадинг...
                 </div>
             );
         }
@@ -75,7 +75,7 @@ export default function GeneralForm({
     return (
         <div>
             <p>
-                You are logged in.
+                Да, you are logged in.
             </p>
         </div>
     );
