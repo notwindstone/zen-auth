@@ -1,4 +1,5 @@
 import SendResetCode from "@/components/forms/SendResetCode/SendResetCode";
+import WrapperBlock from "@/components/misc/WrapperBlock/WrapperBlock";
 
 export default async function Page({
     searchParams,
@@ -9,8 +10,8 @@ export default async function Page({
     const email = searchParamsStore?.email ?? undefined;
 
     return (
-        <>
+        <WrapperBlock>
             <SendResetCode emailFromParams={email} />
-        </>
+        </WrapperBlock>
     );
 }

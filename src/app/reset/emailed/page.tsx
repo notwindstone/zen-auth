@@ -1,4 +1,5 @@
 import ResetCodeSent from "@/components/forms/ResetCodeSent/ResetCodeSent";
+import WrapperBlock from "@/components/misc/WrapperBlock/WrapperBlock";
 
 export default async function Page({
     searchParams,
@@ -18,14 +19,19 @@ export default async function Page({
     }
 
     return (
-        <>
-            <div>
-                ссылка с токеном сброса была отправлена на почту. перейдите по ней.
+        <WrapperBlock>
+            <div className="flex flex-col items-center">
+                <p>
+                    Ссылка с токеном сброса была отправлена на почту.
+                </p>
+                <p>
+                    Перейдите по ней.
+                </p>
             </div>
             <ResetCodeSent
                 emailLetterId={emailLetterId}
                 email={email}
             />
-        </>
+        </WrapperBlock>
     );
 }

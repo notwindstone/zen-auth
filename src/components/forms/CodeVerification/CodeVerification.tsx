@@ -401,7 +401,7 @@ export default function CodeVerification({
     }
 
     return (
-        <GeneralForm token={token}>
+        <GeneralForm token={token} initialHeight={645}>
             <div className="h-fit w-full max-w-[464px] bg-zinc-100 drop-shadow-xl rounded-md">
                 <div className="py-6 px-12 rounded-md drop-shadow-sm bg-white">
                     <div className="flex flex-col items-center gap-4">

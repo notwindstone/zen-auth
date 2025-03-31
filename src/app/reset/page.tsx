@@ -1,4 +1,5 @@
 import ResetPassword from "@/components/forms/ResetPassword/ResetPassword";
+import WrapperBlock from "@/components/misc/WrapperBlock/WrapperBlock";
 
 export default async function Page({
     searchParams,
@@ -18,8 +19,8 @@ export default async function Page({
     }
 
     return (
-        <>
+        <WrapperBlock>
             <ResetPassword token={token} email={email} />
-        </>
+        </WrapperBlock>
     );
 }

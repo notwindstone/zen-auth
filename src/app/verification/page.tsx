@@ -1,6 +1,7 @@
 import CodeVerification from "@/components/forms/CodeVerification/CodeVerification";
 import { cookies } from "next/headers";
 import { COOKIES_KEY } from "@/configs/constants";
+import WrapperBlock from "@/components/misc/WrapperBlock/WrapperBlock";
 
 export default async function Page({
     searchParams,
@@ -17,13 +18,13 @@ export default async function Page({
 
 
     return (
-        <>
+        <WrapperBlock>
             <CodeVerification
                 username={username}
                 email={email}
                 emailLetterId={id}
                 token={token}
             />
-        </>
+        </WrapperBlock>
     );
 }

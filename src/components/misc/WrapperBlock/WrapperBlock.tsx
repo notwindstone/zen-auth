@@ -25,6 +25,16 @@ export default function WrapperBlock({
             translatedPathname = "Вход";
 
             break;
+        case PAGE_ROUTES.VERIFICATION:
+            translatedPathname = "Верификация";
+
+            break;
+        case PAGE_ROUTES.RESET.SEND:
+        case PAGE_ROUTES.RESET.ROOT:
+        case PAGE_ROUTES.RESET.EMAILED:
+            translatedPathname = "Сброс пароля";
+
+            break;
         default:
             translatedPathname = pathname;
     }
