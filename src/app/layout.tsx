@@ -36,9 +36,12 @@ export default function RootLayout({
                         showSpinner={false}
                         color="#dc8a78"
                     />
-                    <div className="p-2 text-lg">
+                    <div className="flex gap-4 p-2 text-lg">
                         <Link href={"/"}>
-                    ← На главную
+                            ← На главную
+                        </Link>
+                        <Link className="text-zinc-500" href={"/video"}>
+                            → Посмотреть видеодемонстрацию
                         </Link>
                     </div>
                     {children}
