@@ -6,12 +6,11 @@ import { checkUserExistence, updateUser } from "@/lib/actions/user";
 import { types } from "node:util";
 import { sendResetCodeEmail } from "@/lib/actions/email";
 import { generateSecurePassword } from "@/utils/secure/generateSecurePassword";
-import { DecrementResetRateLimit, ResetRateLimit } from "@/lib/ratelimit/ratelimit";
 import { EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT } from "@/configs/constants";
 import validateEmail from "@/utils/secure/validateEmail";
 import { validateTurnstileToken } from "next-turnstile";
 import { v4 as uuid } from "uuid";
-import { ConfiguredLRUCacheRateLimit } from "@/lib/ratelimit/lrucache";
+import { ConfiguredLRUCacheRateLimit, ResetLRUCacheRateLimit } from "@/lib/ratelimit/lrucache";
 
 export async function POST(request: NextRequest): Promise<Response> {
     const routeRTLKey = request.nextUrl.pathname;
@@ -62,23 +61,9 @@ export async function POST(request: NextRequest): Promise<Response> {
         });
     }
 
-    const rateLimitResult = await ResetRateLimit({
-        token: email,
-    });
-
-    if (types.isNativeError(rateLimitResult)) {
-        return new Response(null, {
-            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
-        });
-    }
-
-    if (!rateLimitResult.success) {
-        const expirationTime = Number(rateLimitResult?.expirationTime);
-        const currentTime = Date.now();
-        const rtlTime = new Date(expirationTime - currentTime);
-        const remainingSeconds = rtlTime.getMinutes() * 60 + rtlTime.getSeconds();
+    if (ResetLRUCacheRateLimit.increment(email)) {
         const headers = new Headers({
-            "Retry-After": remainingSeconds.toString(),
+            "Retry-After": "120",
         });
 
         return new Response(null, {
@@ -95,7 +80,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     });
 
     if (!turnstileResponse.success) {
-        await DecrementResetRateLimit({ token: email });
+        ResetLRUCacheRateLimit.decrement(email);
 
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.NETWORK_AUTHENTICATION_REQUIRED,
@@ -108,7 +93,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     });
 
     if (types.isNativeError(userExistence)) {
-        await DecrementResetRateLimit({ token: email });
+        ResetLRUCacheRateLimit.decrement(email);
 
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
@@ -116,7 +101,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     }
 
     if (userExistence === null) {
-        await DecrementResetRateLimit({ token: email });
+        ResetLRUCacheRateLimit.decrement(email);
 
         return new Response(null, {
             status: API_STATUS_CODES.ERROR.NOT_FOUND,
@@ -130,7 +115,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     });
 
     if (types.isNativeError(databaseResponse)) {
-        await DecrementResetRateLimit({ token: email });
+        ResetLRUCacheRateLimit.decrement(email);
 
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
@@ -143,7 +128,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     });
 
     if (emailResponse.error) {
-        await DecrementResetRateLimit({ token: email });
+        ResetLRUCacheRateLimit.decrement(email);
 
         const statusCode = ('statusCode' in emailResponse?.error)
             ? Number(emailResponse.error.statusCode)

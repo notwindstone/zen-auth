@@ -3,21 +3,17 @@ import { API_STATUS_CODES } from "@/configs/api";
 import { createVerificationCode, getVerificationCodes, removeVerificationCode } from "@/lib/actions/verification";
 import { sendVerificationCodeEmail } from "@/lib/actions/email";
 import { generateVerificationCode } from "@/utils/secure/generateVerificationCode";
-import { types } from "node:util";
 import { checkUserExistence, createUser } from "@/lib/actions/user";
 import { generateSecurePassword } from "@/utils/secure/generateSecurePassword";
-import {
-    DecrementVerificationRateLimit,
-    VerificationRateLimit,
-} from "@/lib/ratelimit/ratelimit";
 import { CODE_DIGITS_COUNT, EMAIL_LENGTH_LIMIT, PASSWORD_LENGTH_LIMIT, USERNAME_LENGTH_LIMIT } from "@/configs/constants";
 import validateEmail from "@/utils/secure/validateEmail";
 import { validateTurnstileToken } from "next-turnstile";
 import { v4 as uuid } from "uuid";
 import {
     ConfiguredLRUCacheRateLimit,
-    ConfiguredVerificationCodeLRUCacheRateLimit,
+    ConfiguredVerificationCodeLRUCacheRateLimit, EmailLRUCacheRateLimit,
 } from "@/lib/ratelimit/lrucache";
+import { types } from "node:util";
 
 export async function POST(request: NextRequest): Promise<Response> {
     const routeRTLKey = request.nextUrl.pathname;
@@ -69,23 +65,9 @@ export async function POST(request: NextRequest): Promise<Response> {
         });
     }
 
-    const rateLimitResult = await VerificationRateLimit({
-        token: email,
-    });
-
-    if (types.isNativeError(rateLimitResult)) {
-        return new Response(null, {
-            status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
-        });
-    }
-
-    if (!rateLimitResult.success) {
-        const expirationTime = Number(rateLimitResult?.expirationTime);
-        const currentTime = Date.now();
-        const rtlTime = new Date(expirationTime - currentTime);
-        const remainingSeconds = rtlTime.getMinutes() * 60 + rtlTime.getSeconds();
+    if (EmailLRUCacheRateLimit.increment(email)) {
         const headers = new Headers({
-            "Retry-After": remainingSeconds.toString(),
+            "Retry-After": "120",
         });
 
         return new Response(null, {
@@ -102,7 +84,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     });
 
     if (!turnstileResponse.success) {
-        await DecrementVerificationRateLimit({ token: email });
+        EmailLRUCacheRateLimit.decrement(email);
 
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.NETWORK_AUTHENTICATION_REQUIRED,
@@ -115,7 +97,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     });
 
     if (types.isNativeError(userExistence)) {
-        await DecrementVerificationRateLimit({ token: email });
+        EmailLRUCacheRateLimit.decrement(email);
 
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
@@ -123,7 +105,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     }
 
     if (userExistence !== null) {
-        await DecrementVerificationRateLimit({ token: email });
+        EmailLRUCacheRateLimit.decrement(email);
 
         const headers = new Headers({
             "X-Zen-Auth-Conflict": String(userExistence.username ?? userExistence.email),
@@ -142,7 +124,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     });
 
     if (types.isNativeError(databaseResponse)) {
-        await DecrementVerificationRateLimit({ token: email });
+        EmailLRUCacheRateLimit.decrement(email);
 
         return new Response(null, {
             status: API_STATUS_CODES.SERVER.INTERNAL_SERVER_ERROR,
@@ -156,7 +138,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     });
 
     if (emailResponse.error) {
-        await DecrementVerificationRateLimit({ token: email });
+        EmailLRUCacheRateLimit.decrement(email);
 
         // they actually have it.
         // source: https://resend.com/docs/api-reference/errors#daily-quota-exceeded
