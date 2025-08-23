@@ -1,7 +1,7 @@
 export default function translateEmailStatus({
     status,
 }: {
-    status: "bounced" | "canceled" | "clicked" | "complained" | "delivered" | "delivery_delayed" | "opened" | "queued" | "scheduled" | undefined
+    status: "bounced" | "canceled" | "clicked" | "failed" | "complained" | "delivered" | "delivery_delayed" | "opened" | "queued" | "scheduled" | "sent" | undefined
 }): string {
     switch (status) {
         case "bounced":
@@ -10,6 +10,8 @@ export default function translateEmailStatus({
             return "Отменено";
         case "clicked":
             return "Пройдено по ссылке";
+        case "failed":
+            return "Возникла непредвиденная ошибка";
         case "complained":
             return "Что-то пошло не так...";
         case "delivered":
@@ -22,6 +24,8 @@ export default function translateEmailStatus({
             return "Запланировано";
         case "queued":
             return "В очереди";
+        case "sent":
+            return "Отправлено";
         default:
             return "Неизвестно";
     }
