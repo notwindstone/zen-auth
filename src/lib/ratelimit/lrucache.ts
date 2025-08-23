@@ -22,12 +22,12 @@ export const DashboardLRUCacheRateLimit = LRUCacheRateLimit({
 
 export const EmailLRUCacheRateLimit = AdvancedLRUCacheRateLimit({
     duration: 120,
-    limit: 1,
+    limit: 2,
 });
 
 export const ResetLRUCacheRateLimit = AdvancedLRUCacheRateLimit({
     duration: 120,
-    limit: 1,
+    limit: 2,
 });
 
 export function LRUCacheRateLimit({

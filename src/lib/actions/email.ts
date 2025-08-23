@@ -17,7 +17,7 @@ export async function sendVerificationCodeEmail({
     username: string;
 }) {
     return resend.emails.send({
-        from: 'Zen-Auth <onboarding@windstone.space>',
+        from: 'Zen-Auth <onboarding@windstone.freesmlauncher.org>',
         to: email,
         subject: 'Верификация Email',
         html: `<p>Добро пожаловать, ${username}. Ваш код подтверждения: ${code}</p>`,
@@ -32,7 +32,7 @@ export async function sendResetCodeEmail({
     email: string;
 }) {
     return resend.emails.send({
-        from: 'Zen-Auth <onboarding@windstone.space>',
+        from: 'Zen-Auth <onboarding@windstone.freesmlauncher.org>',
         to: email,
         subject: 'Сброс пароля',
         html: `<p>Используйте эту ссылку, чтобы сбросить пароль для вашей учетной записи. Ваша ссылка: https://zen-auth.vercel.app/reset?token=${resetToken}&email=${email}</p>`,

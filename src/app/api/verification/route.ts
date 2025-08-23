@@ -208,6 +208,7 @@ export async function PUT(request: NextRequest): Promise<Response> {
     //
     // With this ratelimit (5 requests per 20 seconds) there are way smaller chances (0,09%)
     // That this dude will sign up without knowing the verification code
+    // btw: this is how Pavel Durov was hacked recently lol :p
     const EmailRTLResult = ConfiguredVerificationCodeLRUCacheRateLimit(email ?? "");
 
     if (EmailRTLResult) {
