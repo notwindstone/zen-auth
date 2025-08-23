@@ -199,6 +199,7 @@ export default function LoginForm({
                     <p className="text-center text-gray-500 font-medium">
                         Ещё нет аккаунта?{' '}
                         <Link
+                            prefetch
                             className="text-black font-medium transition hover:text-zinc-700"
                             href={"/register"}
                         >
@@ -211,6 +212,7 @@ export default function LoginForm({
                     <p className="text-center text-gray-500 font-medium">
                         Забыли пароль?{' '}
                         <Link
+                            prefetch
                             className="text-black font-medium transition hover:text-zinc-700"
                             href="/reset/send"
                         >

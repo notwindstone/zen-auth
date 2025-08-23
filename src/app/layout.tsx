@@ -37,7 +37,7 @@ export default function RootLayout({
                         color="#dc8a78"
                     />
                     <div className="flex gap-4 p-2 text-lg">
-                        <Link href={"/"}>
+                        <Link prefetch href={"/"}>
                             ← На главную
                         </Link>
                         <Link className="text-zinc-500" href={"/video"}>

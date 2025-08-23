@@ -319,6 +319,7 @@ export default function RegisterForm({
                     <p className="text-center text-gray-500 font-medium">
                         Уже есть аккаунт?{' '}
                         <Link
+                            prefetch
                             className="text-black font-medium transition hover:text-zinc-700"
                             href={"/login"}
                         >

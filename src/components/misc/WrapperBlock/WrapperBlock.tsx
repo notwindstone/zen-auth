@@ -57,6 +57,7 @@ export default function WrapperBlock({
                 </div>
                 {children}
                 <Link
+                    prefetch
                     className="w-full max-w-[464px] text-center hover:bg-zinc-200 bg-white focus:bg-zinc-300 text-black rounded-md py-2 px-4 transition"
                     href={PAGE_ROUTES.PROFILE.ROOT}
                 >
